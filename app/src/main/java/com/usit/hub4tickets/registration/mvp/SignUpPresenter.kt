@@ -1,18 +1,19 @@
 package com.usit.hub4tickets.domain.presentation.presenters
 
-import com.usit.hub4tickets.domain.presentation.screens.main.MainViewModel
+import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
+
 /**
  * Created by Bhagyashri Burade
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-interface LoginPresenter : BasePresenter {
+interface SignUpPresenter : BasePresenter {
     interface MainView {
         /**
          * This enum is used for determine the current state of this screen
          */
         enum class ViewState {
-            IDLE, LOADING, LOAD_SAMPLE, SHOW_SAMPLE, ERROR,
+            IDLE, LOADING, LOAD_LOGIN, SHOW_LOGIN_PAGE, ERROR,
         }
 
         /**
@@ -27,7 +28,7 @@ interface LoginPresenter : BasePresenter {
          *
          * @return
          */
-        fun doRetrieveModel(): MainViewModel
+        fun doRetrieveModel(): SignUpViewModel
     }
 
     /**

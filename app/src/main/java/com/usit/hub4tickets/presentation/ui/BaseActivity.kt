@@ -9,17 +9,24 @@ import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import com.usit.hub4tickets.domain.presentation.presenters.BaseView
+import android.widget.Toast
 import com.usit.hub4tickets.MainApplication
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.domain.presentation.presenters.BaseView
 import com.usit.hub4tickets.utils.ConnectivityReceiver
 
-open class BaseActivity : AppCompatActivity(), BaseView {
 
+abstract class BaseActivity : AppCompatActivity(), BaseView {
+    private var toolBar: Toolbar? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(getLayoutResource())
+        initToolbar()
 
         val intentFilter = IntentFilter(ConnectivityReceiver.NETWORK_AVAILABLE_ACTION)
         LocalBroadcastManager.getInstance(this).registerReceiver(object : BroadcastReceiver() {
@@ -30,6 +37,17 @@ open class BaseActivity : AppCompatActivity(), BaseView {
                     showToast(getString(R.string.message_no_internet))
             }
         }, intentFilter)
+    }
+
+    fun initToolbar() {
+        toolBar = this.findViewById(R.id.mainToolbar) as Toolbar
+
+        if (toolBar != null) {
+            setSupportActionBar(toolBar)
+            if (supportActionBar != null) {
+                setDisplayHomeEnabled(true)
+            }
+        }
     }
 
     override fun showProgress(flag: Boolean) {
@@ -54,5 +72,25 @@ open class BaseActivity : AppCompatActivity(), BaseView {
         } else {
             showToast(getString(R.string.message_failed_request_general))
         }
+    }
+
+    protected abstract fun getLayoutResource(): Int
+
+    fun setDisplayHomeEnabled(b: Boolean) {
+        if (supportActionBar != null) {
+            supportActionBar!!.setDisplayHomeAsUpEnabled(b)
+        }
+    }
+
+    override fun setTitle(title: CharSequence) {
+        toolBar?.setTitle(title)
+    }
+
+    override fun setTitle(titleId: Int) {
+        toolBar?.setTitle(titleId)
+    }
+
+    fun getToolBar(): Toolbar? {
+        return toolBar
     }
 }

@@ -12,6 +12,7 @@ import com.usit.hub4tickets.login.LoginInteractor
 import com.usit.hub4tickets.utils.Enums
 import android.provider.Settings.Secure
 import com.usit.hub4tickets.domain.api.sample.LoginResponse
+import com.usit.hub4tickets.registration.ui.SignUpActivity
 
 
 /**
@@ -19,18 +20,18 @@ import com.usit.hub4tickets.domain.api.sample.LoginResponse
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-class LoginPresenterImpl(private val mView: LoginPresenter.MainView,context: Context) : LoginPresenter, APICallListener {
+class SignUpPresenterImpl(private val mView: LoginPresenter.MainView, context: Context) : LoginPresenter, APICallListener {
     private val loginInteractor: LoginInteractor =
         LoginInteractor(this)
     private val mContext = context
     private var device_id = Secure.getString(mContext.contentResolver, Secure.ANDROID_ID)
     override fun presentState(state: LoginPresenter.MainView.ViewState) {
         // user state logging
-        Log.i(MainActivity::class.java.simpleName, state.name)
+        Log.i(SignUpActivity::class.java.simpleName, state.name)
         when (state) {
             IDLE -> mView.showState(IDLE)
             LOADING -> mView.showState(LOADING)
-            LOAD_SAMPLE ->
+            LOAD_LOGIN ->
                 if (MainApplication.getInstance.isConnected()) {
                     presentState(LOADING)
                     loginInteractor.callAPIGetLogin("0e83ff56a12a9cf0c7290cbb08ab6752181fb54b","sanjay0707@yopmail.com","123",1)
@@ -39,7 +40,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView,context: Con
                             mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
                     presentState(ERROR)
                 }
-            SHOW_SAMPLE -> mView.showState(SHOW_SAMPLE)
+            SHOW_LOGIN_PAGE -> mView.showState(SHOW_LOGIN_PAGE)
             ERROR -> mView.showState(ERROR)
         }
     }
@@ -64,7 +65,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView,context: Con
         when (route) {
             Enums.APIRoute.GET_SAMPLE -> {
                 mView.doRetrieveModel().hub4TicketsDomain.hub4TicketsDomain = responseModel as Response
-                presentState(SHOW_SAMPLE)
+                presentState(SHOW_LOGIN_PAGE)
             }
         }
     }
