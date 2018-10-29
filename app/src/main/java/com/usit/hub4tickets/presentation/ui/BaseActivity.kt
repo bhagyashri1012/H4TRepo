@@ -1,24 +1,24 @@
 package com.usit.hub4tickets.domain.presentation.screens
 
+import android.annotation.TargetApi
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import com.usit.hub4tickets.MainApplication
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.presenters.BaseView
 import com.usit.hub4tickets.utils.ConnectivityReceiver
+import kotlinx.android.synthetic.main.common_toolbar.*
 
 
 abstract class BaseActivity : AppCompatActivity(), BaseView {
@@ -39,11 +39,15 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
         }, intentFilter)
     }
 
-    fun initToolbar() {
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun initToolbar() {
         toolBar = this.findViewById(R.id.mainToolbar) as Toolbar
 
         if (toolBar != null) {
             setSupportActionBar(toolBar)
+
+            toolBar?.setNavigationOnClickListener { onBackPressed() }
+
             if (supportActionBar != null) {
                 setDisplayHomeEnabled(true)
             }
@@ -76,18 +80,26 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
 
     protected abstract fun getLayoutResource(): Int
 
-    fun setDisplayHomeEnabled(b: Boolean) {
+    private fun setDisplayHomeEnabled(b: Boolean) {
         if (supportActionBar != null) {
             supportActionBar!!.setDisplayHomeAsUpEnabled(b)
+            supportActionBar!!.setDisplayShowHomeEnabled(b)
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     override fun setTitle(title: CharSequence) {
-        toolBar?.setTitle(title)
+        val toolBarTitle = findViewById<View>(R.id.titleToolBar) as TextView
+        toolBarTitle?.setText(title)
     }
 
     override fun setTitle(titleId: Int) {
-        toolBar?.setTitle(titleId)
+        val toolBarTitle = findViewById<View>(R.id.titleToolBar) as TextView
+        toolBarTitle?.setText(titleId)
     }
 
     fun getToolBar(): Toolbar? {

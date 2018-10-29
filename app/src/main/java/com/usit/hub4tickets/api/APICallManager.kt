@@ -3,7 +3,6 @@ package com.usit.hub4tickets.domain.api
 import com.usit.hub4tickets.BuildConfig
 import com.usit.hub4tickets.domain.api.sample.Login
 import com.usit.hub4tickets.domain.api.sample.LoginResponse
-import com.usit.hub4tickets.domain.api.sample.Response
 import com.usit.hub4tickets.domain.api.sample.Service
 import com.usit.hub4tickets.utils.Constant
 import io.reactivex.Flowable
@@ -12,7 +11,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.moshi.MoshiConverterFactory
 
 /**
  * Created by Bhagyashri Burade
@@ -83,7 +81,7 @@ class APICallManager {
         }
 
         fun getLogin(device_id: String, email: String, password: String, deviceFlag: Int): Flowable<LoginResponse> {
-            val login =Login(device_id,email,password,deviceFlag)
+            val login = Login(device_id, email, password, deviceFlag)
             return service.getLogin(login)
         }
     }

@@ -1,7 +1,8 @@
 package com.usit.hub4tickets.domain.api.sample
 
 import io.reactivex.Flowable
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.POST
 
 /**
  * Created by Bhagyashri Burade

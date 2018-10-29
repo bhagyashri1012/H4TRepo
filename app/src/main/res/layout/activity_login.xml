@@ -1,13 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent" android:layout_height="match_parent"
               android:gravity="center_horizontal"
               android:orientation="vertical"
-              android:paddingBottom="@dimen/activity_vertical_margin"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin"
-              android:paddingTop="@dimen/activity_vertical_margin"
               tools:context="com.usit.hub4tickets.login.ui.LoginActivity">
 
     <!-- Login progress -->
@@ -23,10 +19,11 @@
             android:id="@+id/login_form"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center">
+    >
         <RelativeLayout android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center">
+                        android:layout_margin="@dimen/activity_vertical_margin"
+        >
             <ImageView
                     android:id="@+id/imv_logo"
                     android:layout_width="180dp"
@@ -34,8 +31,10 @@
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/image"/>
 
-            <TextView style="@style/CustomLargeTextView"
+            <TextView android:id="@+id/tv_skip"
+                    style="@style/CustomLargeTextView"
                       android:text="@string/skip"
+                      android:textColor="@color/slate_grey"
                       android:layout_alignParentRight="true"/>
 
             <LinearLayout
@@ -56,6 +55,7 @@
                             android:layout_width="match_parent"
                             style="@style/CustomRegularTextView"
                             android:hint="@string/prompt_email"
+                            android:text="bhagyashri@gmail.com"
                             android:inputType="textEmailAddress"
                             android:maxLines="1"
                             android:singleLine="true"/>
@@ -92,6 +92,7 @@
 
                 <LinearLayout android:layout_width="match_parent"
                               android:layout_height="wrap_content"
+                              android:layout_marginBottom="@dimen/activity_vertical_margin"
                               android:layout_marginTop="@dimen/activity_vertical_margin_half"
                               android:orientation="horizontal">
                     <Button
@@ -100,7 +101,7 @@
                             android:layout_weight="1"
                             android:layout_marginTop="@dimen/activity_vertical_margin"
                             android:layout_marginRight="@dimen/activity_horizontal_margin"
-                            android:text="@string/action_sign_in"/>
+                            android:text="@string/action_sign_up"/>
                     <Button
                             android:id="@+id/forgot_pass_button"
                             style="@style/CustomButton"

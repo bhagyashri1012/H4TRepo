@@ -1,18 +1,18 @@
 package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
+import android.provider.Settings.Secure
 import android.util.Log
+import com.usit.hub4tickets.MainApplication
+import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.api.APICallListener
+import com.usit.hub4tickets.domain.api.sample.LoginResponse
 import com.usit.hub4tickets.domain.api.sample.Response
 import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter
 import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter.MainView.ViewState.*
-import com.usit.hub4tickets.MainApplication
-import com.usit.hub4tickets.R
 import com.usit.hub4tickets.login.LoginInteractor
-import com.usit.hub4tickets.utils.Enums
-import android.provider.Settings.Secure
-import com.usit.hub4tickets.domain.api.sample.LoginResponse
 import com.usit.hub4tickets.login.ui.LoginActivity
+import com.usit.hub4tickets.utils.Enums
 
 
 /**
@@ -20,7 +20,8 @@ import com.usit.hub4tickets.login.ui.LoginActivity
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-class LoginPresenterImpl(private val mView: LoginPresenter.MainView,context: Context) : LoginPresenter, APICallListener {
+class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Context) : LoginPresenter,
+    APICallListener {
     private val loginInteractor: LoginInteractor =
         LoginInteractor(this)
     private val mContext = context
@@ -34,7 +35,12 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView,context: Con
             LOAD_LOGIN ->
                 if (MainApplication.getInstance.isConnected()) {
                     presentState(LOADING)
-                    loginInteractor.callAPIGetLogin("0e83ff56a12a9cf0c7290cbb08ab6752181fb54b","sanjay0707@yopmail.com","123",1)
+                    loginInteractor.callAPIGetLogin(
+                        "0e83ff56a12a9cf0c7290cbb08ab6752181fb54b",
+                        "sanjay0707@yopmail.com",
+                        "123",
+                        1
+                    )
                 } else {
                     mView.doRetrieveModel().errorMessage =
                             mView.doRetrieveModel().context?.getString(R.string.message_no_internet)

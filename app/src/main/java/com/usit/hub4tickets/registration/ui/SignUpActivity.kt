@@ -1,45 +1,32 @@
 package com.usit.hub4tickets.registration.ui
 
-import android.Manifest.permission.READ_CONTACTS
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
-import android.content.pm.PackageManager
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
-import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
 import kotlinx.android.synthetic.main.activity_signup.*
-import kotlinx.android.synthetic.main.common_toolbar.*
 
 /**
  * A login screen that offers login via email/password.
  */
 class SignUpActivity : BaseActivity() {
-    override fun getLayoutResource(): Int {
-        return R.layout.common_toolbar;
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private var mAuthTask: UserLoginTask? = null
+    override fun getLayoutResource(): Int {
+        return R.layout.common_toolbar
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
-        setupActionBar()
-       // initToolbar(R.id.mainToolbar)        // Set up the login form.
-        populateAutoComplete()
+        title = resources.getString(R.string.action_sign_up)
         password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                 attemptLogin()
@@ -51,44 +38,6 @@ class SignUpActivity : BaseActivity() {
         email_sign_in_button.setOnClickListener { attemptLogin() }
     }
 
-    private fun populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return
-        }
-
-    }
-
-    private fun mayRequestContacts(): Boolean {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(email, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                .setAction(android.R.string.ok,
-                    { requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS) })
-        } else {
-            requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS)
-        }
-        return false
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete()
-            }
-        }
-    }
-
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */
@@ -96,7 +45,6 @@ class SignUpActivity : BaseActivity() {
     private fun setupActionBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             // Show the Up button in the action bar.
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
     }
 
@@ -106,9 +54,6 @@ class SignUpActivity : BaseActivity() {
      * errors are presented and no actual login attempt is made.
      */
     private fun attemptLogin() {
-        if (mAuthTask != null) {
-            return
-        }
 
         // Reset errors.
         email.error = null
@@ -147,8 +92,6 @@ class SignUpActivity : BaseActivity() {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true)
-            mAuthTask = UserLoginTask(emailStr, passwordStr)
-            mAuthTask!!.execute(null as Void?)
         }
     }
 
@@ -173,13 +116,13 @@ class SignUpActivity : BaseActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
-            login_form.visibility = if (show) View.GONE else View.VISIBLE
-            login_form.animate()
+            signup_form.visibility = if (show) View.GONE else View.VISIBLE
+            signup_form.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 0 else 1).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        login_form.visibility = if (show) View.GONE else View.VISIBLE
+                        signup_form.visibility = if (show) View.GONE else View.VISIBLE
                     }
                 })
 
@@ -196,85 +139,7 @@ class SignUpActivity : BaseActivity() {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             login_progress.visibility = if (show) View.VISIBLE else View.GONE
-            login_form.visibility = if (show) View.GONE else View.VISIBLE
+            signup_form.visibility = if (show) View.GONE else View.VISIBLE
         }
-    }
-
-    private fun addEmailsToAutoComplete(emailAddressCollection: List<String>) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        val adapter = ArrayAdapter(
-            this@SignUpActivity,
-            android.R.layout.simple_dropdown_item_1line, emailAddressCollection
-        )
-
-        email.setAdapter(adapter)
-    }
-
-    object ProfileQuery {
-        val PROJECTION = arrayOf(
-            ContactsContract.CommonDataKinds.Email.ADDRESS,
-            ContactsContract.CommonDataKinds.Email.IS_PRIMARY
-        )
-        val ADDRESS = 0
-        val IS_PRIMARY = 1
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    inner class UserLoginTask internal constructor(private val mEmail: String, private val mPassword: String) :
-        AsyncTask<Void, Void, Boolean>() {
-
-        override fun doInBackground(vararg params: Void): Boolean? {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000)
-            } catch (e: InterruptedException) {
-                return false
-            }
-
-            return DUMMY_CREDENTIALS
-                .map { it.split(":") }
-                .firstOrNull { it[0] == mEmail }
-                ?.let {
-                    // Account exists, return true if the password matches.
-                    it[1] == mPassword
-                }
-                ?: true
-        }
-
-        override fun onPostExecute(success: Boolean?) {
-            mAuthTask = null
-            showProgress(false)
-
-            if (success!!) {
-                finish()
-            } else {
-                password.error = getString(R.string.error_incorrect_password)
-                password.requestFocus()
-            }
-        }
-
-        override fun onCancelled() {
-            mAuthTask = null
-            showProgress(false)
-        }
-    }
-
-    companion object {
-
-        /**
-         * Id to identity READ_CONTACTS permission request.
-         */
-        private val REQUEST_READ_CONTACTS = 0
-
-        /**
-         * A dummy authentication store containing known user names and passwords.
-         * TODO: remove after connecting to a real authentication system.
-         */
-        private val DUMMY_CREDENTIALS = arrayOf("foo@example.com:hello", "bar@example.com:world")
     }
 }

@@ -9,9 +9,9 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.dashboard.DashboardActivity
 import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginPresenterImpl
@@ -47,6 +47,24 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
         })
 
         email_sign_in_button.setOnClickListener { attemptLogin() }
+        sign_up_button.setOnClickListener { attemptSignUp() }
+        forgot_pass_button.setOnClickListener { forgotPassword() }
+        tv_skip.setOnClickListener { redirectToDashboard() }
+    }
+
+    private fun redirectToDashboard() {
+        val intent = Intent(applicationContext, DashboardActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun forgotPassword() {
+        val intent = Intent(applicationContext, ForgotPasswordActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun attemptSignUp() {
+        val intent = Intent(applicationContext, SignUpActivity::class.java)
+        startActivity(intent)
     }
 
     private fun init() {
@@ -59,7 +77,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
             LoginPresenter.MainView.ViewState.IDLE -> showProgress(false)
             LoginPresenter.MainView.ViewState.LOADING -> showProgress(true)
             LoginPresenter.MainView.ViewState.SHOW_LOGIN_PAGE -> showSignUp()
-            LoginPresenter.MainView.ViewState.ERROR ->showSignUp()/* {
+            LoginPresenter.MainView.ViewState.ERROR -> showSignUp()/* {
                 presenter.presentState(LoginPresenter.MainView.ViewState.IDLE)
                 showDialog(null, doRetrieveModel().errorMessage)
             }*/
