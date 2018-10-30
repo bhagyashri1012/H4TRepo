@@ -21,6 +21,7 @@
         <activity
                 android:name=".dashboard.DashboardActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
+                android:launchMode="singleTop"
                 android:screenOrientation="portrait"
                 android:theme="@style/NoActionBarAppTheme"/>
         <activity
@@ -42,17 +43,25 @@
                 android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
         <activity
+                android:name=".registration.ui.SignUpActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
                 android:screenOrientation="portrait"
                 android:theme="@style/NoActionBarAppTheme"
-                android:name=".registration.ui.SignUpActivity"
-                android:windowSoftInputMode="stateHidden|adjustPan"
-               >
+                android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
-        <activity  android:configChanges="orientation|keyboardHidden|screenSize"
-                   android:screenOrientation="portrait"
-                   android:theme="@style/NoActionBarAppTheme"
-                   android:name=".login.ui.ForgotPasswordActivity">
+        <activity
+                android:name=".login.ui.ForgotPasswordActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:screenOrientation="portrait"
+                android:theme="@style/NoActionBarAppTheme"
+                android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity android:name=".dashboard.ui.AlertsActivity"
+                  android:configChanges="orientation|keyboardHidden|screenSize"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/NoActionBarAppTheme"
+                  android:windowSoftInputMode="stateHidden|adjustPan"
+        >
         </activity>
     </application>
 

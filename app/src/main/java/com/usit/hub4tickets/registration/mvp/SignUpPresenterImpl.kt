@@ -5,12 +5,10 @@ import android.provider.Settings.Secure
 import android.util.Log
 import com.usit.hub4tickets.MainApplication
 import com.usit.hub4tickets.R
-import com.usit.hub4tickets.domain.api.APICallListener
-import com.usit.hub4tickets.domain.api.sample.LoginResponse
-import com.usit.hub4tickets.domain.api.sample.Response
-import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter
-import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter.MainView.ViewState.*
-import com.usit.hub4tickets.login.LoginInteractor
+import com.usit.hub4tickets.domain.api.SignUpAPICallListener
+import com.usit.hub4tickets.domain.presentation.presenters.SignUpPresenter.MainView.ViewState.*
+import com.usit.hub4tickets.domain.presentation.presenters.SignUpPresenter
+import com.usit.hub4tickets.login.SignUpBaseInteractor
 import com.usit.hub4tickets.registration.ui.SignUpActivity
 import com.usit.hub4tickets.utils.Enums
 
@@ -20,22 +18,22 @@ import com.usit.hub4tickets.utils.Enums
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-class SignUpPresenterImpl(private val mView: LoginPresenter.MainView, context: Context) : LoginPresenter,
-    APICallListener {
-    private val loginInteractor: LoginInteractor =
-        LoginInteractor(this)
+class SignUpPresenterImpl(private val mView: SignUpPresenter.MainView, context: Context) : SignUpPresenter,
+    SignUpAPICallListener {
+    private val signUpBaseInteractor: SignUpBaseInteractor =
+        SignUpBaseInteractor(this)
     private val mContext = context
     private var device_id = Secure.getString(mContext.contentResolver, Secure.ANDROID_ID)
-    override fun presentState(state: LoginPresenter.MainView.ViewState) {
+    override fun presentState(state: SignUpPresenter.MainView.ViewState) {
         // user state logging
         Log.i(SignUpActivity::class.java.simpleName, state.name)
         when (state) {
             IDLE -> mView.showState(IDLE)
             LOADING -> mView.showState(LOADING)
-            LOAD_LOGIN ->
+            LOAD_SIGN_UP ->
                 if (MainApplication.getInstance.isConnected()) {
                     presentState(LOADING)
-                    loginInteractor.callAPIGetLogin(
+                    signUpBaseInteractor.callAPIGetSignUp(
                         "0e83ff56a12a9cf0c7290cbb08ab6752181fb54b",
                         "sanjay0707@yopmail.com",
                         "123",
@@ -46,7 +44,7 @@ class SignUpPresenterImpl(private val mView: LoginPresenter.MainView, context: C
                             mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
                     presentState(ERROR)
                 }
-            SHOW_LOGIN_PAGE -> mView.showState(SHOW_LOGIN_PAGE)
+            SUCCESS -> mView.showState(SUCCESS)
             ERROR -> mView.showState(ERROR)
         }
     }
@@ -67,12 +65,10 @@ class SignUpPresenterImpl(private val mView: LoginPresenter.MainView, context: C
 
     }
 
-    override fun onAPICallSucceed(route: Enums.APIRoute, responseModel: LoginResponse) {
-        when (route) {
-            Enums.APIRoute.GET_SAMPLE -> {
-                mView.doRetrieveModel().hub4TicketsDomain.hub4TicketsDomain = responseModel as Response
-                presentState(SHOW_LOGIN_PAGE)
-            }
+    override fun onAPICallSucceed(route: Enums.APIRoute, responseModel: SignUpViewModel.SignUpResponse) = when (route) {
+        Enums.APIRoute.GET_SAMPLE -> {
+            mView.doRetrieveModel().signUpDomain = responseModel
+            presentState(SUCCESS)
         }
     }
 

@@ -3,30 +3,65 @@ package com.usit.hub4tickets.registration.ui
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter
+import com.usit.hub4tickets.domain.presentation.presenters.SignUpPresenter
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
+import com.usit.hub4tickets.domain.presentation.screens.main.SignUpPresenterImpl
+import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
+import com.usit.hub4tickets.login.ui.LoginActivity
 import kotlinx.android.synthetic.main.activity_signup.*
 
 /**
  * A login screen that offers login via email/password.
  */
-class SignUpActivity : BaseActivity() {
+class SignUpActivity : BaseActivity(), SignUpPresenter.MainView {
+
+    override fun showState(viewState: SignUpPresenter.MainView.ViewState) {
+        when (viewState) {
+            LoginPresenter.MainView.ViewState.IDLE -> showProgress(false)
+            LoginPresenter.MainView.ViewState.LOADING -> showProgress(true)
+            LoginPresenter.MainView.ViewState.SUCCESS -> showDashboard(true)
+            LoginPresenter.MainView.ViewState.ERROR
+            -> {
+                presenter.presentState(SignUpPresenter.MainView.ViewState.IDLE)
+                showDialog(null, doRetrieveModel().errorMessage)
+            }
+        }
+    }
+
+    private fun showDashboard(b: Boolean) {
+        val intent = Intent(applicationContext, LoginActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun doRetrieveModel(): SignUpViewModel = this.model
+
+
+    private lateinit var model: SignUpViewModel
+    private lateinit var presenter: SignUpPresenter
 
     override fun getLayoutResource(): Int {
         return R.layout.common_toolbar
+    }
+
+    private fun init() {
+        this.model = SignUpViewModel(this)
+        this.presenter = SignUpPresenterImpl(this, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
         title = resources.getString(R.string.action_sign_up)
+        init()
         password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                 attemptLogin()
@@ -37,24 +72,12 @@ class SignUpActivity : BaseActivity() {
 
         email_sign_in_button.setOnClickListener { attemptLogin() }
     }
-
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private fun setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // Show the Up button in the action bar.
-        }
-    }
-
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     private fun attemptLogin() {
-
         // Reset errors.
         email.error = null
         password.error = null
@@ -92,6 +115,7 @@ class SignUpActivity : BaseActivity() {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true)
+            presenter.presentState(SignUpPresenter.MainView.ViewState.LOAD_SIGN_UP)
         }
     }
 
@@ -115,17 +139,6 @@ class SignUpActivity : BaseActivity() {
         // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
-
-            signup_form.visibility = if (show) View.GONE else View.VISIBLE
-            signup_form.animate()
-                .setDuration(shortAnimTime)
-                .alpha((if (show) 0 else 1).toFloat())
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        signup_form.visibility = if (show) View.GONE else View.VISIBLE
-                    }
-                })
-
             login_progress.visibility = if (show) View.VISIBLE else View.GONE
             login_progress.animate()
                 .setDuration(shortAnimTime)
@@ -140,6 +153,7 @@ class SignUpActivity : BaseActivity() {
             // and hide the relevant UI components.
             login_progress.visibility = if (show) View.VISIBLE else View.GONE
             signup_form.visibility = if (show) View.GONE else View.VISIBLE
+
         }
     }
 }

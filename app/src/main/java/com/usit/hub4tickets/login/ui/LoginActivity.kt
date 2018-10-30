@@ -36,7 +36,6 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        // Set up the login form.
         init()
         password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
@@ -76,27 +75,16 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
         when (viewState) {
             LoginPresenter.MainView.ViewState.IDLE -> showProgress(false)
             LoginPresenter.MainView.ViewState.LOADING -> showProgress(true)
-            LoginPresenter.MainView.ViewState.SHOW_LOGIN_PAGE -> showSignUp()
-            LoginPresenter.MainView.ViewState.ERROR -> showSignUp()/* {
+            LoginPresenter.MainView.ViewState.SUCCESS -> redirectToDashboard()
+            LoginPresenter.MainView.ViewState.ERROR ->  {
                 presenter.presentState(LoginPresenter.MainView.ViewState.IDLE)
                 showDialog(null, doRetrieveModel().errorMessage)
-            }*/
+            }
         }
-    }
-
-    private fun showSignUp() {
-        presenter.presentState(LoginPresenter.MainView.ViewState.IDLE)
-        val intent = Intent(applicationContext, SignUpActivity::class.java)
-        startActivity(intent)
     }
 
     override fun doRetrieveModel(): LoginViewModel = this.model
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
     private fun attemptLogin() {
         // Reset errors.
         email.error = null

@@ -13,7 +13,7 @@ interface LoginPresenter : BasePresenter {
          * This enum is used for determine the current state of this screen
          */
         enum class ViewState {
-            IDLE, LOADING, LOAD_LOGIN, SHOW_LOGIN_PAGE, ERROR,
+            IDLE, LOADING, LOAD_LOGIN, SUCCESS, ERROR,
         }
 
         /**

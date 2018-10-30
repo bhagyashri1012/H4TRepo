@@ -1,7 +1,6 @@
 package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
-import com.usit.hub4tickets.domain.model.Hub4TicketsDomain
 
 /**
  * Created by Bhagyashri Burade
@@ -10,5 +9,31 @@ import com.usit.hub4tickets.domain.model.Hub4TicketsDomain
  */
 class LoginViewModel(var context: Context?) {
     var errorMessage: String? = null
-    var hub4TicketsDomain: Hub4TicketsDomain = Hub4TicketsDomain()
+    var loginDomain: LoginResponse = LoginResponse(message = null, responseData = null, status = null)
+
+    data class LoginResponse(
+        val message: String?,
+        val responseData: ResponseData?,
+        val status: String?
+    )
+
+    data class ResponseData(
+        val city: String,
+        val country: String,
+        val deviceId: String,
+        val dno: Any,
+        val email: String,
+        val firstname: String,
+        val homeairport: String,
+        val language: String,
+        val lastname: String,
+        val otp: String,
+        val otpFlag: Int,
+        val password: String,
+        val phonenumber: String,
+        val state: String,
+        val timezone: String,
+        val timezoneid: Any,
+        val userId: Int
+    )
 }

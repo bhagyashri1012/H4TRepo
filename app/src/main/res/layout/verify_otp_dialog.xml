@@ -5,10 +5,11 @@
               android:gravity="center_horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
-  <!--  <TextView
+    <TextView
             android:text="@string/two_step_verification"
             style="@style/CustomLargeTextView"
-            android:id="@+id/textView"/>-->
+            android:textStyle="bold"
+            android:id="@+id/textView"/>
     <TextView
             android:text="@string/enter_your_code"
             style="@style/CustomRegularTextView"
@@ -16,18 +17,20 @@
             android:id="@+id/textView2"/>
     <EditText
             style="@style/CustomLargeTextView"
-            android:inputType="textPersonName"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:inputType="number"
+            android:layout_margin="@dimen/activity_vertical_margin"
             android:hint="@string/enter_otp"
             android:ems="10"
             android:gravity="center"
             android:id="@+id/editTextEnterOtp"/>
-    <Button
-            android:text="Resend OTP"
-            style="@style/CustomButton"
+    <TextView
+            android:text="@string/resend_otp"
+            style="@style/CustomLargeTextView"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:id="@+id/button"/>
-   <!-- <LinearLayout
+   <LinearLayout
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent" android:layout_height="match_parent">
     <Button
@@ -36,12 +39,12 @@
             style="@style/CustomButton"
             android:layout_marginRight="@dimen/activity_vertical_margin_half"
             android:layout_weight="1"
-            android:id="@+id/button2"/>
+            android:id="@+id/button_cancel"/>
     <Button
             android:text="@string/verify"
             android:layout_width="0dp"
             style="@style/CustomButton"
             android:layout_weight="1"
-            android:id="@+id/button3"/>
-    </LinearLayout>-->
+            android:id="@+id/button_verify"/>
+    </LinearLayout>
 </LinearLayout>

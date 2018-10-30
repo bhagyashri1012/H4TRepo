@@ -5,12 +5,10 @@ import android.provider.Settings.Secure
 import android.util.Log
 import com.usit.hub4tickets.MainApplication
 import com.usit.hub4tickets.R
-import com.usit.hub4tickets.domain.api.APICallListener
-import com.usit.hub4tickets.domain.api.sample.LoginResponse
-import com.usit.hub4tickets.domain.api.sample.Response
+import com.usit.hub4tickets.domain.api.LoginAPICallListener
 import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter
 import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter.MainView.ViewState.*
-import com.usit.hub4tickets.login.LoginInteractor
+import com.usit.hub4tickets.login.LoginBaseInteractor
 import com.usit.hub4tickets.login.ui.LoginActivity
 import com.usit.hub4tickets.utils.Enums
 
@@ -21,9 +19,9 @@ import com.usit.hub4tickets.utils.Enums
  * Email: bhagyashri.burade@usit.net.in
  */
 class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Context) : LoginPresenter,
-    APICallListener {
-    private val loginInteractor: LoginInteractor =
-        LoginInteractor(this)
+    LoginAPICallListener {
+    private val loginInteractor: LoginBaseInteractor =
+        LoginBaseInteractor(this)
     private val mContext = context
     private var device_id = Secure.getString(mContext.contentResolver, Secure.ANDROID_ID)
     override fun presentState(state: LoginPresenter.MainView.ViewState) {
@@ -46,7 +44,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
                             mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
                     presentState(ERROR)
                 }
-            SHOW_LOGIN_PAGE -> mView.showState(SHOW_LOGIN_PAGE)
+            SUCCESS -> mView.showState(SUCCESS)
             ERROR -> mView.showState(ERROR)
         }
     }
@@ -67,12 +65,10 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
 
     }
 
-    override fun onAPICallSucceed(route: Enums.APIRoute, responseModel: LoginResponse) {
-        when (route) {
-            Enums.APIRoute.GET_SAMPLE -> {
-                mView.doRetrieveModel().hub4TicketsDomain.hub4TicketsDomain = responseModel as Response
-                presentState(SHOW_LOGIN_PAGE)
-            }
+    override fun onAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) = when (route) {
+        Enums.APIRoute.GET_SAMPLE -> {
+            mView.doRetrieveModel().loginDomain = responseModel
+            presentState(SUCCESS)
         }
     }
 

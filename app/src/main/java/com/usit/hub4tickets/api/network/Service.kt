@@ -1,5 +1,7 @@
 package com.usit.hub4tickets.domain.api.sample
 
+import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
+import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
 import io.reactivex.Flowable
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -12,10 +14,10 @@ import retrofit2.http.POST
 interface Service {
 
     @POST("login")
-    fun getLogin(@Body loginDto: Login): Flowable<LoginResponse>
+    fun getLogin(@Body loginDto: Login): Flowable<LoginViewModel.LoginResponse>
 
     @POST("registration")
-    fun getRegistration(): Flowable<Response>
+    fun getRegistration(@Body signUpDto: SignUp): Flowable<SignUpViewModel.SignUpResponse>
 
     @POST("SendOTP")
     fun sendOTP(): Flowable<Response>

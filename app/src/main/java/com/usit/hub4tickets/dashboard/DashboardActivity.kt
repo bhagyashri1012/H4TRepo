@@ -2,8 +2,12 @@ package com.usit.hub4tickets.dashboard
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.dashboard.ui.HelpFragment
+import com.usit.hub4tickets.dashboard.ui.HomeFragment
+import com.usit.hub4tickets.dashboard.ui.ProfileFragment
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 /**
@@ -13,22 +17,24 @@ import kotlinx.android.synthetic.main.activity_dashboard.*
  */
 class DashboardActivity : AppCompatActivity() {
 
+    private var selectedFragment: Fragment ?= null
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+
         when (item.itemId) {
             R.id.navigation_home -> {
-                message.setText(R.string.title_home)
-                return@OnNavigationItemSelectedListener true
+                selectedFragment = HomeFragment.newInstance()
             }
             R.id.navigation_dashboard -> {
-                message.setText(R.string.title_dashboard)
-                return@OnNavigationItemSelectedListener true
+                selectedFragment = ProfileFragment.newInstance()
             }
-            R.id.navigation_notifications -> {
-                message.setText(R.string.title_notifications)
-                return@OnNavigationItemSelectedListener true
+            R.id.navigation_help -> {
+                selectedFragment = HelpFragment.newInstance()
             }
         }
-        false
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.frame_layout, selectedFragment!!)
+        transaction.commit()
+        return@OnNavigationItemSelectedListener true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,5 +42,13 @@ class DashboardActivity : AppCompatActivity() {
         setContentView(R.layout.activity_dashboard)
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+        //Manually displaying the first fragment - one time only
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.frame_layout, HomeFragment.newInstance())
+        transaction.commit()
+
+        //Used to select an item programmatically
+        navigation.menu.getItem(2).isChecked = true;
     }
 }

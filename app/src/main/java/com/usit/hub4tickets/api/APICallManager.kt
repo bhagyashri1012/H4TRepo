@@ -1,9 +1,9 @@
 package com.usit.hub4tickets.domain.api
 
 import com.usit.hub4tickets.BuildConfig
-import com.usit.hub4tickets.domain.api.sample.Login
-import com.usit.hub4tickets.domain.api.sample.LoginResponse
-import com.usit.hub4tickets.domain.api.sample.Service
+import com.usit.hub4tickets.domain.api.sample.*
+import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
+import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
 import com.usit.hub4tickets.utils.Constant
 import io.reactivex.Flowable
 import okhttp3.OkHttpClient
@@ -80,9 +80,14 @@ class APICallManager {
             getService(Service::class.java)
         }
 
-        fun getLogin(device_id: String, email: String, password: String, deviceFlag: Int): Flowable<LoginResponse> {
+        fun getLogin(device_id: String, email: String, password: String, deviceFlag: Int): Flowable<LoginViewModel.LoginResponse> {
             val login = Login(device_id, email, password, deviceFlag)
             return service.getLogin(login)
+        }
+
+        fun getSignUp(device_id: String, email: String, password: String, deviceFlag: Int): Flowable<SignUpViewModel.SignUpResponse> {
+            val signUp = SignUp(device_id, email, password, deviceFlag)
+            return service.getRegistration(signUp)
         }
     }
     //endregion

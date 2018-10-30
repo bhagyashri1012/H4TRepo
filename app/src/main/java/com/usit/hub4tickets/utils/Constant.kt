@@ -9,7 +9,7 @@ package com.usit.hub4tickets.utils
 class Constant {
     object Path {
         // TODO: Replace API URL Endpoint
-        val DEFAULT_URL_API = "http://192.168.10.149:5000/"
+        val DEFAULT_URL_API = "http://192.168.10.137:8080/hub4ticket-api/"
         val BASE_URL_API = "https://glacial-escarpment-50090.herokuapp.com"
     }
 }

@@ -1,6 +1,6 @@
 package com.usit.hub4tickets.domain.api
 
-import com.usit.hub4tickets.domain.api.sample.LoginResponse
+import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
 import com.usit.hub4tickets.utils.Enums
 
 /**
@@ -8,8 +8,8 @@ import com.usit.hub4tickets.utils.Enums
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-interface APICallListener {
-    fun onAPICallSucceed(route: Enums.APIRoute, responseModel: LoginResponse)
+interface LoginAPICallListener {
+    fun onAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse)
 
     fun onAPICallFailed(route: Enums.APIRoute, throwable: Throwable)
 }

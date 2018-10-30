@@ -1,7 +1,6 @@
 package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
-import com.usit.hub4tickets.domain.model.Hub4TicketsDomain
 
 /**
  * Created by Bhagyashri Burade
@@ -10,5 +9,13 @@ import com.usit.hub4tickets.domain.model.Hub4TicketsDomain
  */
 class SignUpViewModel(var context: Context?) {
     var errorMessage: String? = null
-    var hub4TicketsDomain: Hub4TicketsDomain = Hub4TicketsDomain()
+    var signUpDomain: SignUpResponse =
+        SignUpResponse(message = null, responseData = null, status = null)
+
+    data class SignUpResponse(
+        val message: String?,
+        val responseData: LoginViewModel.ResponseData?,
+        val status: String?
+    )
+
 }
