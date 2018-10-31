@@ -1,6 +1,5 @@
 package com.usit.hub4tickets.domain.api
 
-import com.usit.hub4tickets.domain.api.sample.SignUpResponse
 import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
 import com.usit.hub4tickets.utils.Enums
 

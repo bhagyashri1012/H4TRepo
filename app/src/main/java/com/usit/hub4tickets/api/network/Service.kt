@@ -16,7 +16,7 @@ interface Service {
     @POST("login")
     fun getLogin(@Body loginDto: Login): Flowable<LoginViewModel.LoginResponse>
 
-    @POST("registration")
+    @POST("users")
     fun getRegistration(@Body signUpDto: SignUp): Flowable<SignUpViewModel.SignUpResponse>
 
     @POST("SendOTP")

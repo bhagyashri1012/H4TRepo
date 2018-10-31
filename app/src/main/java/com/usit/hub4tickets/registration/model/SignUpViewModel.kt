@@ -14,8 +14,14 @@ class SignUpViewModel(var context: Context?) {
 
     data class SignUpResponse(
         val message: String?,
-        val responseData: LoginViewModel.ResponseData?,
+        val responseData: ResponseData?,
         val status: String?
     )
 
+    data class ResponseData(
+        val userId: Int,
+        val details: String,
+        val message: String,
+        val timeStamp: Long
+    )
 }

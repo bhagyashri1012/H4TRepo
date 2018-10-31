@@ -53,4 +53,5 @@
     <string name="country_region">Country / Region :</string>
     <string name="hot_deals">Hot Deals</string>
     <string name="action_alerts">Alerts</string>
+    <string name="ok">ok</string>
 </resources>

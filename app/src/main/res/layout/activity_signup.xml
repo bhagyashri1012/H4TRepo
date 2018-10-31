@@ -45,8 +45,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                    <AutoCompleteTextView
-                            android:id="@+id/email"
+                    <EditText
+                            android:id="@+id/edt_email"
                             android:layout_width="match_parent"
                             style="@style/CustomRegularTextView"
                             android:hint="@string/prompt_email"
@@ -63,7 +63,7 @@
                         android:layout_marginTop="@dimen/activity_vertical_margin">
 
                     <EditText
-                            android:id="@+id/password"
+                            android:id="@+id/edt_password"
                             android:layout_width="match_parent"
                             style="@style/CustomRegularTextView"
                             android:hint="@string/prompt_password"
@@ -84,7 +84,7 @@
                 >
 
                     <EditText
-                            android:id="@+id/confirm_password"
+                            android:id="@+id/edt_confirm_password"
                             android:layout_width="match_parent"
                             style="@style/CustomRegularTextView"
                             android:hint="@string/prompt_confirm_password"

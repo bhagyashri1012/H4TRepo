@@ -10,11 +10,7 @@ import com.usit.hub4tickets.domain.api.RootResponseModel
 
 data class Response(
      val message: String?
-) : RootResponseModel() {
-
-    constructor() : this(message = null)
-}
+)
 data class Login(val device_id: String, val email: String, val password: String, val deviceFlag: Int)
-data class SignUp(val device_id: String, val email: String, val password: String, val deviceFlag: Int)
-data class SignUpResponse(val status: String?, val message: String?, val responseData: Nothing?)
+data class SignUp(val device_id: String, var email: String, var password: String, val deviceFlag: Int)
 

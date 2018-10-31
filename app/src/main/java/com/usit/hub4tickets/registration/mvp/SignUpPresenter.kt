@@ -29,6 +29,7 @@ interface SignUpPresenter : BasePresenter {
          * @return
          */
         fun doRetrieveModel(): SignUpViewModel
+
     }
 
     /**
@@ -37,4 +38,6 @@ interface SignUpPresenter : BasePresenter {
      * @param state
      */
     fun presentState(state: MainView.ViewState)
+
+    fun callAPI(signUp: String, toString: String)
 }

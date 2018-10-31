@@ -18,8 +18,10 @@ import com.usit.hub4tickets.domain.presentation.screens.main.LoginPresenterImpl
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
 import com.usit.hub4tickets.registration.ui.SignUpActivity
 import kotlinx.android.synthetic.main.activity_login.*
-
 /**
+ * Created by Bhagyashri Burade
+ * Date: 24/10/2018
+ * Email: bhagyashri.burade@usit.net.in
  * A login screen that offers login via email/password.
  */
 class LoginActivity : BaseActivity(), LoginPresenter.MainView {
@@ -144,7 +146,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
             login_progress.visibility = if (show) View.VISIBLE else View.GONE
@@ -161,6 +163,6 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
             // and hide the relevant UI components.
             login_progress.visibility = if (show) View.VISIBLE else View.GONE
             //login_form.visibility = if (show) View.GONE else View.VISIBLE
-        }
+        }*/
     }
 }
