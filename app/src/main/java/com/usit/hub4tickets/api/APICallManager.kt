@@ -89,6 +89,17 @@ class APICallManager {
             val signUp = SignUp(device_id, email, password, deviceFlag)
             return service.getRegistration(signUp)
         }
+
+
+        fun getForgotPassword(email: String): Flowable<LoginViewModel.LoginResponse> {
+            val forgotPassword = ForgotPassword(email)
+            return service.forgotPassword(forgotPassword)
+        }
+
+        fun verifyOTP(email: String, otp: String): Flowable<LoginViewModel.LoginResponse> {
+            val sentOTP = SentOTP(email,otp)
+            return service.verifyOTP(sentOTP)
+        }
     }
     //endregion
 }

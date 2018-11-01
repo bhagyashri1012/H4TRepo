@@ -49,6 +49,6 @@ class DashboardActivity : AppCompatActivity() {
         transaction.commit()
 
         //Used to select an item programmatically
-        navigation.menu.getItem(2).isChecked = true;
+        navigation.menu.getItem(2).isChecked = true
     }
 }

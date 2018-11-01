@@ -13,7 +13,7 @@ interface LoginPresenter : BasePresenter {
          * This enum is used for determine the current state of this screen
          */
         enum class ViewState {
-            IDLE, LOADING, LOAD_LOGIN, SUCCESS, ERROR,
+            IDLE, LOADING, VERIFY_OTP_SUCCESS, SUCCESS, ERROR, SEND_OTP_SUCCESS
         }
 
         /**
@@ -37,4 +37,8 @@ interface LoginPresenter : BasePresenter {
      * @param state
      */
     fun presentState(state: MainView.ViewState)
+
+    fun callAPI(toString: String, toString1: String)
+    fun callForgotPasswordAPI(toString: String)
+    fun callVerifyOTPAPI(email: String,otp: String)
 }

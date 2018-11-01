@@ -19,12 +19,15 @@ interface Service {
     @POST("users")
     fun getRegistration(@Body signUpDto: SignUp): Flowable<SignUpViewModel.SignUpResponse>
 
-    @POST("SendOTP")
-    fun sendOTP(): Flowable<Response>
+    @POST("otp")
+    fun forgotPassword(@Body signUpDto: ForgotPassword): Flowable<LoginViewModel.LoginResponse>
+
+    @POST("verify")
+    fun verifyOTP(@Body signUpDto: SentOTP): Flowable<LoginViewModel.LoginResponse>
 
     @POST("OTPValidator")
-    fun getOTPValidator(): Flowable<Response>
+    fun getOTPValidator(@Body signUpDto: ForgotPassword): Flowable<LoginViewModel.LoginResponse>
 
     @POST("ResetPassword")
-    fun resetPassword(): Flowable<Response>
+    fun resetPassword(@Body signUpDto: ForgotPassword): Flowable<LoginViewModel.LoginResponse>
 }

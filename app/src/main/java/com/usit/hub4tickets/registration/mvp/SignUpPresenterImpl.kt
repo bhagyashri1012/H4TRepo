@@ -1,10 +1,8 @@
 package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
-import android.graphics.Color
 import android.provider.Settings.Secure
 import android.util.Log
-import com.afollestad.materialdialogs.MaterialDialog
 import com.usit.hub4tickets.MainApplication
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.api.SignUpAPICallListener
@@ -14,6 +12,7 @@ import com.usit.hub4tickets.login.SignUpBaseInteractor
 import com.usit.hub4tickets.registration.ui.SignUpActivity
 import com.usit.hub4tickets.utils.Constant
 import com.usit.hub4tickets.utils.Enums
+import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 
 /**
  * Created by Bhagyashri Burade
@@ -75,12 +74,21 @@ class SignUpPresenterImpl(
     override fun onAPICallSucceed(route: Enums.APIRoute, responseModel: SignUpViewModel.SignUpResponse) = when (route) {
         Enums.APIRoute.GET_SAMPLE -> {
             mView.doRetrieveModel().signUpDomain = responseModel
-            MaterialDialog(mContext)
-                .title(text = responseModel.message)
-                .positiveButton(R.string.ok) { dialog ->
-                    presentState(SUCCESS)
-                }
-                .show()
+            CustomDialogPresenter.showDialog(mContext,
+                mContext.resources.getString(R.string.alert_success),
+                responseModel.message,
+                mContext.resources.getString(
+                    R.string.ok
+                ),
+                null,
+                object : CustomDialogPresenter.CustomDialogView {
+                    override fun onPositiveButtonClicked() {
+                        presentState(SUCCESS)
+                    }
+
+                    override fun onNegativeButtonClicked() {
+                    }
+                })
         }
     }
 

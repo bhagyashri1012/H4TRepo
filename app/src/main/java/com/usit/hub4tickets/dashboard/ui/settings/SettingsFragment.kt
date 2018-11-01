@@ -1,4 +1,4 @@
-package com.usit.hub4tickets.dashboard.ui
+package com.usit.hub4tickets.dashboard.ui.settings
 
 import android.net.Uri
 import android.os.Bundle
@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.dashboard.HorizontalAdapter
-import com.usit.hub4tickets.dashboard.ui.settings.SettingsFragment
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_settings_panel.*
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -26,28 +26,11 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class HomeFragment : Fragment() {
+class SettingsFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
-    internal var titles = arrayOf(
-        "Android",
-        "Beta",
-        "Cupcake",
-        "Donut",
-        "Eclair",
-        "Froyo",
-        "Gingerbread",
-        "Honeycomb",
-        "Ice Cream Sandwich",
-        "Jelly Bean",
-        "KitKat",
-        "Lollipop",
-        "Marshmallow",
-        "Nougat",
-        "Oreo"
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,23 +47,13 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_settings_panel, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val firstAdapter = HorizontalAdapter(titles)
-        val firstRecyclerView = view.findViewById(R.id.recycler_view) as MultiSnapRecyclerView
-        val firstManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        firstRecyclerView.layoutManager = firstManager
-        firstRecyclerView.adapter = firstAdapter
 
-        imv_settings.setOnClickListener {
-
-            val transaction = fragmentManager?.beginTransaction()
-            transaction?.replace(R.id.frame_layout_settings, SettingsFragment.newInstance()!!)
-            transaction?.commit()
-        }
+        cancel_button.setOnClickListener {  activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit(); }
     }
 
     fun onButtonPressed(uri: Uri) {
@@ -100,7 +73,7 @@ class HomeFragment : Fragment() {
     companion object {
         @JvmStatic
         fun newInstance() =
-            HomeFragment().apply {
+            SettingsFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
