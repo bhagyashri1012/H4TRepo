@@ -41,4 +41,5 @@ interface LoginPresenter : BasePresenter {
     fun callAPI(toString: String, toString1: String)
     fun callForgotPasswordAPI(toString: String)
     fun callVerifyOTPAPI(email: String,otp: String)
+    fun callResetPassword(email: String,newPassword: String)
 }

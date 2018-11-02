@@ -24,6 +24,7 @@ import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Context) : LoginPresenter,
     LoginAPICallListener {
 
+
     private val mContext = context
 
     private val loginInteractor: LoginBaseInteractor =
@@ -134,5 +135,17 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
                     mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
+    }
+
+    override fun callResetPassword(email: String, newPassword: String) {
+        if (MainApplication.getInstance.isConnected()) {
+            presentState(LOADING)
+            loginInteractor.callAPIResetPassword(email, newPassword)
+        } else {
+            mView.doRetrieveModel().errorMessage =
+                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            presentState(ERROR)
+        }
+
     }
 }

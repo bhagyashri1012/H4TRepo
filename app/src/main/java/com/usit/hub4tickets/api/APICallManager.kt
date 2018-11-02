@@ -71,25 +71,30 @@ class APICallManager {
     }
 
     // region Service Managers
-    /**
-     * A sample API manager.
-     * TODO: Replace this with your own API manager class
-     */
     inner class APIManager {
         private val service by lazy {
             getService(Service::class.java)
         }
 
-        fun getLogin(device_id: String, email: String, password: String, deviceFlag: Int): Flowable<LoginViewModel.LoginResponse> {
+        fun getLogin(
+            device_id: String,
+            email: String,
+            password: String,
+            deviceFlag: Int
+        ): Flowable<LoginViewModel.LoginResponse> {
             val login = Login(device_id, email, password, deviceFlag)
             return service.getLogin(login)
         }
 
-        fun getSignUp(device_id: String, email: String, password: String, deviceFlag: Int): Flowable<SignUpViewModel.SignUpResponse> {
+        fun getSignUp(
+            device_id: String,
+            email: String,
+            password: String,
+            deviceFlag: Int
+        ): Flowable<SignUpViewModel.SignUpResponse> {
             val signUp = SignUp(device_id, email, password, deviceFlag)
             return service.getRegistration(signUp)
         }
-
 
         fun getForgotPassword(email: String): Flowable<LoginViewModel.LoginResponse> {
             val forgotPassword = ForgotPassword(email)
@@ -97,8 +102,13 @@ class APICallManager {
         }
 
         fun verifyOTP(email: String, otp: String): Flowable<LoginViewModel.LoginResponse> {
-            val sentOTP = SentOTP(email,otp)
+            val sentOTP = SentOTP(email, otp)
             return service.verifyOTP(sentOTP)
+        }
+
+        fun resetPassword(email: String, newPass: String): Flowable<LoginViewModel.LoginResponse> {
+            val resetPassword = ResetPassword(email, newPass)
+            return service.resetPassword(resetPassword)
         }
     }
     //endregion

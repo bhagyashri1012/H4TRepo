@@ -13,6 +13,7 @@ import com.usit.hub4tickets.dashboard.HorizontalAdapter
 import com.usit.hub4tickets.dashboard.ui.settings.SettingsFragment
 import kotlinx.android.synthetic.main.fragment_home.*
 
+
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -55,8 +56,6 @@ class HomeFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
-
     }
 
     override fun onCreateView(

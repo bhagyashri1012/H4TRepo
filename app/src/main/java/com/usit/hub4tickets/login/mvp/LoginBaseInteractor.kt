@@ -44,7 +44,21 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
 
     fun callAPIVerifyOTP(email: String, otp: String) {
         val route = Enums.APIRoute.GET_SAMPLE
-        val call = APICallManager.getInstance.apiManager.verifyOTP(email,otp)
+        val call = APICallManager.getInstance.apiManager.verifyOTP(email, otp)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+        call.subscribe(
+            { response ->
+                listener.onVerifyOtpAPICallSucceed(route, response)
+            },
+            { error ->
+                listener.onAPICallFailed(route, error)
+            })
+    }
+
+    fun callAPIResetPassword(email: String, newPassword: String) {
+        val route = Enums.APIRoute.GET_SAMPLE
+        val call = APICallManager.getInstance.apiManager.resetPassword(email, newPassword)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
         call.subscribe(
