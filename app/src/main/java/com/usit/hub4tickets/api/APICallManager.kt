@@ -1,6 +1,7 @@
 package com.usit.hub4tickets.domain.api
 
 import com.usit.hub4tickets.BuildConfig
+import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.api.sample.*
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
@@ -101,15 +102,73 @@ class APICallManager {
             return service.forgotPassword(forgotPassword)
         }
 
-        fun verifyOTP(email: String, otp: String): Flowable<LoginViewModel.LoginResponse> {
-            val sentOTP = SentOTP(email, otp)
-            return service.verifyOTP(sentOTP)
+        fun verifyOTP(device_id: String, email: String, otp: String): Flowable<LoginViewModel.LoginResponse> {
+            val verifyOTP = VerifyOTP(device_id, email, otp)
+            return service.verifyOTP(verifyOTP)
         }
 
-        fun resetPassword(email: String, newPass: String): Flowable<LoginViewModel.LoginResponse> {
-            val resetPassword = ResetPassword(email, newPass)
+        fun resetPassword(device_id: String, email: String, newPass: String): Flowable<LoginViewModel.LoginResponse> {
+            val resetPassword = ResetPassword(device_id, email, newPass)
             return service.resetPassword(resetPassword)
         }
+
+        fun getCountries(): Flowable<DashboardViewModel.CountriesResponse> {
+            return service.getCountries()
+        }
+
+        fun getLanguages(): Flowable<DashboardViewModel.LanguageResponse> {
+            return service.getLangauges()
+        }
+
+        fun getCurrencies(): Flowable<DashboardViewModel.CurrencyResponse> {
+            return service.getCurrencies()
+        }
+
+        fun getStates(): Flowable<DashboardViewModel.CountriesResponse> {
+            return service.getStates()
+        }
+
+        fun getCities(): Flowable<DashboardViewModel.CountriesResponse> {
+            return service.getCities()
+        }
+
+        fun getSettingsData(userId: String, device_id: String): Flowable<DashboardViewModel.CountriesResponse> {
+            val settingsData = SettingsData(userId, device_id)
+            return service.settingsData(settingsData)
+        }
+
+        fun getSaveSettingsData(
+            userId: String,
+            device_id: String,
+            countryId: String,
+            currencyId: String,
+            langId: String
+        ): Flowable<DashboardViewModel.CountriesResponse> {
+            val saveSettingsData = SaveSettingsData(userId, device_id, countryId, currencyId, langId)
+            return service.saveSettingsData(saveSettingsData)
+        }
+
+        fun getChangePassword(
+            userId: String,
+            device_id: String,
+            pass: String,
+            newPass: String
+        ): Flowable<DashboardViewModel.CountriesResponse> {
+            val chngData = ChangePassword(device_id, userId, pass, newPass)
+            return service.changePassword(chngData)
+        }
+
+
+        fun getProfileData(userId: String, device_id: String): Flowable<DashboardViewModel.CountriesResponse> {
+            val profData = ProfileData(userId, device_id)
+            return service.getProfileData(profData)
+        }
+
+        fun updateProfileData(userId: String, device_id: String): Flowable<DashboardViewModel.CountriesResponse> {
+            val settingsData = SettingsData(userId, device_id)
+            return service.settingsData(settingsData)
+        }
     }
+
     //endregion
 }

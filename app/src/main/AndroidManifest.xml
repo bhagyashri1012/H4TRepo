@@ -56,11 +56,17 @@
                 android:theme="@style/NoActionBarAppTheme"
                 android:windowSoftInputMode="stateHidden">
         </activity>
-        <activity android:name=".dashboard.ui.AlertsActivity"
-                  android:configChanges="orientation|keyboardHidden|screenSize"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/NoActionBarAppTheme"
-                  android:windowSoftInputMode="stateHidden|adjustPan"
+        <activity
+                android:name=".dashboard.ui.AlertsActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:screenOrientation="portrait"
+                android:theme="@style/NoActionBarAppTheme"
+                android:windowSoftInputMode="stateHidden|adjustPan">
+        </activity>
+        <activity
+                android:name=".flight.MainFlightActivity"
+                android:label="@string/title_activity_flight"
+                android:theme="@style/NoActionBarAppTheme"
         >
         </activity>
     </application>

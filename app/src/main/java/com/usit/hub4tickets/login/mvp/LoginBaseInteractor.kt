@@ -42,9 +42,9 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
             })
     }
 
-    fun callAPIVerifyOTP(email: String, otp: String) {
+    fun callAPIVerifyOTP(device_id: String, email: String, otp: String) {
         val route = Enums.APIRoute.GET_SAMPLE
-        val call = APICallManager.getInstance.apiManager.verifyOTP(email, otp)
+        val call = APICallManager.getInstance.apiManager.verifyOTP(device_id, email, otp)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
         call.subscribe(
@@ -56,9 +56,9 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
             })
     }
 
-    fun callAPIResetPassword(email: String, newPassword: String) {
+    fun callAPIResetPassword(device_id: String, email: String, newPassword: String) {
         val route = Enums.APIRoute.GET_SAMPLE
-        val call = APICallManager.getInstance.apiManager.resetPassword(email, newPassword)
+        val call = APICallManager.getInstance.apiManager.resetPassword(device_id, email, newPassword)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
         call.subscribe(

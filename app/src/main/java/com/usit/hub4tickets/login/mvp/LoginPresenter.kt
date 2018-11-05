@@ -38,8 +38,8 @@ interface LoginPresenter : BasePresenter {
      */
     fun presentState(state: MainView.ViewState)
 
-    fun callAPI(toString: String, toString1: String)
+    fun callAPI(deviceId: String,email: String, password: String)
     fun callForgotPasswordAPI(toString: String)
-    fun callVerifyOTPAPI(email: String,otp: String)
-    fun callResetPassword(email: String,newPassword: String)
+    fun callVerifyOTPAPI(deviceId: String,email: String, otp: String)
+    fun callResetPassword(deviceId: String, email: String, newPassword: String)
 }

@@ -29,10 +29,6 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
 
     private val loginInteractor: LoginBaseInteractor =
         LoginBaseInteractor(this)
-    val deviceId: String = Settings.Secure.getString(
-        context.contentResolver,
-        Settings.Secure.ANDROID_ID
-    )
 
     override fun presentState(state: LoginPresenter.MainView.ViewState) {
         // user state logging
@@ -99,7 +95,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
         presentState(VERIFY_OTP_SUCCESS)
     }
 
-    override fun callAPI(email: String, password: String) {
+    override fun callAPI(deviceId: String,email: String, password: String) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
             loginInteractor.callAPIGetLogin(
@@ -126,10 +122,10 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
         }
     }
 
-    override fun callVerifyOTPAPI(email: String, otp: String) {
+    override fun callVerifyOTPAPI(deviceId: String, email: String, otp: String) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
-            loginInteractor.callAPIVerifyOTP(email, otp)
+            loginInteractor.callAPIVerifyOTP(deviceId,email, otp)
         } else {
             mView.doRetrieveModel().errorMessage =
                     mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
@@ -137,10 +133,10 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
         }
     }
 
-    override fun callResetPassword(email: String, newPassword: String) {
+    override fun callResetPassword(deviceId: String, email: String, newPassword: String) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
-            loginInteractor.callAPIResetPassword(email, newPassword)
+            loginInteractor.callAPIResetPassword(deviceId, email, newPassword)
         } else {
             mView.doRetrieveModel().errorMessage =
                     mView.doRetrieveModel().context?.getString(R.string.message_no_internet)

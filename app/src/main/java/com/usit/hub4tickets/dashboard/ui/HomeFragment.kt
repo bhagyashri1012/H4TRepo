@@ -1,5 +1,6 @@
 package com.usit.hub4tickets.dashboard.ui
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -11,6 +12,7 @@ import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.dashboard.HorizontalAdapter
 import com.usit.hub4tickets.dashboard.ui.settings.SettingsFragment
+import com.usit.hub4tickets.flight.MainFlightActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
@@ -79,6 +81,11 @@ class HomeFragment : Fragment() {
             val transaction = fragmentManager?.beginTransaction()
             transaction?.replace(R.id.frame_layout_settings, SettingsFragment.newInstance()!!)
             transaction?.commit()
+        }
+
+        ll_flight.setOnClickListener {
+            val intent = Intent(context, MainFlightActivity::class.java)
+            startActivity(intent)
         }
     }
 

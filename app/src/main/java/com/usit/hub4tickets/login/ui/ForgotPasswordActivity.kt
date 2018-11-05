@@ -99,7 +99,7 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
             focusView = edt_password
             cancel = true
         }
-        if(!passwordStr.equals(confirmPasswordStr)) {
+        if (!passwordStr.equals(confirmPasswordStr)) {
             edt_password.error = getString(R.string.error_not_match_password)
             focusView = edt_password
             cancel = false;
@@ -112,7 +112,11 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true)
-            presenter.callResetPassword(edt_current_password.text.toString(), edt_password.text.toString())
+            presenter.callResetPassword(
+                Utility.getDeviceId(this),
+                edt_current_password.text.toString(),
+                edt_password.text.toString()
+            )
         }
     }
 
@@ -126,7 +130,7 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
         val dialogView = inflater.inflate(R.layout.verify_otp_dialog, null)
         dialogView.button_verify.setOnClickListener {
             val otp = dialogView.editTextEnterOtp.text.toString()
-            presenter.callVerifyOTPAPI(email, otp)
+            presenter.callVerifyOTPAPI(Utility.getDeviceId(this), email, otp)
         }
         dialogView.button_cancel.setOnClickListener {
             dialogBuilder.dismiss()
@@ -142,7 +146,7 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
         val dialogView = inflater.inflate(R.layout.forgot_password_dialog, null)
         dialogView.button_chng_password.setOnClickListener {
             val newPassword = dialogView.edt_password.text.toString()
-            presenter.callResetPassword(email, newPassword)
+            presenter.callResetPassword(Utility.getDeviceId(this), email, newPassword)
         }
         dialogView.button_cancel1.setOnClickListener {
             dialogBuilder.dismiss()

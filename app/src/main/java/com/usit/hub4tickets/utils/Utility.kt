@@ -11,6 +11,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import android.text.Spannable
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
@@ -607,4 +608,11 @@ object Utility {
         textView.setText(spannable, TextView.BufferType.SPANNABLE)
     }
 
+    fun getDeviceId(context: Context): String {
+        val deviceId: String = Settings.Secure.getString(
+            context.contentResolver,
+            Settings.Secure.ANDROID_ID
+        )
+        return deviceId
+    }
 }

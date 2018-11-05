@@ -1,6 +1,8 @@
 package com.usit.hub4tickets.dashboard.model
 
 import android.content.Context
+import com.google.gson.annotations.SerializedName
+
 
 
 /**
@@ -15,6 +17,29 @@ class DashboardViewModel(var context: Context?) {
 
     var dashboradLangDomain: DashboardViewModel.LanguageResponse =
         DashboardViewModel.LanguageResponse(languageData = null, message = null, status = null)
+
+    var dashboradCurrencyDomain: DashboardViewModel.CurrencyResponse =
+        DashboardViewModel.CurrencyResponse(currencyData = null, message = null, status = null)
+
+    data class CurrencyResponse(
+        @SerializedName("currencyData")
+        val currencyData: List<CurrencyData>?,
+        @SerializedName("message")
+        val message: String?,
+        @SerializedName("status")
+        val status: Int?
+) {
+    data class CurrencyData(
+        @SerializedName("currencyCode")
+        val currencyCode: String,
+        @SerializedName("currencyId")
+        val currencyId: String,
+        @SerializedName("currencyName")
+        val currencyName: String,
+        @SerializedName("currencySymbol")
+        val currencySymbol: String
+    )
+}
 
     data class CountriesResponse(
         val countryData: List<CountryData>?,
@@ -39,4 +64,8 @@ class DashboardViewModel(var context: Context?) {
         val languageId: String,
         val languageName: String
     )
+
+
 }
+
+

@@ -59,6 +59,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
         else
             Utility.hideProgressBar()
     }
+
     private fun init() {
         this.model = LoginViewModel(this)
         this.presenter = LoginPresenterImpl(this, this)
@@ -133,7 +134,11 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
             // perform the user login attempt.
             showProgress(true)
             // load data from API,
-            presenter.callAPI(edt_email_login.text.toString(), edt_password_login.text.toString())
+            presenter.callAPI(
+                Utility.getDeviceId(this),
+                edt_email_login.text.toString(),
+                edt_password_login.text.toString()
+            )
         }
     }
 

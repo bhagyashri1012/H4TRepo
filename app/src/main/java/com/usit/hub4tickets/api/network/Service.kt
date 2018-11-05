@@ -18,14 +18,14 @@ interface Service {
     @POST("login")
     fun getLogin(@Body loginDto: Login): Flowable<LoginViewModel.LoginResponse>
 
-    @POST("users")
+    @POST("registeruser")
     fun getRegistration(@Body signUpDto: SignUp): Flowable<SignUpViewModel.SignUpResponse>
 
     @POST("otp")
     fun forgotPassword(@Body signUpDto: ForgotPassword): Flowable<LoginViewModel.LoginResponse>
 
     @POST("otp/verify")
-    fun verifyOTP(@Body signUpDto: SentOTP): Flowable<LoginViewModel.LoginResponse>
+    fun verifyOTP(@Body signUpDto: VerifyOTP): Flowable<LoginViewModel.LoginResponse>
 
     @POST("resetpassword")
     fun resetPassword(@Body resetPasswordDto: ResetPassword): Flowable<LoginViewModel.LoginResponse>
@@ -37,12 +37,27 @@ interface Service {
     fun getLangauges(): Flowable<DashboardViewModel.LanguageResponse>
 
     @GET("currencies")
-    fun getCurrencies(): Flowable<DashboardViewModel.CountriesResponse>
+    fun getCurrencies(): Flowable<DashboardViewModel.CurrencyResponse>
 
-    @GET("states")
+    @POST("states")
     fun getStates(): Flowable<DashboardViewModel.CountriesResponse>
 
-    @GET("cities")
+    @POST("cities")
     fun getCities(): Flowable<DashboardViewModel.CountriesResponse>
+
+    @POST("settingdata")
+    fun settingsData(@Body settingsData: SettingsData): Flowable<DashboardViewModel.CountriesResponse>
+
+    @POST("savesettingdata")
+    fun saveSettingsData(@Body settingsData: SaveSettingsData): Flowable<DashboardViewModel.CountriesResponse>
+
+    @POST("changepassword")
+    fun changePassword(@Body changePasswordDto: ChangePassword): Flowable<DashboardViewModel.CountriesResponse>
+
+    @POST("getprofile")
+    fun getProfileData(@Body profileData: ProfileData): Flowable<DashboardViewModel.CountriesResponse>
+
+    @POST("updateprofile")
+    fun updateProfileData(@Body updateProfileData: UpdateProfileData): Flowable<DashboardViewModel.CountriesResponse>
 
 }
