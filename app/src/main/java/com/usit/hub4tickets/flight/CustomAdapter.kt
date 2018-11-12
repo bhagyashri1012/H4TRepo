@@ -15,19 +15,14 @@ import java.util.*
  */
 
 
-class CustomAdapter(data: ArrayList<*>, private var mContext: Context) :
+class CustomAdapter(data: ArrayList<*>, private var mContext: Context?) :
     ArrayAdapter<Any>(mContext, R.layout.row_item, data) {
 
-    private val dataSet: ArrayList<String>
+    private val dataSet: ArrayList<String> = data as ArrayList<String>
 
     // View lookup cache
     private class ViewHolder {
         internal var txtName: TextView? = null
-
-    }
-
-    init {
-        this.dataSet = data as ArrayList<String>
 
     }
 

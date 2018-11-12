@@ -67,7 +67,8 @@
                 android:name=".flight.MainFlightActivity"
                 android:label="@string/title_activity_flight"
                 android:theme="@style/NoActionBarAppTheme"
-        >
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
     </application>
 

@@ -71,50 +71,33 @@
     <string name="direct">Direct</string>
     <string name="n_scales">%d scales</string>
     <string name="via_agent">via %s</string>
+    <string name="one_adult">1 Adult, 1 Child , 1 Infants</string>
+    <string name="first_class">First Class</string>
+    <string name="filter">Filter</string>
+    <string name="sort">Sort</string>
+    <string name="sort_by">Sort By</string>
     <string-array name="tab_A">
-        <item>Item 1A</item>
-        <item>Item 1B</item>
-        <item>Item 1C</item>
-        <item>Item 1D</item>
-        <item>Item 1E</item>
-        <item>Item 1F</item>
-        <item>Item 1G</item>
-        <item>Item 1H</item>
-        <item>Item 1I</item>
-        <item>Item 1J</item>
-        <item>Item 1K</item>
-        <item>Item 1L</item>
-        <item>Item 1M</item>
-        <item>Item 1N</item>
-        <item>Item 1O</item>
-        <item>Item 1P</item>
-        <item>Item 1Q</item>
-        <item>Item 1R</item>
-        <item>Item 1S</item>
-        <item>Item 1T</item>
+        <item>$600</item>
+        <item>$2200</item>
+        <item>$800</item>
+        <item>$600</item>
+        <item>$900</item>
+        <item>$600</item>
+        <item>$700</item>
+        <item>$6700</item>
+        <item>$6400</item>
     </string-array>
 
     <string-array name="tab_B">
-        <item>Item 2A</item>
-        <item>Item 2B</item>
-        <item>Item 2C</item>
-        <item>Item 2D</item>
-        <item>Item 2E</item>
-        <item>Item 2F</item>
-        <item>Item 2G</item>
-        <item>Item 2H</item>
-        <item>Item 2I</item>
-        <item>Item 2J</item>
-        <item>Item 2K</item>
-        <item>Item 2L</item>
-        <item>Item 2M</item>
-        <item>Item 2N</item>
-        <item>Item 2O</item>
-        <item>Item 2P</item>
-        <item>Item 2Q</item>
-        <item>Item 2R</item>
-        <item>Item 2S</item>
-        <item>Item 2T</item>
+        <item>$600</item>
+        <item>$2200</item>
+        <item>$800</item>
+        <item>$600</item>
+        <item>$900</item>
+        <item>$600</item>
+        <item>$700</item>
+        <item>$6700</item>
+        <item>$6400</item>
     </string-array>
 
     <string-array name="tab_C">

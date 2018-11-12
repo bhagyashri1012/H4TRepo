@@ -6,12 +6,8 @@ import android.widget.TextView
 import com.usit.hub4tickets.R
 
 class TextItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val textView: TextView
+    private val textView: TextView = itemView.findViewById(R.id.list_item) as TextView
 
-
-    init {
-        textView = itemView.findViewById(R.id.list_item) as TextView
-    }
 
     fun bind(text: String) {
         textView.text = text

@@ -6,10 +6,6 @@ package com.usit.hub4tickets.domain.api.sample
  * Email: bhagyashri.burade@usit.net.in
  */
 
-data class Response(
-    val message: String?
-)
-
 data class Login(val deviceId: String, val email: String, val password: String, val deviceType: Int)
 data class SignUp(val deviceId: String, var email: String, var password: String, val deviceType: Int)
 data class ForgotPassword(var email: String)

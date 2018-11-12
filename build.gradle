@@ -16,11 +16,17 @@ buildscript {
 
 }
 
+
+
 allprojects {
     repositories {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
+    }
+
+    ext {
+        glideVersion = "3.7.0"
     }
 }
 

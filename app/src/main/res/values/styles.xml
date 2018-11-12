@@ -72,6 +72,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textStyle">bold</item>
     </style>
+    <style name="CustomLargeBoldDialogHeader">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size_18dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+    </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -79,7 +86,17 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-
+    <style name="CustomRegularEditText">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size_14dp</item>
+        <item name="android:textColorHint">@color/warm_grey</item>
+        <item name="android:background">@drawable/grey_border</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
     <style name="TabStyle" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">@color/colorPrimary</item>
         <item name="tabIndicatorHeight">5dp</item>

@@ -19,11 +19,11 @@ class ViewPagerAdapter(
     override fun getItem(position: Int): Fragment? {
         var fragment: Fragment? = null
         if (position == 0) {
-            fragment = FragmentA()
+            fragment = FragmentReturn()
         } else if (position == 1) {
-            fragment = FragmentB()
+            fragment = FragmentOneWay()
         } else if (position == 2) {
-            fragment = FragmentC()
+            fragment = FragmentMultiCity()
         }
         return fragment
     }

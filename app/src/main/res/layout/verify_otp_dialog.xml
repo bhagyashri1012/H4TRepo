@@ -7,8 +7,7 @@
               android:layout_height="wrap_content">
     <TextView
             android:text="@string/two_step_verification"
-            style="@style/CustomLargeTextView"
-            android:textStyle="bold"
+            style="@style/CustomLargeBoldDialogHeader"
             android:id="@+id/textView"/>
     <TextView
             android:text="@string/enter_your_code"
@@ -25,9 +24,8 @@
             android:id="@+id/editTextEnterOtp"/>
     <TextView
             android:text="@string/resend_otp"
-            style="@style/CustomLargeTextView"
+            style="@style/CustomLargeBoldDialogHeader"
             android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:id="@+id/button"/>
    <LinearLayout

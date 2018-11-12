@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import com.usit.hub4tickets.R
 
 
-class FragmentC : Fragment() {
+class FragmentMultiCity : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
 

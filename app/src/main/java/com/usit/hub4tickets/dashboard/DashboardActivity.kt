@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_dashboard.*
  */
 class DashboardActivity : AppCompatActivity() {
 
-    private var selectedFragment: Fragment ?= null
+    private var selectedFragment: Fragment? = null
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
         when (item.itemId) {
@@ -40,15 +40,32 @@ class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
+        if (intent.extras != null) {
+            when (intent.extras.get("SCREEN_NAME")) {
+                "home" -> loadFragment(HomeFragment.newInstance())
+                "account" -> loadFragment(ProfileFragment.newInstance())
+                "help" -> loadFragment(HelpFragment.newInstance())
+
+            }
+        } else
+            loadFragment(HomeFragment.newInstance())
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        //Manually displaying the first fragment - one time only
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.frame_layout, HomeFragment.newInstance())
-        transaction.commit()
+    }
 
-        //Used to select an item programmatically
-        navigation.menu.getItem(2).isChecked = true
+    private fun loadFragment(fragment: Fragment) {
+        // load fragment
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.frame_layout, fragment)
+        transaction.commit()
+    }
+
+    override fun onBackPressed() {
+        if (navigation.selectedItemId === R.id.navigation_home) {
+            super.onBackPressed()
+        } else {
+            navigation.selectedItemId = R.id.navigation_home
+        }
     }
 }
