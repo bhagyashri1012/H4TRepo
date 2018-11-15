@@ -8,23 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.flight.ui.FlightMainFragment
 import com.usit.hub4tickets.login.ui.LoginActivity
+import com.usit.hub4tickets.profile.AccountInfoFragment
+import com.usit.hub4tickets.utils.Pref
+import com.usit.hub4tickets.utils.PrefConstants
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [ProfileFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class ProfileFragment : Fragment() {
 
     private var listener: OnFragmentInteractionListener? = null
@@ -38,15 +29,18 @@ class ProfileFragment : Fragment() {
 
         view.link_my_alerts.setOnClickListener {
             val intent = Intent(context, AlertsActivity::class.java)
-            startActivity(intent) }
+            startActivity(intent)
+        }
 
         view.link_my_history.setOnClickListener {
             val intent = Intent(context, AlertsActivity::class.java)
-            startActivity(intent) }
+            startActivity(intent)
+        }
 
         view.link_clear_history.setOnClickListener {
             val intent = Intent(context, AlertsActivity::class.java)
-            startActivity(intent) }
+            startActivity(intent)
+        }
     }
 
     override fun onCreateView(
@@ -57,10 +51,31 @@ class ProfileFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        if (Pref.getValue(context, PrefConstants.IS_LOGIN, false)) {
+            rl_my_acc_info.visibility = View.VISIBLE
+            link_login.visibility = View.GONE
+        } else {
+            link_login.visibility = View.VISIBLE
+            rl_my_acc_info.visibility = View.GONE
+        }
+        link_account_info.setOnClickListener {
+            initScreen()
+        }
+    }
+
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
 
+    private var flihtMainFrag: AccountInfoFragment? = null
+
+    private fun initScreen() {
+        flihtMainFrag = AccountInfoFragment()
+        val fragmentManager = activity?.supportFragmentManager
+        fragmentManager?.beginTransaction()?.replace(R.id.container_flight, flihtMainFrag!!)?.commit()
+    }
 
     interface OnFragmentInteractionListener {
         fun onFragmentInteraction(uri: Uri)

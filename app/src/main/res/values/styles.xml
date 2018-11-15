@@ -28,7 +28,16 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:padding">@dimen/padding_8dp</item>
     </style>
-
+    <style name="CustomButtonGreen" parent="Base.Widget.AppCompat.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/rounded_button_green</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/min_button_height</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:padding">@dimen/padding_8dp</item>
+    </style>
     <style name="TextAppearance.TextInputLayout.Black" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_16dp</item>
@@ -41,6 +50,7 @@
         <item name="android:textSize">@dimen/text_size_20dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="CustomMediumTextView">
@@ -49,6 +59,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:imeOptions">actionNext</item>
+        <item name="android:ellipsize">end</item>
+
     </style>
     <style name="CustomRegularTextView">
         <item name="android:textColor">@color/black</item>
@@ -56,6 +68,15 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:imeOptions">actionNext</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="WhiteRegularTextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_size_14dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:ellipsize">end</item>
     </style>
     <style name="CustomSmallTextView">
         <item name="android:textColor">@color/black</item>
@@ -63,6 +84,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:imeOptions">actionNext</item>
+        <item name="android:ellipsize">end</item>
+
     </style>
 
     <style name="CustomLargeBoldTextView">
@@ -71,6 +94,15 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="CustomRegularBoldTextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size_14dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:ellipsize">end</item>
     </style>
     <style name="CustomLargeBoldDialogHeader">
         <item name="android:textColor">@color/black</item>
@@ -78,6 +110,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:ellipsize">end</item>
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

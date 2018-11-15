@@ -1,4 +1,4 @@
-package com.usit.hub4tickets.flight
+package com.usit.hub4tickets.flight.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".1"
+        android:layout_marginRight="@dimen/margin_16dp"
+        android:layout_marginLeft="@dimen/margin_16dp"
+        android:layout_marginTop="@dimen/margin_16dp" android:orientation="vertical">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_4dp"
+            android:orientation="horizontal"
+            android:weightSum="2"
+    >
+
+        <TextView style="@style/CustomRegularBoldTextView"
+                  android:text="Air India"
+                  android:layout_marginBottom="@dimen/margin_4dp"
+                  android:maxLines="2"
+                  android:layout_weight="1"
+        />
+        <TextView
+                android:id="@+id/list_item"
+                style="@style/CustomRegularTextView"
+                android:text="$3400"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:maxLines="2"
+        />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_4dp"
+            android:orientation="vertical"
+            android:weightSum="2"
+    >
+        <RatingBar
+                android:id="@+id/myRatingBar"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_4dp"
+                android:progressTint="@color/sand_two"
+                android:numStars="5"
+                android:rating="3.5"
+                android:isIndicator="false"/>
+        <TextView style="@style/CustomRegularBoldTextView"
+                  android:text="250"
+                  android:maxLines="2"
+                  android:layout_weight="1"
+        />
+
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_4dp"
+            android:orientation="horizontal"
+            android:weightSum="2"
+    >
+
+        <TextView style="@style/CustomRegularTextView"
+                  android:text="The purpose of select tickets Air India"
+                  android:maxLines="2"
+                  android:layout_gravity="center_vertical"
+                  android:layout_weight="1.5"
+        />
+        <Button android:id="@+id/btn_continue_booking"
+                style="@style/CustomButtonGreen"
+                android:text="@string/visit_site"
+                android:layout_weight=".5"
+                android:layout_gravity="right|center_vertical"
+        />
+    </LinearLayout>
+    <View
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@color/cool_grey"/>
+</LinearLayout>

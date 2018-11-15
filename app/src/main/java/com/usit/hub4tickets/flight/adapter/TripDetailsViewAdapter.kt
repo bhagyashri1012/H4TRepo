@@ -1,8 +1,7 @@
-package com.usit.hub4tickets.flight
+package com.usit.hub4tickets.flight.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
 
@@ -10,10 +9,10 @@ import com.usit.hub4tickets.R
  * Created by anupamchugh on 05/10/16.
  */
 
-class OneWayRecyclerViewAdapter(internal var items: Array<String>) : RecyclerView.Adapter<TextItemViewHolder>() {
+class TripDetailsViewAdapter(private var items: Array<String>) : RecyclerView.Adapter<TextItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TextItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_one_way_list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_trip_details_list_item, parent, false)
         return TextItemViewHolder(view)
     }
 

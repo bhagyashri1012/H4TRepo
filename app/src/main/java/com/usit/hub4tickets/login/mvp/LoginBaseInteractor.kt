@@ -1,5 +1,6 @@
 package com.usit.hub4tickets.login
 
+import com.usit.hub4tickets.api.network.ErrorResponse
 import com.usit.hub4tickets.domain.api.APICallManager
 import com.usit.hub4tickets.domain.api.LoginAPICallListener
 import com.usit.hub4tickets.presentation.presenters.BaseInteractor
@@ -24,21 +25,21 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
                 listener.onAPICallSucceed(route, response)
             },
             { error ->
-                listener.onAPICallFailed(route, error)
+                listener.onAPICallFailed(route, ErrorResponse.parseError(error))
             })
     }
 
-    fun callAPIForgotPassword(email: String) {
+    fun callSendOtpAPI(deviceId: String, email: String) {
         val route = Enums.APIRoute.GET_SAMPLE
-        val call = APICallManager.getInstance.apiManager.getForgotPassword(email)
+        val call = APICallManager.getInstance.apiManager.sendOtp(deviceId, email)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
         call.subscribe(
             { response ->
-                listener.onForgotPasswordAPICallSucceed(route, response)
+                listener.onSentOtpAPICallSucceed(route, response)
             },
             { error ->
-                listener.onAPICallFailed(route, error)
+                listener.onAPICallFailed(route, ErrorResponse.parseError(error))
             })
     }
 
@@ -52,7 +53,7 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
                 listener.onVerifyOtpAPICallSucceed(route, response)
             },
             { error ->
-                listener.onAPICallFailed(route, error)
+                listener.onAPICallFailed(route, ErrorResponse.parseError(error))
             })
     }
 
@@ -63,10 +64,10 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
             .observeOn(AndroidSchedulers.mainThread())
         call.subscribe(
             { response ->
-                listener.onVerifyOtpAPICallSucceed(route, response)
+                listener.onChangePasswordAPICallSucceed(route, response)
             },
             { error ->
-                listener.onAPICallFailed(route, error)
+                listener.onAPICallFailed(route, ErrorResponse.parseError(error))
             })
     }
 

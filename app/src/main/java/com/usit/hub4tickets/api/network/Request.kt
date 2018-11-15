@@ -8,7 +8,7 @@ package com.usit.hub4tickets.domain.api.sample
 
 data class Login(val deviceId: String, val email: String, val password: String, val deviceType: Int)
 data class SignUp(val deviceId: String, var email: String, var password: String, val deviceType: Int)
-data class ForgotPassword(var email: String)
+data class ForgotPassword(val deviceId: String,var email: String)
 data class VerifyOTP(val deviceId: String, var email: String, var otp: String)
 data class ResetPassword(val deviceId: String, var email: String, var password: String)
 data class SettingsData(val deviceId: String, var userId: String)

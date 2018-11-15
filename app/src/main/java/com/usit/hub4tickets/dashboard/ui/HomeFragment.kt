@@ -12,7 +12,7 @@ import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.dashboard.HorizontalAdapter
 import com.usit.hub4tickets.dashboard.ui.settings.SettingsFragment
-import com.usit.hub4tickets.flight.MainFlightActivity
+import com.usit.hub4tickets.flight.ui.MainFlightActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 
 

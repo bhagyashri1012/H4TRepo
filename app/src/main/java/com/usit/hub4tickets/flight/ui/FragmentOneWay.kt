@@ -1,4 +1,4 @@
-package com.usit.hub4tickets.flight
+package com.usit.hub4tickets.flight.ui
 
 
 import android.os.Bundle
@@ -10,9 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.flight.adapter.OneWayRecyclerViewAdapter
 import kotlinx.android.synthetic.main.search_layout.*
 import kotlinx.android.synthetic.main.sort_by_dialog.view.*
-import kotlinx.android.synthetic.main.verify_otp_dialog.view.*
 
 class FragmentOneWay : Fragment() {
 

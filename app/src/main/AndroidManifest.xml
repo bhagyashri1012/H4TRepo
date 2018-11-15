@@ -64,11 +64,20 @@
                 android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
         <activity
-                android:name=".flight.MainFlightActivity"
-                android:label="@string/title_activity_flight"
-                android:theme="@style/NoActionBarAppTheme"
+                android:name=".flight.ui.MainFlightActivity"
                 android:screenOrientation="portrait"
+                android:theme="@style/NoActionBarAppTheme"
                 android:windowSoftInputMode="stateHidden|adjustPan">
+        </activity>
+        <activity
+                android:name=".flight.ui.TripDetailsActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/NoActionBarAppTheme"
+                android:windowSoftInputMode="stateHidden|adjustPan">
+        </activity>
+        <activity android:name=".flight.ui.TripProvidersListActivity" android:screenOrientation="portrait"
+                  android:theme="@style/NoActionBarAppTheme"
+                  android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
     </application>
 

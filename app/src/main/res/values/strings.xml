@@ -45,6 +45,8 @@
     <string name="support">Support</string>
     <string name="contact_app_support">Contact App Support</string>
     <string name="flight">Flight</string>
+    <string name="flight_details">Trip Details</string>
+    <string name="select_provider">Select Provider</string>
     <string name="hotels">Hotels</string>
     <string name="sports">Sports</string>
     <string name="events">Events</string>
@@ -76,6 +78,12 @@
     <string name="filter">Filter</string>
     <string name="sort">Sort</string>
     <string name="sort_by">Sort By</string>
+    <string name="see_details">See Details</string>
+    <string name="visit_site">Visit Site</string>
+    <string name="change_password">Change Password</string>
+    <string name="login">Login</string>
+    <string name="login_out">Login Out</string>
+    <string name="my_account_info">My Account Info</string>
     <string-array name="tab_A">
         <item>$600</item>
         <item>$2200</item>
@@ -99,7 +107,11 @@
         <item>$6700</item>
         <item>$6400</item>
     </string-array>
-
+    <string-array name="return_trip">
+        <item>$900</item>
+        <item>$600</item>
+        <item>$600</item>
+    </string-array>
     <string-array name="tab_C">
         <item>Item 3A</item>
         <item>Item 3B</item>

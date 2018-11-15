@@ -1,6 +1,7 @@
 package com.usit.hub4tickets.utils
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -12,6 +13,7 @@ import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.support.v4.app.FragmentActivity
 import android.text.Spannable
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
@@ -615,4 +617,21 @@ object Utility {
         )
         return deviceId
     }
+
+    fun dateDialog(
+        c: Calendar?,
+        activity: Activity?,
+        textView: TextView
+    ) {
+        var day = c!!.get(Calendar.DAY_OF_MONTH)
+        var year = c!!.get(Calendar.YEAR)
+        var month = c.get(Calendar.MONTH)
+        val listener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+            textView.text = dayOfMonth.toString() + "/" + monthOfYear + "/" + year
+        }
+        val dpDialog = DatePickerDialog(activity!!, listener, year, month, day)
+        dpDialog.show()
+    }
+
+
 }

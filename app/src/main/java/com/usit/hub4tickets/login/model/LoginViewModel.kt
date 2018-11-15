@@ -1,20 +1,29 @@
 package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
+import com.google.gson.annotations.SerializedName
+
 
 /**
  * Created by Bhagyashri Burade
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-class LoginViewModel(var context: Context?) {
+class LoginViewModel(var context: Context?){
     var errorMessage: String? = null
-    var loginDomain: LoginResponse = LoginResponse(message = null, responseData = null, status = null)
+
+    var loginDomain: LoginResponse =
+        LoginResponse(responseData = null, message = null, status = null, timeStamp = null)
 
     data class LoginResponse(
-        val message: String?,
+        @SerializedName("responseData")
         val responseData: ResponseData?,
-        val status: String?
+        @SerializedName("message")
+        var message: String?,
+        @SerializedName("status")
+        val status: String?,
+        @SerializedName("timeStamp")
+        val timeStamp: String?
     )
 
     data class ResponseData(

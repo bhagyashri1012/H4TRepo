@@ -1,7 +1,6 @@
 package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
-import android.provider.Settings
 import android.util.Log
 import com.usit.hub4tickets.MainApplication
 import com.usit.hub4tickets.R
@@ -24,7 +23,6 @@ import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Context) : LoginPresenter,
     LoginAPICallListener {
 
-
     private val mContext = context
 
     private val loginInteractor: LoginBaseInteractor =
@@ -39,6 +37,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
             SUCCESS -> mView.showState(SUCCESS)
             VERIFY_OTP_SUCCESS -> mView.showState(VERIFY_OTP_SUCCESS)
             SEND_OTP_SUCCESS -> mView.showState(SEND_OTP_SUCCESS)
+            CHANGE_PASSWORD_SUCCESS -> mView.showState(CHANGE_PASSWORD_SUCCESS)
             ERROR -> mView.showState(ERROR)
         }
     }
@@ -61,18 +60,23 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
 
     override fun onAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) = when (route) {
         Enums.APIRoute.GET_SAMPLE -> {
-            mView.doRetrieveModel().loginDomain = responseModel
-            presentState(SUCCESS)
+            if (responseModel.status.equals("1")) {
+                mView.doRetrieveModel().loginDomain = responseModel
+                presentState(SUCCESS)
+            } else {
+                mView.doRetrieveModel().errorMessage = responseModel.message
+                presentState(ERROR)
+            }
         }
     }
 
-    override fun onAPICallFailed(route: Enums.APIRoute, throwable: Throwable) {
+    override fun onAPICallFailed(route: Enums.APIRoute, message: String?) {
         Utility.hideProgressBar()
-        mView.doRetrieveModel().errorMessage = throwable.message
+        mView.doRetrieveModel().errorMessage = message
         presentState(ERROR)
     }
 
-    override fun onForgotPasswordAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
+    override fun onSentOtpAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
         CustomDialogPresenter.showDialog(mContext,
             mContext.resources.getString(R.string.alert_success),
             responseModel.message,
@@ -95,7 +99,25 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
         presentState(VERIFY_OTP_SUCCESS)
     }
 
-    override fun callAPI(deviceId: String,email: String, password: String) {
+    override fun onChangePasswordAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
+        CustomDialogPresenter.showDialog(mContext,
+            mContext.resources.getString(R.string.alert_success),
+            responseModel.message,
+            mContext.resources.getString(
+                R.string.ok
+            ),
+            null,
+            object : CustomDialogPresenter.CustomDialogView {
+                override fun onPositiveButtonClicked() {
+                    presentState(CHANGE_PASSWORD_SUCCESS)
+                }
+
+                override fun onNegativeButtonClicked() {
+                }
+            })
+    }
+
+    override fun callAPI(deviceId: String, email: String, password: String) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
             loginInteractor.callAPIGetLogin(
@@ -111,10 +133,10 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
         }
     }
 
-    override fun callForgotPasswordAPI(email: String) {
+    override fun callSendOtpAPI(deviceId: String, email: String) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
-            loginInteractor.callAPIForgotPassword(email)
+            loginInteractor.callSendOtpAPI(deviceId, email)
         } else {
             mView.doRetrieveModel().errorMessage =
                     mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
@@ -125,7 +147,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
     override fun callVerifyOTPAPI(deviceId: String, email: String, otp: String) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
-            loginInteractor.callAPIVerifyOTP(deviceId,email, otp)
+            loginInteractor.callAPIVerifyOTP(deviceId, email, otp)
         } else {
             mView.doRetrieveModel().errorMessage =
                     mView.doRetrieveModel().context?.getString(R.string.message_no_internet)

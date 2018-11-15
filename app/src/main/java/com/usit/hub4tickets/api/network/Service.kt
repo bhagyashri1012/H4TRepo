@@ -22,7 +22,7 @@ interface Service {
     fun getRegistration(@Body signUpDto: SignUp): Flowable<SignUpViewModel.SignUpResponse>
 
     @POST("otp")
-    fun forgotPassword(@Body signUpDto: ForgotPassword): Flowable<LoginViewModel.LoginResponse>
+    fun sendOtp(@Body signUpDto: ForgotPassword): Flowable<LoginViewModel.LoginResponse>
 
     @POST("otp/verify")
     fun verifyOTP(@Body signUpDto: VerifyOTP): Flowable<LoginViewModel.LoginResponse>

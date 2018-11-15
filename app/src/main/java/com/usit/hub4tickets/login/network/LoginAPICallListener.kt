@@ -10,7 +10,8 @@ import com.usit.hub4tickets.utils.Enums
  */
 interface LoginAPICallListener {
     fun onAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse)
-    fun onAPICallFailed(route: Enums.APIRoute, throwable: Throwable)
     fun onVerifyOtpAPICallSucceed(route: Enums.APIRoute, response: LoginViewModel.LoginResponse)
-    fun onForgotPasswordAPICallSucceed(route: Enums.APIRoute, response: LoginViewModel.LoginResponse)
+    fun onSentOtpAPICallSucceed(route: Enums.APIRoute, response: LoginViewModel.LoginResponse)
+    fun onChangePasswordAPICallSucceed(route: Enums.APIRoute, response: LoginViewModel.LoginResponse)
+    fun onAPICallFailed(route: Enums.APIRoute, message: String?)
 }

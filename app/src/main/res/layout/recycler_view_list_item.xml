@@ -42,10 +42,12 @@
             <TextView style="@style/CustomRegularTextView"
                       android:text="2.14am - 4.25am"
                       android:layout_marginBottom="@dimen/margin_4dp"
+                      android:maxLines="2"
             />
             <TextView style="@style/CustomRegularTextView"
                       android:text="BOM-PNQ ,GoAir"
                       android:textColor="@color/cool_grey"
+                      android:maxLines="2"
             />
         </LinearLayout>
         <LinearLayout
@@ -62,6 +64,7 @@
                       android:layout_width="match_parent"
                       android:textAlignment="viewEnd"
                       android:text="2.hr 5min"
+                      android:maxLines="2"
                       android:layout_marginBottom="@dimen/margin_4dp"
             />
         </LinearLayout>
@@ -101,10 +104,12 @@
             <TextView style="@style/CustomRegularTextView"
                       android:text="2.14am - 4.25am"
                       android:layout_marginBottom="@dimen/margin_4dp"
+                      android:maxLines="2"
             />
             <TextView style="@style/CustomRegularTextView"
                       android:text="BOM-PNQ ,GoAir"
                       android:textColor="@color/cool_grey"
+                      android:maxLines="2"
             />
         </LinearLayout>
         <LinearLayout
@@ -121,6 +126,7 @@
                       android:layout_width="match_parent"
                       android:textAlignment="viewEnd"
                       android:text="2.hr 5min"
+                      android:maxLines="2"
                       android:layout_marginBottom="@dimen/margin_4dp"
             />
         </LinearLayout>
@@ -131,6 +137,7 @@
             android:text="$8,000 $"
             android:layout_gravity="end"
             android:textColor="@android:color/holo_blue_light"
+            android:maxLines="2"
             style="@style/CustomRegularTextView"/>
     <View
             android:id="@+id/separator"

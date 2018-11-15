@@ -1,28 +1,27 @@
 package com.usit.hub4tickets.domain.presentation.screens
 
-import android.annotation.TargetApi
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import com.usit.hub4tickets.MainApplication
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.presenters.BaseView
 import com.usit.hub4tickets.utils.ConnectivityReceiver
-import kotlinx.android.synthetic.main.common_toolbar.*
 
 
-abstract class BaseActivity : AppCompatActivity(), BaseView {
+abstract class BaseActivity : AppCompatActivity(), BaseView, View.OnClickListener {
     private var toolBar: Toolbar? = null
+    private var titleToolBar: TextView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutResource())
@@ -39,19 +38,23 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
         }, intentFilter)
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun initToolbar() {
         toolBar = this.findViewById(R.id.mainToolbar) as Toolbar
-
-        if (toolBar != null) {
-            setSupportActionBar(toolBar)
-
-            toolBar?.setNavigationOnClickListener { onBackPressed() }
-
-            if (supportActionBar != null) {
-                setDisplayHomeEnabled(true)
-            }
+        setSupportActionBar(toolBar)
+        if (supportActionBar != null) {
+            setDisplayHomeEnabled(true)
         }
+        toolBar?.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        toolBar?.setNavigationOnClickListener { onBackPressed() }
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId === android.R.id.home) {
+
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun showProgress(flag: Boolean) {
@@ -88,21 +91,28 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
         return true
     }
 
     override fun setTitle(title: CharSequence) {
-        val toolBarTitle = findViewById<View>(R.id.titleToolBar) as TextView
-        toolBarTitle?.setText(title)
+        titleToolBar = this.findViewById(R.id.titleToolBar) as TextView
+        titleToolBar?.text = title
     }
 
     override fun setTitle(titleId: Int) {
-        val toolBarTitle = findViewById<View>(R.id.titleToolBar) as TextView
-        toolBarTitle?.setText(titleId)
+        titleToolBar = this.findViewById(R.id.titleToolBar) as TextView
+        titleToolBar?.setText(titleId)
     }
 
     fun getToolBar(): Toolbar? {
         return toolBar
+    }
+
+    override fun onClick(view :View)
+    {
+        when(view.id) {
+            R.id.mainToolbar -> toolBar!!.setNavigationOnClickListener { onBackPressed() }
+
+        }
     }
 }
