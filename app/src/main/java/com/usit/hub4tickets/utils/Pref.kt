@@ -54,8 +54,8 @@ object Pref {
         return result
     }
 
-    fun setValue(context: Context, key: String, value: String) {
-        Pref.openPref(context)
+    fun setValue(context: Context?, key: String, value: String) {
+        Pref.openPref(context!!)
         var prefsPrivateEditor: Editor? = Pref.sharedPreferences!!.edit()
         prefsPrivateEditor!!.putString(key, value)
         prefsPrivateEditor.commit()
@@ -107,9 +107,9 @@ object Pref {
         return result
     }
 
-    fun setValue(context: Context, key: String, value: Boolean) {
+    fun setValue(context: Context?, key: String, value: Boolean) {
         // if (sharedPreferences != null) {
-        Pref.openPref(context)
+        Pref.openPref(context!!)
         var prefsPrivateEditor: Editor? = Pref.sharedPreferences!!.edit()
         prefsPrivateEditor!!.putBoolean(key, value)
         prefsPrivateEditor.commit()

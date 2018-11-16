@@ -1,5 +1,6 @@
 package com.usit.hub4tickets.login
 
+import com.usit.hub4tickets.api.network.ErrorResponse
 import com.usit.hub4tickets.domain.api.SignUpAPICallListener
 import com.usit.hub4tickets.domain.api.APICallManager
 import com.usit.hub4tickets.presentation.presenters.BaseInteractor
@@ -24,7 +25,7 @@ class SignUpBaseInteractor(private var listenerSignUp: SignUpAPICallListener) :
                 listenerSignUp.onAPICallSucceed(route, response)
             },
             { error ->
-                listenerSignUp.onAPICallFailed(route, error)
+                listenerSignUp.onAPICallFailed(route, ErrorResponse.parseError(error))
             })
     }
 }

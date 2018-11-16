@@ -13,8 +13,6 @@ import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
 import com.usit.hub4tickets.domain.presentation.screens.main.SignUpPresenterImpl
 import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
 import com.usit.hub4tickets.login.ui.LoginActivity
-import com.usit.hub4tickets.utils.Pref
-import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.activity_signup.*
 
@@ -77,7 +75,6 @@ class SignUpActivity : BaseActivity(), SignUpPresenter.MainView {
     }
 
     private fun showLogin() {
-        Pref.setValue(this@SignUpActivity, PrefConstants.IS_LOGIN, true)
         val intent = Intent(this, LoginActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)

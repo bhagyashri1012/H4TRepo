@@ -13,7 +13,6 @@ import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.support.v4.app.FragmentActivity
 import android.text.Spannable
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
@@ -633,5 +632,13 @@ object Utility {
         dpDialog.show()
     }
 
+    fun hideKeyBordActivity(activity: Activity) {
+
+        if (activity.currentFocus != null) {
+            val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(activity.currentFocus!!.windowToken, 0)
+        }
+
+    }
 
 }

@@ -6,9 +6,15 @@ interface PrefConstants {
         val IS_LOGIN = "isLogin"
         val IS_DASHBOARD = "is_dashboard"
         val IS_FIRST_TIME = "is_first_time"
-        val Current_tier = "current_tier"
+        val USER_ID = "user_id"
+        val EMAIL_ID = "email_id"
         val DEVICE_TOKEN = "device_tokrn"
         val REFRESH_FLAG = "refresh_flag"
+        val LOCATION_LIST = "LOCATION_LIST"
+        val ACTIVITY_TITLE = "ACTIVITY_TITLE"
+        val SELECTED_ITEMS_ID = "SELECTED_ITEMS_ID"
+        val SELECTED_ITEMS_NAME = "SELECTED_ITEMS_NAME"
+        val SELECTED_ITEMS_TYPE = "SELECTED_ITEMS_TYPE"
     }
 
 }

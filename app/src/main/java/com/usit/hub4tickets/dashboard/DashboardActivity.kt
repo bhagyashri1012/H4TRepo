@@ -62,10 +62,15 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+
         if (navigation.selectedItemId === R.id.navigation_home) {
             super.onBackPressed()
         } else {
-            navigation.selectedItemId = R.id.navigation_home
+            if (supportFragmentManager?.backStackEntryCount == 0) {
+                navigation.selectedItemId = R.id.navigation_home
+            } else {
+                supportFragmentManager?.popBackStackImmediate()
+            }
         }
     }
 }

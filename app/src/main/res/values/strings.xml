@@ -82,8 +82,18 @@
     <string name="visit_site">Visit Site</string>
     <string name="change_password">Change Password</string>
     <string name="login">Login</string>
-    <string name="login_out">Login Out</string>
+    <string name="logout">Logout</string>
     <string name="my_account_info">My Account Info</string>
+    <string name="alert_log_out">Log out</string>
+    <string name="log_out_messege">Are you sure you want to logout?</string>
+    <string name="forgot_pass">Forgot Password</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="payment_methods">Payment Methods</string>
+    <string name="conn_account">Connected Account</string>
+    <string name="passport">Passport</string>
+    <string name="btn_done">Done</string>
+    <string name="language_settings">Language</string>
     <string-array name="tab_A">
         <item>$600</item>
         <item>$2200</item>

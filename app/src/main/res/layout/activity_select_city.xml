@@ -1,0 +1,76 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <android.support.v7.widget.SearchView
+            android:id="@+id/search_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_16dp"
+            android:background="@drawable/grey_border"
+            app:defaultQueryHint="Search"
+            app:iconifiedByDefault="false"
+            app:queryHint="Search">
+
+    </android.support.v7.widget.SearchView>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/search_items"
+            android:layout_margin="@dimen/padding_8dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_city_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"/>
+
+
+        <LinearLayout
+                android:id="@+id/btn_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/recycler_city_list"
+                android:layout_marginBottom="@dimen/margin_16dp"
+                android:layout_marginRight="@dimen/margin_16dp"
+                android:layout_marginTop="@dimen/margin_16dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="2">
+
+            <TextView
+                    android:id="@+id/tv_count"
+                    style="@style/CustomRegularTextView"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/slate_grey"
+                    tools:text="02 Selected"/>
+
+            <Button
+                    android:id="@+id/btn_apply"
+                    style="@style/CustomButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/btn_done"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/txt_no_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/margin_16dp"
+            android:gravity="center"
+            android:paddingTop="42dp"
+            android:text="No data found"
+            android:textColor="@color/slate_grey"
+            android:visibility="gone"/>
+</RelativeLayout><!--
+</ScrollView>-->

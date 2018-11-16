@@ -75,7 +75,13 @@
                 android:theme="@style/NoActionBarAppTheme"
                 android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
-        <activity android:name=".flight.ui.TripProvidersListActivity" android:screenOrientation="portrait"
+        <activity android:name=".flight.ui.TripProvidersListActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/NoActionBarAppTheme"
+                  android:windowSoftInputMode="stateHidden|adjustPan">
+        </activity>
+        <activity android:name=".search.CommonSearchActivity"
+                  android:screenOrientation="portrait"
                   android:theme="@style/NoActionBarAppTheme"
                   android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>

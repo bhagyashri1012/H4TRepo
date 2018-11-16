@@ -8,11 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
-import com.usit.hub4tickets.flight.ui.FlightMainFragment
 import com.usit.hub4tickets.login.ui.LoginActivity
 import com.usit.hub4tickets.profile.AccountInfoFragment
 import com.usit.hub4tickets.utils.Pref
 import com.usit.hub4tickets.utils.PrefConstants
+import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 
@@ -55,26 +55,31 @@ class ProfileFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         if (Pref.getValue(context, PrefConstants.IS_LOGIN, false)) {
             rl_my_acc_info.visibility = View.VISIBLE
-            link_login.visibility = View.GONE
+            link_login.isClickable = false
+            link_login.text = Pref.getValue(context, PrefConstants.EMAIL_ID, "")
+
         } else {
             link_login.visibility = View.VISIBLE
+            link_login.isClickable = true
             rl_my_acc_info.visibility = View.GONE
         }
         link_account_info.setOnClickListener {
             initScreen()
         }
+
+        link_log_out.setOnClickListener { logoutClearData() }
     }
 
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
 
-    private var flihtMainFrag: AccountInfoFragment? = null
+    private var accountMainFrag: AccountInfoFragment? = null
 
     private fun initScreen() {
-        flihtMainFrag = AccountInfoFragment()
+        accountMainFrag = AccountInfoFragment()
         val fragmentManager = activity?.supportFragmentManager
-        fragmentManager?.beginTransaction()?.replace(R.id.container_flight, flihtMainFrag!!)?.commit()
+        fragmentManager?.beginTransaction()?.replace(R.id.container_account_info, accountMainFrag!!)?.addToBackStack("AccountInfo")?.commit()
     }
 
     interface OnFragmentInteractionListener {
@@ -86,5 +91,30 @@ class ProfileFragment : Fragment() {
         fun newInstance(): ProfileFragment {
             return ProfileFragment()
         }
+    }
+
+    fun logoutClearData() {
+        CustomDialogPresenter.showDialog(
+            this!!.context!!,
+            context?.resources!!.getString(R.string.alert_log_out),
+            getString(R.string.log_out_messege),
+            context?.resources!!.getString(
+                R.string.ok
+            ),
+            null,
+            object : CustomDialogPresenter.CustomDialogView {
+                override fun onPositiveButtonClicked() {
+                    Pref.setValue(context, PrefConstants.IS_LOGIN, false)
+                    Pref.setValue(context, PrefConstants.USER_ID, false)
+                    Pref.setValue(context, PrefConstants.EMAIL_ID, "")
+                    val intent = Intent(context, LoginActivity::class.java)
+                    startActivity(intent)
+                }
+
+                override fun onNegativeButtonClicked() {
+
+                }
+            })
+
     }
 }

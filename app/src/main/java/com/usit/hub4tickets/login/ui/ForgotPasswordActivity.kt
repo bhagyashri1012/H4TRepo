@@ -13,6 +13,7 @@ import com.usit.hub4tickets.domain.presentation.screens.main.LoginPresenterImpl
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
 import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.activity_forgot_password.*
+import kotlinx.android.synthetic.main.change_password_dialog.view.*
 import kotlinx.android.synthetic.main.forgot_password_dialog.*
 import kotlinx.android.synthetic.main.forgot_password_dialog.view.*
 import kotlinx.android.synthetic.main.verify_otp_dialog.view.*
@@ -39,8 +40,10 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
         when (viewState) {
             LoginPresenter.MainView.ViewState.IDLE -> showProgress(false)
             LoginPresenter.MainView.ViewState.LOADING -> showProgress(true)
-            LoginPresenter.MainView.ViewState.VERIFY_OTP_SUCCESS -> forgotPassword()
-            LoginPresenter.MainView.ViewState.SEND_OTP_SUCCESS -> verifyOtp()
+            LoginPresenter.MainView.ViewState.VERIFY_OTP_SUCCESS ->
+                forgotPassword()
+            LoginPresenter.MainView.ViewState.SEND_OTP_SUCCESS ->
+                verifyOtp()
             LoginPresenter.MainView.ViewState.CHANGE_PASSWORD_SUCCESS -> redirectToLogin()
             LoginPresenter.MainView.ViewState.ERROR -> {
                 presenter.presentState(LoginPresenter.MainView.ViewState.IDLE)
@@ -85,19 +88,19 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
 
     private fun attemptResetPassword() {
         // Reset errors.
-        edt_current_password.error = null
+        //edt_current_password.error = null
         edt_new_password.error = null
 
         // Store values at the time of the login attempt.
-        val currentPasswordStr = edt_current_password.text.toString()
+        //val currentPasswordStr = edt_current_password.text.toString()
         val passwordStr = edt_new_password.text.toString()
         val confirmPasswordStr = edt_confirm_password.text.toString()
 
         var cancel = false
         var focusView: View? = null
-        if (TextUtils.isEmpty(currentPasswordStr) && !isPasswordValid(currentPasswordStr)) {
-            edt_current_password.error = getString(R.string.error_field_required)
-            focusView = edt_current_password
+        if (TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
+            edt_new_password.error = getString(R.string.error_field_required)
+            focusView = edt_new_password
             cancel = true
         }
         // Check for a valid password, if the user entered one.
@@ -121,8 +124,8 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
             showProgress(true)
             presenter.callResetPassword(
                 Utility.getDeviceId(this),
-                edt_current_password.text.toString(),
-                edt_new_password.text.toString()
+                edt_new_password.text.toString(),
+                edt_confirm_password.text.toString()
             )
         }
     }
@@ -130,6 +133,7 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 4
     }
+
 
     private fun verifyOtp() {
         val dialogBuilder = AlertDialog.Builder(this).create()
@@ -153,10 +157,27 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
         val dialogBuilder = AlertDialog.Builder(this).create()
         val inflater = this.layoutInflater
         val dialogView = inflater.inflate(R.layout.forgot_password_dialog, null)
-        dialogView.button_chng_password.setOnClickListener {
+        dialogView.button_reset_password.setOnClickListener {
             val newPassword = dialogView.edt_new_password.text.toString()
             presenter.callResetPassword(Utility.getDeviceId(this), email, newPassword)
             dialogBuilder.dismiss()
+        }
+        dialogView.button_cancel_fp.setOnClickListener {
+            Utility.hideProgressBar()
+            dialogBuilder.dismiss()
+        }
+        dialogBuilder.setView(dialogView)
+        dialogBuilder.setCanceledOnTouchOutside(false)
+        dialogBuilder.show()
+    }
+
+    private fun changePassword() {
+        val dialogBuilder = AlertDialog.Builder(this).create()
+        val inflater = this.layoutInflater
+        val dialogView = inflater.inflate(R.layout.change_password_dialog, null)
+        dialogView.button_chng_password.setOnClickListener {
+            val newPassword = dialogView.edt_new_change_password.text.toString()
+            presenter.callResetPassword(Utility.getDeviceId(this), email, newPassword)
         }
         dialogView.button_cancel1.setOnClickListener {
             Utility.hideProgressBar()

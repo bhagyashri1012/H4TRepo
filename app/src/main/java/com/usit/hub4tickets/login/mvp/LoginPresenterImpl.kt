@@ -9,9 +9,7 @@ import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter
 import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter.MainView.ViewState.*
 import com.usit.hub4tickets.login.LoginBaseInteractor
 import com.usit.hub4tickets.login.ui.LoginActivity
-import com.usit.hub4tickets.utils.Constant
-import com.usit.hub4tickets.utils.Enums
-import com.usit.hub4tickets.utils.Utility
+import com.usit.hub4tickets.utils.*
 import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 
 
@@ -62,6 +60,9 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
         Enums.APIRoute.GET_SAMPLE -> {
             if (responseModel.status.equals("1")) {
                 mView.doRetrieveModel().loginDomain = responseModel
+                Pref.setValue(mContext, PrefConstants.IS_LOGIN, true)
+                Pref.setValue(mContext, PrefConstants.USER_ID, responseModel.responseData?.userId.toString())
+                Pref.setValue(mContext, PrefConstants.EMAIL_ID, responseModel.responseData?.email.toString())
                 presentState(SUCCESS)
             } else {
                 mView.doRetrieveModel().errorMessage = responseModel.message
@@ -95,8 +96,13 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
     }
 
     override fun onVerifyOtpAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
-        mView.doRetrieveModel().loginDomain = responseModel
-        presentState(VERIFY_OTP_SUCCESS)
+        if (responseModel.status.equals("1")) {
+            mView.doRetrieveModel().loginDomain = responseModel
+            presentState(VERIFY_OTP_SUCCESS)
+        } else {
+            mView.doRetrieveModel().errorMessage = responseModel.message
+            presentState(ERROR)
+        }
     }
 
     override fun onChangePasswordAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {

@@ -18,7 +18,7 @@
             android:gravity="center_horizontal">
 
         <TextView
-                android:id="@+id/register"
+                android:id="@+id/tv_settings_country"
                 android:layout_gravity="left"
                 android:text="@string/country"
                 style="@style/CustomRegularTextView"/>
@@ -27,7 +27,7 @@
               android:layout_marginBottom="@dimen/activity_vertical_margin"
               android:layout_marginTop="@dimen/activity_vertical_margin" android:background="@color/black_20"/>
         <TextView
-                android:id="@+id/settings_currency"
+                android:id="@+id/tv_settings_currency"
                 android:text="@string/currency"
                 android:layout_gravity="left"
                 style="@style/CustomRegularTextView"/>
@@ -37,9 +37,9 @@
               android:layout_marginTop="@dimen/activity_vertical_margin"
               android:background="@color/black_20"/>
         <TextView
-                android:id="@+id/settings_language"
+                android:id="@+id/tv_settings_language"
                 android:layout_gravity="left"
-                android:text="@string/language"
+                android:text="@string/language_settings"
                 style="@style/CustomRegularTextView"/>
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"

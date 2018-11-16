@@ -98,7 +98,7 @@ class APICallManager {
         }
 
         fun sendOtp(device_id: String,email: String): Flowable<LoginViewModel.LoginResponse> {
-            val forgotPassword = ForgotPassword(device_id,email)
+            val forgotPassword = SendOtp(device_id,email)
             return service.sendOtp(forgotPassword)
         }
 

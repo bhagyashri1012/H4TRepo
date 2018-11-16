@@ -1,16 +1,14 @@
 package com.usit.hub4tickets.dashboard.ui.settings
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
 import com.usit.hub4tickets.R
-import com.usit.hub4tickets.dashboard.HorizontalAdapter
-import kotlinx.android.synthetic.main.fragment_home.*
+import com.usit.hub4tickets.search.CommonSearchActivity
 import kotlinx.android.synthetic.main.fragment_settings_panel.*
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,7 +51,13 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        cancel_button.setOnClickListener {  activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit(); }
+        cancel_button.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit();
+        }
+        tv_settings_country.setOnClickListener {
+            val intent = Intent(context, CommonSearchActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     fun onButtonPressed(uri: Uri) {
