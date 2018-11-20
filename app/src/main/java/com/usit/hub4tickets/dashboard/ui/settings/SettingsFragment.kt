@@ -1,34 +1,64 @@
 package com.usit.hub4tickets.dashboard.ui.settings
 
+import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.dashboard.model.DashboardViewModel
+import com.usit.hub4tickets.domain.presentation.presenters.DashboardPresenter
+import com.usit.hub4tickets.domain.presentation.screens.main.DashboardPresenterImpl
 import com.usit.hub4tickets.search.CommonSearchActivity
+import com.usit.hub4tickets.utils.Constant
+import com.usit.hub4tickets.utils.Pref
+import com.usit.hub4tickets.utils.PrefConstants
+import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.fragment_settings_panel.*
 
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+/**
+ * Created by Bhagyashri Burade
+ * Date: 24/10/2018
+ * Email: bhagyashri.burade@usit.net.in
+ */
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [HomeFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
-class SettingsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+class SettingsFragment : Fragment(), DashboardPresenter.MainView {
     private var param1: String? = null
     private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
+    private val LOCATION_SELECTION_REQUEST = 101
+    private lateinit var model: DashboardViewModel
+    private lateinit var presenter: DashboardPresenter
+    override fun doRetrieveModel(): DashboardViewModel = this.model
+    override fun showState(viewState: DashboardPresenter.MainView.ViewState) {
+        when (viewState) {
+            DashboardPresenter.MainView.ViewState.IDLE -> showProgress(false)
+            DashboardPresenter.MainView.ViewState.LOADING -> showProgress(true)
+            DashboardPresenter.MainView.ViewState.COUNTRY_SUCCESS -> {
+                showProgress(false)
+                openSearchActivityCountry(
+                    model.dashboradCountriesDomain.responseData as ArrayList<DashboardViewModel.CountriesResponse.ResponseData>,
+                    "SettingsFragment",
+                    LOCATION_SELECTION_REQUEST
+                )
+            }
+            DashboardPresenter.MainView.ViewState.ERROR
+            -> {
+                presenter.presentState(DashboardPresenter.MainView.ViewState.IDLE)
+                Utility.showDialog(null, doRetrieveModel().errorMessage, context, activity)
+            }
+        }
+    }
+
+    private fun showProgress(show: Boolean) {
+        if (show)
+            Utility.showProgressDialog(context = context)
+        else
+            Utility.hideProgressBar()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +66,6 @@ class SettingsFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
-
     }
 
     override fun onCreateView(
@@ -48,30 +76,59 @@ class SettingsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_settings_panel, container, false)
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        init()
+        setData()
+    }
+
+    private fun setData() {
+        tv_settings_country_name.text = Pref.getValue(context, PrefConstants.COUNTRY, "India")
+    }
+
+    private fun init() {
+        this.model = DashboardViewModel(context)
+        this.presenter = DashboardPresenterImpl(this, context)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         cancel_button.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit();
         }
-        tv_settings_country.setOnClickListener {
-            val intent = Intent(context, CommonSearchActivity::class.java)
-            startActivity(intent)
+        ll_settings_country.setOnClickListener {
+            presenter.callAPIGetCountry()
         }
     }
 
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+    private fun openSearchActivityCountry(
+        arrayListCountry: ArrayList<DashboardViewModel.CountriesResponse.ResponseData>,
+        title: String,
+        locationSelectionRequest: Int
+    ) {
+
+        val intent = Intent(context, CommonSearchActivity::class.java)
+        intent.putParcelableArrayListExtra(Constant.Path.LOCATION_LIST, arrayListCountry)
+        intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
+        startActivityForResult(intent, locationSelectionRequest)
     }
 
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            LOCATION_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    tv_settings_country_name.text = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
+                    Pref.setValue(
+                        context,
+                        PrefConstants.COUNTRY,
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)!!
+                    )
+                }
+            }
+        }
     }
 
     companion object {

@@ -16,15 +16,15 @@ object CustomDialogPresenter {
 
 
     fun showDialog(
-        mContext: Context,
-        dialogTitle: String,
+        mContext: Context?,
+        dialogTitle: String ?,
         message: String?,
         positiveButtonName: String,
         negativeButtonName: String?,
         listener: CustomDialogView?
     ) {
 
-        val builder = AlertDialog.Builder(mContext)
+        val builder = AlertDialog.Builder(mContext!!)
         val dialog = builder.create()
         builder.setTitle(dialogTitle)
         builder.setCancelable(false)

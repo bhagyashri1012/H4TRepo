@@ -4,6 +4,7 @@ import com.usit.hub4tickets.BuildConfig
 import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.api.sample.*
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
+import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
 import com.usit.hub4tickets.utils.Constant
 import io.reactivex.Flowable
@@ -97,8 +98,8 @@ class APICallManager {
             return service.getRegistration(signUp)
         }
 
-        fun sendOtp(device_id: String,email: String): Flowable<LoginViewModel.LoginResponse> {
-            val forgotPassword = SendOtp(device_id,email)
+        fun sendOtp(device_id: String, email: String): Flowable<LoginViewModel.LoginResponse> {
+            val forgotPassword = SendOtp(device_id, email)
             return service.sendOtp(forgotPassword)
         }
 
@@ -132,7 +133,7 @@ class APICallManager {
             return service.getCities()
         }
 
-        fun getSettingsData(userId: String, device_id: String): Flowable<DashboardViewModel.CountriesResponse> {
+        fun getSettingsData(userId: String, device_id: String): Flowable<DashboardViewModel.SettingsResponse> {
             val settingsData = SettingsData(userId, device_id)
             return service.settingsData(settingsData)
         }
@@ -159,14 +160,39 @@ class APICallManager {
         }
 
 
-        fun getProfileData(userId: String, device_id: String): Flowable<DashboardViewModel.CountriesResponse> {
+        fun getProfileData(userId: String, device_id: String): Flowable<ProfileViewModel.ProfileResponse> {
             val profData = ProfileData(userId, device_id)
             return service.getProfileData(profData)
         }
 
-        fun updateProfileData(userId: String, device_id: String): Flowable<DashboardViewModel.CountriesResponse> {
-            val settingsData = SettingsData(userId, device_id)
-            return service.settingsData(settingsData)
+        fun updateProfileData(
+            userId: String, device_id: String,
+            email: String,
+            firstname: String,
+            lastname: String,
+            phonenumber: String,
+            homeairport: String,
+            timezoneId: String,
+            countryId: String,
+            stateId: String,
+            cityId: String,
+            languageId: String
+        ): Flowable<ProfileViewModel.ProfileResponse> {
+            val profData = UpdateProfileData(
+                userId,
+                device_id,
+                email,
+                firstname,
+                lastname,
+                phonenumber,
+                homeairport,
+                timezoneId,
+                countryId,
+                stateId,
+                cityId,
+                languageId
+            )
+            return service.updateProfileData(profData)
         }
     }
 

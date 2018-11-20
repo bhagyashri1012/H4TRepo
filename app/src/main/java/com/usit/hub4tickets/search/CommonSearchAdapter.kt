@@ -3,12 +3,9 @@ package com.usit.hub4tickets.search
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import com.usit.hub4tickets.R
-import com.usit.hub4tickets.dashboard.DashboardActivity
+import com.usit.hub4tickets.flight.adapter.TextItemViewHolder
 import com.usit.hub4tickets.search.model.CommonSelectorPojo
 
 
@@ -21,45 +18,18 @@ class CommonSearchAdapter(
     private var mContext: Context,
     listItems: ArrayList<CommonSelectorPojo>,
     private var listener: OnItemClickListener
-) : RecyclerView.Adapter<CommonSearchAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<TextItemViewHolder>() {
+    private var arrayListCommonSelector: ArrayList<CommonSelectorPojo> = listItems
+    private var temArrayListCommonSelector = listItems
 
-
-    private var arrayListCommonSelector: ArrayList<CommonSelectorPojo>? = null
-    private var temArrayListCommonSelector = ArrayList<CommonSelectorPojo>()
-
-    init {
-        arrayListCommonSelector?.addAll(listItems)
-        temArrayListCommonSelector.addAll(arrayListCommonSelector!!)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommonSearchAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TextItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.row_common_serarch_adapter, parent, false)
-        return ViewHolder(view)
+        return TextItemViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: CommonSearchAdapter.ViewHolder, position: Int) {
-
-        holder.tvTitle!!.text = temArrayListCommonSelector[position].itemsName
-
-        holder.view.setOnClickListener {
-            if (mContext is DashboardActivity) {
-                for (index in temArrayListCommonSelector.indices) {
-                    temArrayListCommonSelector[index].isSelected = false
-                }
-                temArrayListCommonSelector[position].isSelected = true
-                notifyDataSetChanged()
-            }
-
-            listener.onListItemClick(temArrayListCommonSelector[position])
-        }
-
-        if (mContext is DashboardActivity) {
-            if (temArrayListCommonSelector[position].isSelected) {
-                holder.ivTick!!.visibility = View.VISIBLE
-            } else {
-                holder.ivTick!!.visibility = View.INVISIBLE
-            }
-        }
+    override fun onBindViewHolder(holder: TextItemViewHolder, position: Int) {
+        holder.bind(temArrayListCommonSelector[position].itemsName.toString())
+        holder.itemView.setOnClickListener { listener.onListItemClick(temArrayListCommonSelector[position]) }
     }
 
     override fun getItemCount(): Int {
@@ -87,15 +57,8 @@ class CommonSearchAdapter(
     }
 
     interface OnItemClickListener {
-        fun onListItemClick(pinCodeMaster: CommonSelectorPojo)
+        fun onListItemClick(commonSelectorPojo: CommonSelectorPojo)
 
         fun onNoData(isVisible: Boolean)
-    }
-
-    inner class ViewHolder(internal var view: View) : RecyclerView.ViewHolder(view) {
-
-        internal var tvTitle: TextView? = null
-        internal var ivTick: ImageView? = null
-
     }
 }

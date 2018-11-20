@@ -1,19 +1,20 @@
 package com.usit.hub4tickets.domain.presentation.presenters
 
-import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
+import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel
+
 
 /**
  * Created by Bhagyashri Burade
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-interface SignUpPresenter : BasePresenter {
+interface ProfilePresenter : BasePresenter {
     interface MainView {
         /**
          * This enum is used for determine the current state of this screen
          */
         enum class ViewState {
-            IDLE, LOADING, LOAD_SIGN_UP, SUCCESS, ERROR,
+            IDLE, LOADING, LOAD_SIGN_UP, SUCCESS, ERROR, UPDATE_SUCCESS,
         }
 
         /**
@@ -28,7 +29,7 @@ interface SignUpPresenter : BasePresenter {
          *
          * @return
          */
-        fun doRetrieveModel(): SignUpViewModel
+        fun doRetrieveModel(): ProfileViewModel
 
     }
 
@@ -39,5 +40,20 @@ interface SignUpPresenter : BasePresenter {
      */
     fun presentState(state: MainView.ViewState)
 
-    fun callAPI(email: String, password: String)
+    fun callAPIGetProfile(userId: String)
+
+    fun callAPIUpdateProfile(
+        userId: String,
+        email: String,
+        firstname: String,
+        lastname: String,
+        phonenumber: String,
+        homeairport: String,
+        timezoneId: String,
+        countryId: String,
+        stateId: String,
+        cityId: String,
+        languageId: String
+    )
+
 }

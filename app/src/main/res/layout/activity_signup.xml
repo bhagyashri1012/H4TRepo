@@ -84,7 +84,7 @@
                 >
 
                     <EditText
-                            android:id="@+id/edt_confirm_password"
+                            android:id="@+id/edt_confirm_password_signup"
                             android:layout_width="match_parent"
                             style="@style/CustomRegularTextView"
                             android:hint="@string/prompt_confirm_password"

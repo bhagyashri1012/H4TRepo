@@ -8,10 +8,12 @@
                 android:orientation="vertical">
 
     <TextView
-            android:id="@+id/textView"
+            android:id="@+id/list_item"
             style="@style/CustomRegularTextView"
-            android:layout_alignParentLeft="true"
             android:maxLines="2"
+            android:padding="@dimen/margin_16dp"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
             android:ellipsize="end"
             tools:text="Mumbai"/>
 
@@ -29,6 +31,6 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/textView"
+            android:layout_below="@+id/list_item"
             android:background="@color/white_grey"/>
 </RelativeLayout>

@@ -7,8 +7,9 @@ package com.usit.hub4tickets.domain.api.sample
  */
 
 data class Login(val deviceId: String, val email: String, val password: String, val deviceType: Int)
+
 data class SignUp(val deviceId: String, var email: String, var password: String, val deviceType: Int)
-data class SendOtp(val deviceId: String,var email: String)
+data class SendOtp(val deviceId: String, var email: String)
 data class VerifyOTP(val deviceId: String, var email: String, var otp: String)
 data class ResetPassword(val deviceId: String, var email: String, var password: String)
 data class SettingsData(val deviceId: String, var userId: String)
@@ -24,12 +25,17 @@ data class ChangePassword(val deviceId: String, var userId: String, var password
 
 data class ProfileData(val deviceId: String, var userId: String)
 data class UpdateProfileData(
-    val deviceId: String,
     var userId: String,
+    val deviceId: String,
     var email: String,
-    var firstname: String,
-    var lastname: String,
-    var phonenumber: String,
-    var homeairport: String
+    var firstName: String,
+    var lastName: String,
+    var phoneNumber: String,
+    var homeAirport: String,
+    var timezoneId: String,
+    var countryId: String,
+    var stateId: String,
+    var cityId: String,
+    var languageId: String
 )
 

@@ -99,10 +99,10 @@
                                     android:layout_marginRight="@dimen/activity_vertical_margin_half"
                                     android:layout_marginBottom="@dimen/activity_vertical_margin"/>
                             <TextView
+                                    android:id="@+id/tv_country_name"
                                     style="@style/CustomRegularTextView"
-                                    android:text="India"
-                                    android:layout_toRightOf="@+id/tv_country"
-                                    android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+                                    tools:text="India"
+                                    android:layout_toRightOf="@+id/tv_country"  android:layout_marginBottom="@dimen/activity_vertical_margin"/>
                         </RelativeLayout>
                         <RelativeLayout android:layout_width="match_parent"
                                         android:layout_height="wrap_content">
@@ -113,8 +113,9 @@
                                     android:layout_marginRight="@dimen/activity_vertical_margin_half"
                                     android:layout_marginBottom="@dimen/activity_vertical_margin"/>
                             <TextView
+                                    android:id="@+id/tv_lang_name"
                                     style="@style/CustomRegularTextView"
-                                    android:text="Marathi"
+                                    tools:text="Marathi"
                                     android:layout_toRightOf="@+id/tv_lang"
                                     android:layout_marginBottom="@dimen/activity_vertical_margin"/>
                         </RelativeLayout>
@@ -127,8 +128,9 @@
                                     android:layout_marginRight="@dimen/activity_vertical_margin_half"
                                     android:layout_marginBottom="@dimen/activity_vertical_margin"/>
                             <TextView
+                                    android:id="@+id/tv_currency_name"
                                     style="@style/CustomRegularTextView"
-                                    android:text="INR"
+                                    tools:text="INR"
                                     android:layout_toRightOf="@+id/tv_currency"
                                     android:layout_marginBottom="@dimen/activity_vertical_margin"/>
                         </RelativeLayout>

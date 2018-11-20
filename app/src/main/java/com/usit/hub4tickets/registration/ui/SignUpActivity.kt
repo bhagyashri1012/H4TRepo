@@ -34,7 +34,23 @@ class SignUpActivity : BaseActivity(), SignUpPresenter.MainView {
         init()
     }
 
+    private fun init() {
+        this.model = SignUpViewModel(this)
+        this.presenter = SignUpPresenterImpl(this, this)
+
+        edt_password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
+            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                attemptLogin()
+                return@OnEditorActionListener true
+            }
+            false
+        })
+
+        email_sign_in_button.setOnClickListener { attemptLogin() }
+    }
+
     override fun doRetrieveModel(): SignUpViewModel = this.model
+
     override fun showState(viewState: SignUpPresenter.MainView.ViewState) {
         when (viewState) {
             LoginPresenter.MainView.ViewState.IDLE -> showProgress(false)
@@ -59,21 +75,6 @@ class SignUpActivity : BaseActivity(), SignUpPresenter.MainView {
             Utility.hideProgressBar()
     }
 
-    private fun init() {
-        this.model = SignUpViewModel(this)
-        this.presenter = SignUpPresenterImpl(this, this)
-
-        edt_password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
-            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                attemptLogin()
-                return@OnEditorActionListener true
-            }
-            false
-        })
-
-        email_sign_in_button.setOnClickListener { attemptLogin() }
-    }
-
     private fun showLogin() {
         val intent = Intent(this, LoginActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -94,17 +95,10 @@ class SignUpActivity : BaseActivity(), SignUpPresenter.MainView {
         // Store values at the time of the login attempt.
         val emailStr = edt_email.text.toString()
         val passwordStr = edt_password.text.toString()
+        val confirmPasswordStr = edt_confirm_password_signup.text.toString()
 
         var cancel = false
         var focusView: View? = null
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
-            edt_password.error = getString(R.string.error_invalid_password)
-            focusView = edt_password
-            cancel = true
-        }
-
         // Check for a valid email address.
         if (TextUtils.isEmpty(emailStr)) {
             edt_email.error = getString(R.string.error_field_required)
@@ -113,6 +107,17 @@ class SignUpActivity : BaseActivity(), SignUpPresenter.MainView {
         } else if (!isEmailValid(emailStr)) {
             edt_email.error = getString(R.string.error_invalid_email)
             focusView = edt_email
+            cancel = true
+        }
+        // Check for a valid password, if the user entered one.
+        if (!TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
+            edt_password.error = getString(R.string.error_invalid_password)
+            focusView = edt_password
+            cancel = true
+        }
+        if (!passwordStr.equals(confirmPasswordStr)) {
+            edt_confirm_password_signup.error = getString(R.string.error_not_match_password)
+            focusView = edt_confirm_password_signup
             cancel = true
         }
 

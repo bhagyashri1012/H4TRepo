@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_dashboard.*
 class DashboardActivity : AppCompatActivity() {
 
     private var selectedFragment: Fragment? = null
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
         when (item.itemId) {
@@ -51,7 +52,6 @@ class DashboardActivity : AppCompatActivity() {
             loadFragment(HomeFragment.newInstance())
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -73,4 +73,5 @@ class DashboardActivity : AppCompatActivity() {
             }
         }
     }
+
 }

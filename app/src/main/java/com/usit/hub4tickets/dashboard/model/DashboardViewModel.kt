@@ -1,8 +1,9 @@
 package com.usit.hub4tickets.dashboard.model
 
 import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-
 
 
 /**
@@ -13,13 +14,112 @@ import com.google.gson.annotations.SerializedName
 class DashboardViewModel(var context: Context?) {
     var errorMessage: String? = null
     var dashboradCountriesDomain: DashboardViewModel.CountriesResponse =
-        DashboardViewModel.CountriesResponse(countryData = null, message = null, status = null)
+        DashboardViewModel.CountriesResponse(message = null, responseData = null, status = null)
 
     var dashboradLangDomain: DashboardViewModel.LanguageResponse =
-        DashboardViewModel.LanguageResponse(languageData = null, message = null, status = null)
+        DashboardViewModel.LanguageResponse(message = null, responseData = null, status = null)
 
     var dashboradCurrencyDomain: DashboardViewModel.CurrencyResponse =
         DashboardViewModel.CurrencyResponse(currencyData = null, message = null, status = null)
+
+    var settingsDomain: DashboardViewModel.SettingsResponse =
+        DashboardViewModel.SettingsResponse(responseData = null, message = null, status = null)
+
+    data class SettingsResponse(
+        @SerializedName("message")
+        val message: String?,
+        @SerializedName("responseData")
+        val responseData: ResponseData?,
+        @SerializedName("status")
+        val status: String?
+    ) {
+        data class ResponseData(
+            @SerializedName("countryId")
+            val countryId: Int,
+            @SerializedName("countryName")
+            val countryName: String,
+            @SerializedName("currencyId")
+            val currencyId: Int,
+            @SerializedName("currencyName")
+            val currencyName: String,
+            @SerializedName("deviceId")
+            val deviceId: String,
+            @SerializedName("languageId")
+            val languageId: Int,
+            @SerializedName("languageName")
+            val languageName: String,
+            @SerializedName("userDetailsId")
+            val userDetailsId: Int,
+            @SerializedName("userId")
+            val userId: Int
+        )
+    }
+
+    data class CountriesResponse(
+        @SerializedName("message")
+        val message: String?,
+        @SerializedName("responseData")
+        val responseData: List<ResponseData>?,
+        @SerializedName("status")
+        val status: String?
+    ) : Parcelable {
+        data class ResponseData(
+            @SerializedName("countryCode")
+            val countryCode: String,
+            @SerializedName("countryId")
+            val countryId: Int,
+            @SerializedName("countryName")
+            val countryName: String,
+            @SerializedName("msState")
+            val msState: List<Any>
+        ) : Parcelable {
+            companion object {
+                @JvmField
+                val CREATOR: Parcelable.Creator<ResponseData> = object : Parcelable.Creator<ResponseData> {
+                    override fun createFromParcel(source: Parcel): ResponseData = ResponseData(source)
+                    override fun newArray(size: Int): Array<ResponseData?> = arrayOfNulls(size)
+                }
+            }
+
+            constructor(source: Parcel) : this(
+                source.readString(),
+                source.readInt(),
+                source.readString(),
+                ArrayList<Any>().apply { source.readList(this, Any::class.java.classLoader) }
+            )
+
+            override fun describeContents() = 0
+
+            override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+                writeString(countryCode)
+                writeInt(countryId)
+                writeString(countryName)
+                writeList(msState)
+            }
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<CountriesResponse> = object : Parcelable.Creator<CountriesResponse> {
+                override fun createFromParcel(source: Parcel): CountriesResponse = CountriesResponse(source)
+                override fun newArray(size: Int): Array<CountriesResponse?> = arrayOfNulls(size)
+            }
+        }
+
+        constructor(source: Parcel) : this(
+            source.readString(),
+            ArrayList<ResponseData>().apply { source.readList(this, ResponseData::class.java.classLoader) },
+            source.readString()
+        )
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+            writeString(message)
+            writeList(responseData)
+            writeString(status)
+        }
+    }
 
     data class CurrencyResponse(
         @SerializedName("currencyData")
@@ -28,43 +128,36 @@ class DashboardViewModel(var context: Context?) {
         val message: String?,
         @SerializedName("status")
         val status: Int?
-) {
-    data class CurrencyData(
-        @SerializedName("currencyCode")
-        val currencyCode: String,
-        @SerializedName("currencyId")
-        val currencyId: String,
-        @SerializedName("currencyName")
-        val currencyName: String,
-        @SerializedName("currencySymbol")
-        val currencySymbol: String
-    )
-}
-
-    data class CountriesResponse(
-        val countryData: List<CountryData>?,
-        val message: String?,
-        val status: Int?
-    )
-
-    data class CountryData(
-        val countryCode: String,
-        val countryId: String,
-        val countryName: String
-    )
+    ) {
+        data class CurrencyData(
+            @SerializedName("currencyCode")
+            val currencyCode: String,
+            @SerializedName("currencyId")
+            val currencyId: String,
+            @SerializedName("currencyName")
+            val currencyName: String,
+            @SerializedName("currencySymbol")
+            val currencySymbol: String
+        )
+    }
 
     data class LanguageResponse(
-        val languageData: List<LanguageData>?,
+        @SerializedName("responseData")
+        val responseData: List<LanguageResponseData>?,
+        @SerializedName("message")
         val message: String?,
+        @SerializedName("status")
         val status: Int?
     )
 
-    data class LanguageData(
+    data class LanguageResponseData(
+        @SerializedName("languageCode")
         val languageCode: String,
-        val languageId: String,
+        @SerializedName("languageId")
+        val languageId: Int,
+        @SerializedName("languageName")
         val languageName: String
     )
-
 
 }
 

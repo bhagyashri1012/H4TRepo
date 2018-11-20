@@ -1,8 +1,8 @@
 package com.usit.hub4tickets.login
 
 import com.usit.hub4tickets.api.network.ErrorResponse
-import com.usit.hub4tickets.domain.api.SignUpAPICallListener
 import com.usit.hub4tickets.domain.api.APICallManager
+import com.usit.hub4tickets.domain.api.SignUpAPICallListener
 import com.usit.hub4tickets.presentation.presenters.BaseInteractor
 import com.usit.hub4tickets.utils.Enums
 import io.reactivex.android.schedulers.AndroidSchedulers

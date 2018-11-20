@@ -2,6 +2,7 @@ package com.usit.hub4tickets.domain.api.sample
 
 import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
+import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
 import io.reactivex.Flowable
 import retrofit2.http.Body
@@ -46,7 +47,7 @@ interface Service {
     fun getCities(): Flowable<DashboardViewModel.CountriesResponse>
 
     @POST("settingdata")
-    fun settingsData(@Body settingsData: SettingsData): Flowable<DashboardViewModel.CountriesResponse>
+    fun settingsData(@Body settingsData: SettingsData): Flowable<DashboardViewModel.SettingsResponse>
 
     @POST("savesettingdata")
     fun saveSettingsData(@Body settingsData: SaveSettingsData): Flowable<DashboardViewModel.CountriesResponse>
@@ -55,9 +56,9 @@ interface Service {
     fun changePassword(@Body changePasswordDto: ChangePassword): Flowable<DashboardViewModel.CountriesResponse>
 
     @POST("getprofile")
-    fun getProfileData(@Body profileData: ProfileData): Flowable<DashboardViewModel.CountriesResponse>
+    fun getProfileData(@Body profileData: ProfileData): Flowable<ProfileViewModel.ProfileResponse>
 
     @POST("updateprofile")
-    fun updateProfileData(@Body updateProfileData: UpdateProfileData): Flowable<DashboardViewModel.CountriesResponse>
+    fun updateProfileData(@Body updateProfileData: UpdateProfileData): Flowable<ProfileViewModel.ProfileResponse>
 
 }

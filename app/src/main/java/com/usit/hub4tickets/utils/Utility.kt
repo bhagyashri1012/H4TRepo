@@ -13,6 +13,8 @@ import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.text.Spannable
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
@@ -68,13 +70,13 @@ object Utility {
             return sdfDate.format(now)
         }
 
-    fun showProgressDialog(context: Context) {
+    fun showProgressDialog(context: Context?) {
         if (null != sProgressDialog && sProgressDialog!!.isShowing) {
             return
         }
         sProgressDialog = ProgressDialog(context)
 
-        sProgressDialog!!.setMessage(context.resources.getString(R.string.loading))
+        sProgressDialog!!.setMessage(context?.resources?.getString(R.string.loading))
         sProgressDialog!!.setCancelable(false)
 
         if (context is Activity) {
@@ -641,4 +643,24 @@ object Utility {
 
     }
 
+    fun showDialog(title: String?, message: String?, context: Context?, activity: Activity?) {
+        if (message != null) {
+            showToast(message, context, activity)
+        } else {
+            showToast(context?.getString(R.string.message_failed_request_general), context, activity)
+        }
+    }
+
+    private fun showToast(message: String?, context: Context?, activity: Activity?) {
+        val snackbar = message?.let {
+            Snackbar.make(
+                activity!!.findViewById(android.R.id.content),
+                it, Snackbar.LENGTH_SHORT
+            )
+        }
+        val sbView = snackbar?.view
+        val textView = sbView?.findViewById<View>(android.support.design.R.id.snackbar_text) as TextView
+        textView.setTextColor(ContextCompat.getColor(context!!, R.color.white))
+        snackbar.show()
+    }
 }

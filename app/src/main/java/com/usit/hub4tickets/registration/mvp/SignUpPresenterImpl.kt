@@ -74,8 +74,6 @@ class SignUpPresenterImpl(
 
         Enums.APIRoute.GET_SAMPLE -> {
             mView.doRetrieveModel().signUpDomain = responseModel
-            Pref.setValue(mContext, PrefConstants.IS_LOGIN, true)
-            Pref.setValue(mContext, PrefConstants.USER_ID, responseModel.responseData?.userId.toString())
             CustomDialogPresenter.showDialog(mContext,
                 mContext.resources.getString(R.string.alert_success),
                 responseModel.message,
