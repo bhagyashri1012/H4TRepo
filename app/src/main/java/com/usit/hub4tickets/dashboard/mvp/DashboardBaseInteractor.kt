@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
  */
 class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICallListener) :
     BaseInteractor {
-    fun callAPIGetPersonalInfo(device_id: String, userId: String) {
+    fun callAPIGetSettingsData(device_id: String, userId: String) {
         val route = Enums.APIRoute.GET_SAMPLE
         val call = APICallManager.getInstance.apiManager.getSettingsData(device_id, userId)
             .subscribeOn(Schedulers.io())
@@ -23,6 +23,26 @@ class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICall
         call.subscribe(
             { response ->
                 listenerSettingsInfo.onAPICallSucceed(route, response)
+            },
+            { error ->
+                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+            })
+    }
+
+    fun callAPISaveSettingsData(
+        userId: String,
+        deviceId: String,
+        countryId: String,
+        currencyId: String,
+        langId: String
+    ) {
+        val route = Enums.APIRoute.GET_SAMPLE
+        val call = APICallManager.getInstance.apiManager.saveSettingsData(userId, deviceId,countryId,currencyId,langId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+        call.subscribe(
+            { response ->
+                listenerSettingsInfo.onAPICallSaveSucceed(route, response)
             },
             { error ->
                 listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error))

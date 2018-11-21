@@ -10,6 +10,7 @@ import com.usit.hub4tickets.utils.Enums
  */
 interface DashboardAPICallListener {
     fun onAPICallSucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.SettingsResponse)
+    fun onAPICallSaveSucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.SettingsResponse)
     fun onAPICallGetCountrySucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.CountriesResponse)
     fun onAPICallGetLanguageSucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.LanguageResponse)
     fun onAPICallGetCurrencySucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.CurrencyResponse)

@@ -20,18 +20,34 @@ class CommonSearchActivity : BaseActivity() {
 
     private var searchItemsListAdapter: CommonSearchAdapter? = null
     private var strActivityTitle: String? = ""
-
-
-    private lateinit var arrayListCommonSelectorInitial: ArrayList<DashboardViewModel.CountriesResponse.ResponseData>
+    private var arrayListCommonSelectorInitial: ArrayList<DashboardViewModel.CountriesResponse.ResponseData> =
+        ArrayList()
+    private var arrayListCommonSelectorLangInitial: ArrayList<DashboardViewModel.LanguageResponse.ResponseData> =
+        ArrayList()
+    private var arrayListCommonSelectorCurrencyInitial: ArrayList<DashboardViewModel.CurrencyResponse.CurrencyData> =
+        ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_city)
         Utility.hideKeyBordActivity(this)
         if (intent.extras != null) {
-            arrayListCommonSelectorInitial =
-                    intent.extras.getSerializable(Constant.Path.LOCATION_LIST) as ArrayList<DashboardViewModel.CountriesResponse.ResponseData>
-            strActivityTitle = intent.extras!!.getString(PrefConstants.ACTIVITY_TITLE)
+            strActivityTitle = intent.extras!!.getString(Constant.Path.ACTIVITY_TITLE)
+            when (strActivityTitle) {
+                "SettingsFragment" -> {
+                    if (null != intent.extras.getSerializable(Constant.Path.LOCATION_LIST))
+                        arrayListCommonSelectorInitial =
+                                intent.extras.getSerializable(Constant.Path.LOCATION_LIST) as ArrayList<DashboardViewModel.CountriesResponse.ResponseData>
+                    if (null != intent.extras.getSerializable(Constant.Path.LANGUAGE_LIST))
+                        arrayListCommonSelectorLangInitial =
+                                intent.extras.getSerializable(Constant.Path.LANGUAGE_LIST) as ArrayList<DashboardViewModel.LanguageResponse.ResponseData>
+                    if (null != intent.extras.getSerializable(Constant.Path.CURRENCY_LIST))
+                        arrayListCommonSelectorCurrencyInitial =
+                                intent.extras.getSerializable(Constant.Path.CURRENCY_LIST) as ArrayList<DashboardViewModel.CurrencyResponse.CurrencyData>
+                }
+                "PersonalInfoActivity" -> arrayListCommonSelectorInitial =
+                        intent.extras.getSerializable(Constant.Path.LOCATION_LIST_PROFILE) as ArrayList<DashboardViewModel.CountriesResponse.ResponseData>
+            }
         }
         search_text.isFocusable = false
         initView()
@@ -46,6 +62,31 @@ class CommonSearchActivity : BaseActivity() {
                         arrayListCommonSelectorInitial[i].countryId.toString(),
                         arrayListCommonSelectorInitial[i].countryName,
                         arrayListCommonSelectorInitial[i].countryCode
+                    )
+                )
+
+            }
+        }
+
+        if (arrayListCommonSelectorLangInitial != null) {
+            for (i in arrayListCommonSelectorLangInitial!!.indices) {
+                arrayListCommonSelector.add(
+                    i, CommonSelectorPojo(
+                        arrayListCommonSelectorLangInitial[i].languageId.toString(),
+                        arrayListCommonSelectorLangInitial[i].name,
+                        arrayListCommonSelectorLangInitial[i].languageCode
+                    )
+                )
+
+            }
+        }
+        if (arrayListCommonSelectorCurrencyInitial != null) {
+            for (i in arrayListCommonSelectorCurrencyInitial!!.indices) {
+                arrayListCommonSelector.add(
+                    i, CommonSelectorPojo(
+                        arrayListCommonSelectorCurrencyInitial[i].currencyId,
+                        arrayListCommonSelectorCurrencyInitial[i].name,
+                        arrayListCommonSelectorCurrencyInitial[i].code
                     )
                 )
 

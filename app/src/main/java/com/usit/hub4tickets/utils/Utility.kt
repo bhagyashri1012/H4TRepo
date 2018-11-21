@@ -643,6 +643,11 @@ object Utility {
 
     }
 
+    fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+    }
+
     fun showDialog(title: String?, message: String?, context: Context?, activity: Activity?) {
         if (message != null) {
             showToast(message, context, activity)
@@ -662,5 +667,10 @@ object Utility {
         val textView = sbView?.findViewById<View>(android.support.design.R.id.snackbar_text) as TextView
         textView.setTextColor(ContextCompat.getColor(context!!, R.color.white))
         snackbar.show()
+    }
+
+    fun hideSoftKeyboard(view: View) {
+        var imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 }

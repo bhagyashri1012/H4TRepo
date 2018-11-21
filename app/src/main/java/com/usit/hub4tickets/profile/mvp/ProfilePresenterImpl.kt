@@ -53,8 +53,8 @@ class ProfilePresenterImpl(
                 languageId
             )
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView.doRetrieveProfileModel().errorMessage =
+                    mView.doRetrieveProfileModel().context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -72,8 +72,8 @@ class ProfilePresenterImpl(
                 userId
             )
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView.doRetrieveProfileModel().errorMessage =
+                    mView.doRetrieveProfileModel().context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -110,7 +110,7 @@ class ProfilePresenterImpl(
         when (route) {
 
             Enums.APIRoute.GET_SAMPLE -> {
-                mView.doRetrieveModel().profileDomain = responseModel
+                mView.doRetrieveProfileModel().profileDomain = responseModel
                 presentState(SUCCESS)
             }
         }
@@ -142,7 +142,7 @@ class ProfilePresenterImpl(
 
     override fun onAPICallFailed(route: Enums.APIRoute, message: String?) {
         Utility.hideProgressBar()
-        mView.doRetrieveModel().errorMessage = message
+        mView.doRetrieveProfileModel().errorMessage = message
         presentState(ERROR)
     }
 }

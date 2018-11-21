@@ -121,7 +121,7 @@ class ProfileFragment : Fragment(), DashboardPresenter.MainView {
     private fun init() {
         this.model = DashboardViewModel(context)
         this.presenter = DashboardPresenterImpl(this, context)
-        presenter.callAPIGetProfile(Pref.getValue(context, PrefConstants.USER_ID, "").toString())
+        presenter.callAPIGetSettingsData(Pref.getValue(context, PrefConstants.USER_ID, "0").toString())
     }
 
     interface OnFragmentInteractionListener {
@@ -147,7 +147,7 @@ class ProfileFragment : Fragment(), DashboardPresenter.MainView {
             object : CustomDialogPresenter.CustomDialogView {
                 override fun onPositiveButtonClicked() {
                     Pref.setValue(context, PrefConstants.IS_LOGIN, false)
-                    Pref.setValue(context, PrefConstants.USER_ID, "")
+                    Pref.setValue(context, PrefConstants.USER_ID, "0")
                     Pref.setValue(context, PrefConstants.EMAIL_ID, "")
                     val intent = Intent(context, LoginActivity::class.java)
                     startActivity(intent)

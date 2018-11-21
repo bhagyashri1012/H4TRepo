@@ -13,6 +13,7 @@ import com.usit.hub4tickets.login.DashboardBaseInteractor
 import com.usit.hub4tickets.profile.ui.PersonalInfoActivity
 import com.usit.hub4tickets.utils.Enums
 import com.usit.hub4tickets.utils.Utility
+import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 
 /**
  * Created by Bhagyashri Burade
@@ -29,12 +30,29 @@ class DashboardPresenterImpl(
     private val mContext = context
     private var device_id = Secure.getString(mContext?.contentResolver, Secure.ANDROID_ID)
 
-    override fun callAPIGetProfile(userId: String) {
+    override fun callAPIGetSettingsData(userId: String) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
-            dashboardBaseInteractor.callAPIGetPersonalInfo(
+            dashboardBaseInteractor.callAPIGetSettingsData(
                 device_id,
                 userId
+            )
+        } else {
+            mView.doRetrieveModel().errorMessage =
+                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            presentState(ERROR)
+        }
+    }
+
+    override fun callAPISaveSettingsData(userId: String, countryId: String, currencyId: String, langId: String) {
+        if (MainApplication.getInstance.isConnected()) {
+            presentState(LOADING)
+            dashboardBaseInteractor.callAPISaveSettingsData(
+                userId,
+                device_id,
+                countryId,
+                currencyId,
+                langId
             )
         } else {
             mView.doRetrieveModel().errorMessage =
@@ -83,6 +101,7 @@ class DashboardPresenterImpl(
             IDLE -> mView.showState(IDLE)
             LOADING -> mView.showState(LOADING)
             SUCCESS -> mView.showState(SUCCESS)
+            SAVE_SUCCESS -> mView.showState(SAVE_SUCCESS)
             LANG_SUCCESS -> mView.showState(LANG_SUCCESS)
             CURRENCY_SUCCESS -> mView.showState(CURRENCY_SUCCESS)
             COUNTRY_SUCCESS -> mView.showState(COUNTRY_SUCCESS)
@@ -112,15 +131,39 @@ class DashboardPresenterImpl(
             Enums.APIRoute.GET_SAMPLE -> {
                 mView.doRetrieveModel().settingsDomain = responseModel
                 presentState(SUCCESS)
+                presentState(IDLE)
             }
         }
+
+    override fun onAPICallSaveSucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.SettingsResponse) {
+        when (route) {
+
+            Enums.APIRoute.GET_SAMPLE -> {
+                mView.doRetrieveModel().settingsDomain = responseModel
+                CustomDialogPresenter.showDialog(mContext,
+                    mContext?.resources?.getString(R.string.alert_success),
+                    responseModel.message,
+                    mContext?.resources?.getString(
+                        R.string.ok
+                    )!!,
+                    null,
+                    object : CustomDialogPresenter.CustomDialogView {
+                        override fun onPositiveButtonClicked() {
+                            presentState(SAVE_SUCCESS)
+                        }
+
+                        override fun onNegativeButtonClicked() {
+                        }
+                    })
+            }
+        }
+    }
 
     override fun onAPICallGetCountrySucceed(
         route: Enums.APIRoute,
         responseModel: DashboardViewModel.CountriesResponse
     ) {
         when (route) {
-
             Enums.APIRoute.GET_SAMPLE -> {
                 mView.doRetrieveModel().dashboradCountriesDomain = responseModel
                 presentState(COUNTRY_SUCCESS)

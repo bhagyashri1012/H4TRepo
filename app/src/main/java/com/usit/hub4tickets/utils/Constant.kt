@@ -19,8 +19,11 @@ class Constant {
         val IS_RATE_US = "is_rate_us"
         val URL = "url"
         val HEADING = "heading"
-        val LOCATION_LIST = "Location_List"
-        val ACTIVITY_TITLE = "activity_title"
+        val LOCATION_LIST = "LOCATION_LIST"
+        val LANGUAGE_LIST = "LANGUAGE_LIST"
+        val CURRENCY_LIST = "CURRENCY_LIST"
+        val LOCATION_LIST_PROFILE = "LOCATION_LIST_PROFILE"
+        val ACTIVITY_TITLE = "ACTIVITY_TITLE"
 
     }
 }

@@ -5,7 +5,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-
 /**
  * Created by Bhagyashri Burade
  * Date: 02/11/2018
@@ -20,7 +19,7 @@ class DashboardViewModel(var context: Context?) {
         DashboardViewModel.LanguageResponse(message = null, responseData = null, status = null)
 
     var dashboradCurrencyDomain: DashboardViewModel.CurrencyResponse =
-        DashboardViewModel.CurrencyResponse(currencyData = null, message = null, status = null)
+        DashboardViewModel.CurrencyResponse(message = null, currencyData = null, status = null)
 
     var settingsDomain: DashboardViewModel.SettingsResponse =
         DashboardViewModel.SettingsResponse(responseData = null, message = null, status = null)
@@ -122,43 +121,133 @@ class DashboardViewModel(var context: Context?) {
     }
 
     data class CurrencyResponse(
-        @SerializedName("currencyData")
-        val currencyData: List<CurrencyData>?,
         @SerializedName("message")
         val message: String?,
+        @SerializedName("responseData")
+        val currencyData: List<CurrencyData>?,
         @SerializedName("status")
-        val status: Int?
-    ) {
+        val status: String?
+    ) : Parcelable {
         data class CurrencyData(
-            @SerializedName("currencyCode")
-            val currencyCode: String,
+            @SerializedName("code")
+            val code: String,
             @SerializedName("currencyId")
             val currencyId: String,
-            @SerializedName("currencyName")
-            val currencyName: String,
-            @SerializedName("currencySymbol")
-            val currencySymbol: String
+            @SerializedName("name")
+            val name: String,
+            @SerializedName("symbol")
+            val symbol: String
+        ) : Parcelable {
+            companion object {
+                @JvmField
+                val CREATOR: Parcelable.Creator<CurrencyData> = object : Parcelable.Creator<CurrencyData> {
+                    override fun createFromParcel(source: Parcel): CurrencyData = CurrencyData(source)
+                    override fun newArray(size: Int): Array<CurrencyData?> = arrayOfNulls(size)
+                }
+            }
+
+            constructor(source: Parcel) : this(
+                source.readString(),
+                source.readString(),
+                source.readString(),
+                source.readString()
+            )
+
+            override fun describeContents() = 0
+
+            override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+                writeString(code)
+                writeString(currencyId)
+                writeString(name)
+                writeString(symbol)
+            }
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<CurrencyResponse> = object : Parcelable.Creator<CurrencyResponse> {
+                override fun createFromParcel(source: Parcel): CurrencyResponse = CurrencyResponse(source)
+                override fun newArray(size: Int): Array<CurrencyResponse?> = arrayOfNulls(size)
+            }
+        }
+
+        constructor(source: Parcel) : this(
+            source.readString(),
+            ArrayList<CurrencyData>().apply { source.readList(this, CurrencyData::class.java.classLoader) },
+            source.readString()
         )
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+            writeString(message)
+            writeList(currencyData)
+            writeString(status)
+        }
     }
 
     data class LanguageResponse(
         @SerializedName("responseData")
-        val responseData: List<LanguageResponseData>?,
+        val responseData: List<ResponseData>?,
         @SerializedName("message")
         val message: String?,
         @SerializedName("status")
-        val status: Int?
-    )
+        val status: String?
+    ) : Parcelable {
+        data class ResponseData(
+            @SerializedName("languageCode")
+            val languageCode: String,
+            @SerializedName("languageId")
+            val languageId: Int,
+            @SerializedName("name")
+            val name: String
+        ) : Parcelable {
+            companion object {
+                @JvmField
+                val CREATOR: Parcelable.Creator<ResponseData> = object : Parcelable.Creator<ResponseData> {
+                    override fun createFromParcel(source: Parcel): ResponseData = ResponseData(source)
+                    override fun newArray(size: Int): Array<ResponseData?> = arrayOfNulls(size)
+                }
+            }
 
-    data class LanguageResponseData(
-        @SerializedName("languageCode")
-        val languageCode: String,
-        @SerializedName("languageId")
-        val languageId: Int,
-        @SerializedName("languageName")
-        val languageName: String
-    )
+            constructor(source: Parcel) : this(
+                source.readString(),
+                source.readInt(),
+                source.readString()
+            )
 
+            override fun describeContents() = 0
+
+            override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+                writeString(languageCode)
+                writeInt(languageId)
+                writeString(name)
+            }
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<LanguageResponse> = object : Parcelable.Creator<LanguageResponse> {
+                override fun createFromParcel(source: Parcel): LanguageResponse = LanguageResponse(source)
+                override fun newArray(size: Int): Array<LanguageResponse?> = arrayOfNulls(size)
+            }
+        }
+
+        constructor(source: Parcel) : this(
+            source.createTypedArrayList(ResponseData.CREATOR),
+            source.readString(),
+            source.readString()
+        )
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+            writeTypedList(responseData)
+            writeString(message)
+            writeString(status)
+        }
+    }
 }
+
 
 

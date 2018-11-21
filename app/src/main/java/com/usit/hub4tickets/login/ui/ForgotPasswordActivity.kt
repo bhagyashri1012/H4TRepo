@@ -1,8 +1,11 @@
 package com.usit.hub4tickets.login.ui
 
 import android.os.Bundle
+import android.support.v4.view.ViewCompat.setBackgroundTintList
 import android.support.v7.app.AlertDialog
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -139,15 +142,39 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
         val dialogBuilder = AlertDialog.Builder(this).create()
         val inflater = this.layoutInflater
         val dialogView = inflater.inflate(R.layout.verify_otp_dialog, null)
+        dialogView.editTextEnterOtp.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                if (s.length > 4) {
+                    dialogView.button_verify.isClickable = true
+                    setBackgroundTintList(dialogView.button_verify, resources.getColorStateList(R.color.colorPrimary))
+                } else {
+                    dialogView.button_verify.isClickable = false
+                    setBackgroundTintList(dialogView.button_verify, resources.getColorStateList(R.color.cool_grey))
+                }
+            }
+        })
         dialogView.button_verify.setOnClickListener {
             val otp = dialogView.editTextEnterOtp.text.toString()
+            Utility.hideSoftKeyboard(dialogView.editTextEnterOtp)
             presenter.callVerifyOTPAPI(Utility.getDeviceId(this), email, otp)
-            dialogBuilder.dismiss()
         }
         dialogView.button_cancel.setOnClickListener {
             Utility.hideProgressBar()
+            Utility.hideSoftKeyboard(dialogView.editTextEnterOtp)
             dialogBuilder.dismiss()
         }
+        dialogView.resendOtp.setOnClickListener {
+            presenter.callSendOtpAPI(Utility.getDeviceId(this), email)
+        }
+
         dialogBuilder.setView(dialogView)
         dialogBuilder.setCanceledOnTouchOutside(false)
         dialogBuilder.show()

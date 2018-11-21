@@ -23,13 +23,11 @@ import kotlinx.android.synthetic.main.fragment_settings_panel.*
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 class SettingsFragment : Fragment(), DashboardPresenter.MainView {
-    private var param1: String? = null
-    private var param2: String? = null
     private val LOCATION_SELECTION_REQUEST = 101
+    private val LANGUAGE_SELECTION_REQUEST = 102
+    private val CURRENCY_SELECTION_REQUEST = 103
     private lateinit var model: DashboardViewModel
     private lateinit var presenter: DashboardPresenter
     override fun doRetrieveModel(): DashboardViewModel = this.model
@@ -37,12 +35,34 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
         when (viewState) {
             DashboardPresenter.MainView.ViewState.IDLE -> showProgress(false)
             DashboardPresenter.MainView.ViewState.LOADING -> showProgress(true)
+            DashboardPresenter.MainView.ViewState.SAVE_SUCCESS -> showProgress(false)
+            DashboardPresenter.MainView.ViewState.SUCCESS -> setData(
+                model.settingsDomain.responseData?.countryName,
+                model.settingsDomain.responseData?.languageName,
+                model.settingsDomain.responseData?.currencyName
+            )
             DashboardPresenter.MainView.ViewState.COUNTRY_SUCCESS -> {
                 showProgress(false)
                 openSearchActivityCountry(
                     model.dashboradCountriesDomain.responseData as ArrayList<DashboardViewModel.CountriesResponse.ResponseData>,
-                    "SettingsFragment",
+                    this.javaClass.simpleName.toString(),
                     LOCATION_SELECTION_REQUEST
+                )
+            }
+            DashboardPresenter.MainView.ViewState.LANG_SUCCESS -> {
+                showProgress(false)
+                openSearchActivityForLanguage(
+                    model.dashboradLangDomain.responseData as ArrayList<DashboardViewModel.LanguageResponse.ResponseData>,
+                    this.javaClass.simpleName.toString(),
+                    LANGUAGE_SELECTION_REQUEST
+                )
+            }
+            DashboardPresenter.MainView.ViewState.CURRENCY_SUCCESS -> {
+                showProgress(false)
+                openSearchActivityForCurrency(
+                    model.dashboradCurrencyDomain.currencyData as ArrayList<DashboardViewModel.CurrencyResponse.CurrencyData>,
+                    this.javaClass.simpleName.toString(),
+                    CURRENCY_SELECTION_REQUEST
                 )
             }
             DashboardPresenter.MainView.ViewState.ERROR
@@ -60,14 +80,6 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
             Utility.hideProgressBar()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -79,11 +91,18 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
-        setData()
+        presenter.callAPIGetSettingsData(Pref.getValue(context, PrefConstants.USER_ID, "0").toString())
+        setData(
+            Pref.getValue(context, PrefConstants.COUNTRY, "India"),
+            Pref.getValue(context, PrefConstants.LANGUAGE, "English"),
+            Pref.getValue(context, PrefConstants.CURRENCY, "Indian Rupees")
+        )
     }
 
-    private fun setData() {
-        tv_settings_country_name.text = Pref.getValue(context, PrefConstants.COUNTRY, "India")
+    private fun setData(countryName: String?, languageName: String?, currencyName: String?) {
+        tv_settings_country_name.text = countryName
+        tv_settings_language_name.text = languageName
+        tv_settings_currency_name.text = currencyName
     }
 
     private fun init() {
@@ -100,6 +119,27 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
         ll_settings_country.setOnClickListener {
             presenter.callAPIGetCountry()
         }
+
+        ll_settings_language.setOnClickListener {
+            presenter.callAPIGetLanguage()
+        }
+
+        ll_settings_currency.setOnClickListener {
+            presenter.callAPIGetCurrency()
+        }
+
+        settings_apply_button.setOnClickListener {
+            presenter.callAPISaveSettingsData(
+                Pref.getValue(
+                    context,
+                    PrefConstants.USER_ID,
+                    "0"
+                ).toString(),
+                Pref.getValue(context, PrefConstants.COUNTRY_ID, "").toString(),
+                Pref.getValue(context, PrefConstants.CURRENCY_ID, "").toString(),
+                Pref.getValue(context, PrefConstants.LANGUAGE_ID, "").toString()
+            )
+        }
     }
 
     private fun openSearchActivityCountry(
@@ -114,6 +154,27 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
         startActivityForResult(intent, locationSelectionRequest)
     }
 
+    private fun openSearchActivityForLanguage(
+        arrayList: ArrayList<DashboardViewModel.LanguageResponse.ResponseData>,
+        title: String,
+        languageSelectionRequest: Int
+    ) {
+        val intent = Intent(context, CommonSearchActivity::class.java)
+        intent.putParcelableArrayListExtra(Constant.Path.LANGUAGE_LIST, arrayList)
+        intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
+        startActivityForResult(intent, languageSelectionRequest)
+    }
+
+    private fun openSearchActivityForCurrency(
+        arrayList: ArrayList<DashboardViewModel.CurrencyResponse.CurrencyData>,
+        title: String,
+        languageSelectionRequest: Int
+    ) {
+        val intent = Intent(context, CommonSearchActivity::class.java)
+        intent.putParcelableArrayListExtra(Constant.Path.CURRENCY_LIST, arrayList)
+        intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
+        startActivityForResult(intent, languageSelectionRequest)
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -126,6 +187,41 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
                         PrefConstants.COUNTRY,
                         data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)!!
                     )
+                    Pref.setValue(
+                        context,
+                        PrefConstants.COUNTRY_ID,
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_ID)!!
+                    )
+                }
+            }
+            LANGUAGE_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    tv_settings_language_name.text = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
+                    Pref.setValue(
+                        context,
+                        PrefConstants.LANGUAGE,
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)!!
+                    )
+                    Pref.setValue(
+                        context,
+                        PrefConstants.COUNTRY_ID,
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_ID)!!
+                    )
+                }
+            }
+            CURRENCY_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    tv_settings_currency_name.text = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
+                    Pref.setValue(
+                        context,
+                        PrefConstants.CURRENCY,
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)!!
+                    )
+                    Pref.setValue(
+                        context,
+                        PrefConstants.COUNTRY_ID,
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_ID)!!
+                    )
                 }
             }
         }
@@ -136,8 +232,7 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
         fun newInstance() =
             SettingsFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
                 }
             }
     }

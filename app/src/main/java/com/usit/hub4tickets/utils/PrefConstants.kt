@@ -16,6 +16,11 @@ interface PrefConstants {
         val SELECTED_ITEMS_NAME = "SELECTED_ITEMS_NAME"
         val SELECTED_ITEMS_TYPE = "SELECTED_ITEMS_TYPE"
         val COUNTRY = "COUNTRY"
+        val COUNTRY_ID = "COUNTRY_ID"
+        val LANGUAGE = "LANGUAGE"
+        val LANGUAGE_ID = "LANGUAGE_ID"
+        val CURRENCY = "CURRENCY"
+        val CURRENCY_ID = "CURRENCY_ID"
     }
 
 }

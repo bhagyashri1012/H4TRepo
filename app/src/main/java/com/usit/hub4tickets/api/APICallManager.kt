@@ -138,18 +138,18 @@ class APICallManager {
             return service.settingsData(settingsData)
         }
 
-        fun getSaveSettingsData(
+        fun saveSettingsData(
             userId: String,
             device_id: String,
             countryId: String,
             currencyId: String,
             langId: String
-        ): Flowable<DashboardViewModel.CountriesResponse> {
+        ): Flowable<DashboardViewModel.SettingsResponse> {
             val saveSettingsData = SaveSettingsData(userId, device_id, countryId, currencyId, langId)
             return service.saveSettingsData(saveSettingsData)
         }
 
-        fun getChangePassword(
+        fun changePassword(
             userId: String,
             device_id: String,
             pass: String,
