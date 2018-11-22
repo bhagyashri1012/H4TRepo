@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
-import com.usit.hub4tickets.dashboard.DashboardActivity
+import com.usit.hub4tickets.dashboard.ui.DashboardActivity
 import com.usit.hub4tickets.login.ui.LoginActivity
 import com.usit.hub4tickets.utils.Pref
 import com.usit.hub4tickets.utils.PrefConstants

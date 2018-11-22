@@ -64,7 +64,7 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
             .observeOn(AndroidSchedulers.mainThread())
         call.subscribe(
             { response ->
-                listener.onChangePasswordAPICallSucceed(route, response)
+                listener.onForgotPasswordAPICallSucceed(route, response)
             },
             { error ->
                 listener.onAPICallFailed(route, ErrorResponse.parseError(error))

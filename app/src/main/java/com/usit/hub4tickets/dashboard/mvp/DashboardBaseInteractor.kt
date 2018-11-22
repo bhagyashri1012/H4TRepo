@@ -37,9 +37,10 @@ class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICall
         langId: String
     ) {
         val route = Enums.APIRoute.GET_SAMPLE
-        val call = APICallManager.getInstance.apiManager.saveSettingsData(userId, deviceId,countryId,currencyId,langId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        val call =
+            APICallManager.getInstance.apiManager.saveSettingsData(userId, deviceId, countryId, currencyId, langId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
         call.subscribe(
             { response ->
                 listenerSettingsInfo.onAPICallSaveSucceed(route, response)

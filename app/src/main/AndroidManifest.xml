@@ -19,7 +19,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".dashboard.DashboardActivity"
+                android:name=".dashboard.ui.DashboardActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
                 android:launchMode="singleTop"
                 android:screenOrientation="portrait"
@@ -88,7 +88,7 @@
                 android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
         <activity
-                android:name=".profile.ui.PersonalInfoActivity"
+                android:name=".account.ui.PersonalInfoActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/NoActionBarAppTheme"
                 android:windowSoftInputMode="stateHidden|adjustPan">

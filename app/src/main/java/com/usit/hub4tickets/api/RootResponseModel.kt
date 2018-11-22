@@ -7,13 +7,13 @@ import com.google.gson.annotations.SerializedName
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-data class RootResponseModel (
-        @SerializedName("details")
-        val details: String?,
-        @SerializedName("message")
-        var message: String?,
-        @SerializedName("status")
-        val status: String?,
-        @SerializedName("timeStamp")
-        val timeStamp: String?
-    )
+data class RootResponseModel(
+    @SerializedName("details")
+    val details: String?,
+    @SerializedName("message")
+    var message: String?,
+    @SerializedName("status")
+    val status: String?,
+    @SerializedName("timeStamp")
+    val timeStamp: String?
+)

@@ -1,6 +1,5 @@
 package com.usit.hub4tickets.dashboard.ui
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity

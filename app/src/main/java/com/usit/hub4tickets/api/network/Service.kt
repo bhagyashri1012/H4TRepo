@@ -53,7 +53,7 @@ interface Service {
     fun saveSettingsData(@Body settingsData: SaveSettingsData): Flowable<DashboardViewModel.SettingsResponse>
 
     @POST("changepassword")
-    fun changePassword(@Body changePasswordDto: ChangePassword): Flowable<DashboardViewModel.CountriesResponse>
+    fun changePassword(@Body changePasswordDto: ChangePassword): Flowable<ProfileViewModel.ProfileResponse>
 
     @POST("getprofile")
     fun getProfileData(@Body profileData: ProfileData): Flowable<ProfileViewModel.ProfileResponse>

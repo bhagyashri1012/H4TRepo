@@ -1,13 +1,10 @@
-package com.usit.hub4tickets.dashboard
+package com.usit.hub4tickets.dashboard.ui
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.usit.hub4tickets.R
-import com.usit.hub4tickets.dashboard.ui.HelpFragment
-import com.usit.hub4tickets.dashboard.ui.HomeFragment
-import com.usit.hub4tickets.dashboard.ui.ProfileFragment
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 /**
@@ -26,7 +23,7 @@ class DashboardActivity : AppCompatActivity() {
                 selectedFragment = HomeFragment.newInstance()
             }
             R.id.navigation_dashboard -> {
-                selectedFragment = ProfileFragment.newInstance()
+                selectedFragment = AccountFragment.newInstance()
             }
             R.id.navigation_help -> {
                 selectedFragment = HelpFragment.newInstance()
@@ -44,7 +41,7 @@ class DashboardActivity : AppCompatActivity() {
         if (intent.extras != null) {
             when (intent.extras.get("SCREEN_NAME")) {
                 "home" -> loadFragment(HomeFragment.newInstance())
-                "account" -> loadFragment(ProfileFragment.newInstance())
+                "account" -> loadFragment(AccountFragment.newInstance())
                 "help" -> loadFragment(HelpFragment.newInstance())
 
             }

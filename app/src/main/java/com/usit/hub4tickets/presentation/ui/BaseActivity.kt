@@ -108,9 +108,8 @@ abstract class BaseActivity : AppCompatActivity(), BaseView, View.OnClickListene
         return toolBar
     }
 
-    override fun onClick(view :View)
-    {
-        when(view.id) {
+    override fun onClick(view: View) {
+        when (view.id) {
             R.id.mainToolbar -> toolBar!!.setNavigationOnClickListener { onBackPressed() }
 
         }

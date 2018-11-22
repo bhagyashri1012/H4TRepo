@@ -1,4 +1,4 @@
-package com.usit.hub4tickets.profile.ui
+package com.usit.hub4tickets.account.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -42,6 +42,14 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
                     LOCATION_SELECTION_REQUEST
                 )
             }
+            DashboardPresenter.MainView.ViewState.LANG_SUCCESS -> {
+                showProgress(false)
+                openSearchActivityForLanguage(
+                    modelDashboard.dashboradLangDomain.responseData as ArrayList<DashboardViewModel.LanguageResponse.ResponseData>,
+                    this.javaClass.simpleName.toString(),
+                    LANGUAGE_SELECTION_REQUEST
+                )
+            }
             DashboardPresenter.MainView.ViewState.ERROR
             -> {
                 presenterDashboard.presentState(DashboardPresenter.MainView.ViewState.IDLE)
@@ -63,6 +71,9 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
     private fun setClickListeners() {
         update_button.setOnClickListener { attemptUpdate() }
         edt_country.setOnClickListener {
+            presenterDashboard.callAPIGetCountry()
+        }
+        edt_lang.setOnClickListener {
             presenterDashboard.callAPIGetCountry()
         }
     }
@@ -175,6 +186,7 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
     }
 
     private val LOCATION_SELECTION_REQUEST = 201
+    private val LANGUAGE_SELECTION_REQUEST = 102
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -182,6 +194,11 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             LOCATION_SELECTION_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK) {
                     edt_country.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME).toString())
+                }
+            }
+            LANGUAGE_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    edt_lang.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME).toString())
                 }
             }
         }
@@ -199,4 +216,14 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         startActivityForResult(intent, locationSelectionRequest)
     }
 
+    private fun openSearchActivityForLanguage(
+        arrayList: ArrayList<DashboardViewModel.LanguageResponse.ResponseData>,
+        title: String,
+        languageSelectionRequest: Int
+    ) {
+        val intent = Intent(this, CommonSearchActivity::class.java)
+        intent.putParcelableArrayListExtra(Constant.Path.LANGUAGE_LIST, arrayList)
+        intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
+        startActivityForResult(intent, languageSelectionRequest)
+    }
 }

@@ -16,7 +16,6 @@ import com.usit.hub4tickets.domain.presentation.screens.main.LoginPresenterImpl
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
 import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.activity_forgot_password.*
-import kotlinx.android.synthetic.main.change_password_dialog.view.*
 import kotlinx.android.synthetic.main.forgot_password_dialog.*
 import kotlinx.android.synthetic.main.forgot_password_dialog.view.*
 import kotlinx.android.synthetic.main.verify_otp_dialog.view.*
@@ -190,23 +189,6 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
             dialogBuilder.dismiss()
         }
         dialogView.button_cancel_fp.setOnClickListener {
-            Utility.hideProgressBar()
-            dialogBuilder.dismiss()
-        }
-        dialogBuilder.setView(dialogView)
-        dialogBuilder.setCanceledOnTouchOutside(false)
-        dialogBuilder.show()
-    }
-
-    private fun changePassword() {
-        val dialogBuilder = AlertDialog.Builder(this).create()
-        val inflater = this.layoutInflater
-        val dialogView = inflater.inflate(R.layout.change_password_dialog, null)
-        dialogView.button_chng_password.setOnClickListener {
-            val newPassword = dialogView.edt_new_change_password.text.toString()
-            presenter.callResetPassword(Utility.getDeviceId(this), email, newPassword)
-        }
-        dialogView.button_cancel1.setOnClickListener {
             Utility.hideProgressBar()
             dialogBuilder.dismiss()
         }

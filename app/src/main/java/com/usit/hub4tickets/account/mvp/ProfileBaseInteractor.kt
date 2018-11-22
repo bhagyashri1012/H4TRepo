@@ -68,4 +68,24 @@ class ProfileBaseInteractor(private var listenerProfileInfo: ProfileInfoAPICallL
                 listenerProfileInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
             })
     }
+
+    fun callAPIResetPassword(
+        dialogView: android.support.v7.app.AlertDialog,
+        userId: String,
+        device_id: String,
+        oldPassword: String,
+        newPassword: String
+    ) {
+        val route = Enums.APIRoute.GET_SAMPLE
+        val call = APICallManager.getInstance.apiManager.changePassword(userId, device_id, oldPassword, newPassword)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+        call.subscribe(
+            { response ->
+                listenerProfileInfo.onAPICallChangePasswordSucceed(route, response, dialogView)
+            },
+            { error ->
+                listenerProfileInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+            })
+    }
 }

@@ -1,4 +1,4 @@
-package com.usit.hub4tickets.dashboard
+package com.usit.hub4tickets.dashboard.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.usit.hub4tickets.R
-import com.usit.hub4tickets.dashboard.HorizontalAdapter.ViewHolder
+import com.usit.hub4tickets.dashboard.adapter.HorizontalAdapter.ViewHolder
 
 
 /**

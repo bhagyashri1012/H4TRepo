@@ -10,7 +10,9 @@ import com.usit.hub4tickets.domain.presentation.presenters.SignUpPresenter
 import com.usit.hub4tickets.domain.presentation.presenters.SignUpPresenter.MainView.ViewState.*
 import com.usit.hub4tickets.login.SignUpBaseInteractor
 import com.usit.hub4tickets.registration.ui.SignUpActivity
-import com.usit.hub4tickets.utils.*
+import com.usit.hub4tickets.utils.Constant
+import com.usit.hub4tickets.utils.Enums
+import com.usit.hub4tickets.utils.Utility
 import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 
 /**

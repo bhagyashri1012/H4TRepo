@@ -4,7 +4,6 @@ import android.os.Bundle
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
 import kotlinx.android.synthetic.main.common_toolbar.*
-import kotlinx.android.synthetic.main.item_horizontal.*
 
 /**
  * Created by Bhagyashri Burade

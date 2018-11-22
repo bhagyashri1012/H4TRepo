@@ -17,7 +17,7 @@ object CustomDialogPresenter {
 
     fun showDialog(
         mContext: Context?,
-        dialogTitle: String ?,
+        dialogTitle: String?,
         message: String?,
         positiveButtonName: String,
         negativeButtonName: String?,

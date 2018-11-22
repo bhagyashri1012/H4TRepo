@@ -5,12 +5,12 @@ import android.provider.Settings.Secure
 import android.util.Log
 import com.usit.hub4tickets.MainApplication
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.account.ui.PersonalInfoActivity
 import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.api.DashboardAPICallListener
 import com.usit.hub4tickets.domain.presentation.presenters.DashboardPresenter
 import com.usit.hub4tickets.domain.presentation.presenters.DashboardPresenter.MainView.ViewState.*
 import com.usit.hub4tickets.login.DashboardBaseInteractor
-import com.usit.hub4tickets.profile.ui.PersonalInfoActivity
 import com.usit.hub4tickets.utils.Enums
 import com.usit.hub4tickets.utils.Utility
 import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
@@ -137,24 +137,28 @@ class DashboardPresenterImpl(
 
     override fun onAPICallSaveSucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.SettingsResponse) {
         when (route) {
-
             Enums.APIRoute.GET_SAMPLE -> {
-                mView.doRetrieveModel().settingsDomain = responseModel
-                CustomDialogPresenter.showDialog(mContext,
-                    mContext?.resources?.getString(R.string.alert_success),
-                    responseModel.message,
-                    mContext?.resources?.getString(
-                        R.string.ok
-                    )!!,
-                    null,
-                    object : CustomDialogPresenter.CustomDialogView {
-                        override fun onPositiveButtonClicked() {
-                            presentState(SAVE_SUCCESS)
-                        }
+                if (responseModel.status.equals("1")) {
+                    mView.doRetrieveModel().settingsDomain = responseModel
+                    CustomDialogPresenter.showDialog(mContext,
+                        mContext?.resources?.getString(R.string.alert_success),
+                        responseModel.message,
+                        mContext?.resources?.getString(
+                            R.string.ok
+                        )!!,
+                        null,
+                        object : CustomDialogPresenter.CustomDialogView {
+                            override fun onPositiveButtonClicked() {
+                                presentState(SAVE_SUCCESS)
+                            }
 
-                        override fun onNegativeButtonClicked() {
-                        }
-                    })
+                            override fun onNegativeButtonClicked() {
+                            }
+                        })
+                } else {
+                    mView.doRetrieveModel().errorMessage = responseModel.message
+                    presentState(ERROR)
+                }
             }
         }
     }

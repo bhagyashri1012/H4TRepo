@@ -12,6 +12,6 @@ interface LoginAPICallListener {
     fun onAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse)
     fun onVerifyOtpAPICallSucceed(route: Enums.APIRoute, response: LoginViewModel.LoginResponse)
     fun onSentOtpAPICallSucceed(route: Enums.APIRoute, response: LoginViewModel.LoginResponse)
-    fun onChangePasswordAPICallSucceed(route: Enums.APIRoute, response: LoginViewModel.LoginResponse)
+    fun onForgotPasswordAPICallSucceed(route: Enums.APIRoute, response: LoginViewModel.LoginResponse)
     fun onAPICallFailed(route: Enums.APIRoute, message: String?)
 }

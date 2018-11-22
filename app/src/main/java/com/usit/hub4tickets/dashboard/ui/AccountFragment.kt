@@ -8,12 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.account.ui.AccountInfoFragment
 import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.presentation.presenters.DashboardPresenter
 import com.usit.hub4tickets.domain.presentation.presenters.DashboardPresenter.MainView.ViewState.*
 import com.usit.hub4tickets.domain.presentation.screens.main.DashboardPresenterImpl
 import com.usit.hub4tickets.login.ui.LoginActivity
-import com.usit.hub4tickets.profile.AccountInfoFragment
 import com.usit.hub4tickets.utils.Pref
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
@@ -21,7 +21,7 @@ import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 
-class ProfileFragment : Fragment(), DashboardPresenter.MainView {
+class AccountFragment : Fragment(), DashboardPresenter.MainView {
     private lateinit var model: DashboardViewModel
     private lateinit var presenter: DashboardPresenter
     private var listener: OnFragmentInteractionListener? = null
@@ -130,8 +130,8 @@ class ProfileFragment : Fragment(), DashboardPresenter.MainView {
 
     companion object {
         @JvmStatic
-        fun newInstance(): ProfileFragment {
-            return ProfileFragment()
+        fun newInstance(): AccountFragment {
+            return AccountFragment()
         }
     }
 

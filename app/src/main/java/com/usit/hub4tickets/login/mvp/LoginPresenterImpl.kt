@@ -105,7 +105,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
         }
     }
 
-    override fun onChangePasswordAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
+    override fun onForgotPasswordAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
         CustomDialogPresenter.showDialog(mContext,
             mContext.resources.getString(R.string.alert_success),
             responseModel.message,

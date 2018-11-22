@@ -50,8 +50,8 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener {
 
 
         btn_sort.setOnClickListener { sortBy() }
-        tv_departure.setOnClickListener { Utility.dateDialog(c,activity,tv_departure) }
-        txt_return.setOnClickListener { Utility.dateDialog(c,activity,txt_return) }
+        tv_departure.setOnClickListener { Utility.dateDialog(c, activity, tv_departure) }
+        txt_return.setOnClickListener { Utility.dateDialog(c, activity, txt_return) }
 
 
     }

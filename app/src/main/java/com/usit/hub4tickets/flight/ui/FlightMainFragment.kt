@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
-import com.usit.hub4tickets.dashboard.DashboardActivity
+import com.usit.hub4tickets.dashboard.ui.DashboardActivity
 import com.usit.hub4tickets.flight.adapter.ViewPagerAdapter
 import kotlinx.android.synthetic.main.fragment_flight_main.*
 

@@ -25,11 +25,13 @@ import kotlinx.android.synthetic.main.fragment_settings_panel.*
  */
 
 class SettingsFragment : Fragment(), DashboardPresenter.MainView {
+
     private val LOCATION_SELECTION_REQUEST = 101
     private val LANGUAGE_SELECTION_REQUEST = 102
     private val CURRENCY_SELECTION_REQUEST = 103
     private lateinit var model: DashboardViewModel
     private lateinit var presenter: DashboardPresenter
+
     override fun doRetrieveModel(): DashboardViewModel = this.model
     override fun showState(viewState: DashboardPresenter.MainView.ViewState) {
         when (viewState) {
@@ -84,7 +86,6 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_settings_panel, container, false)
     }
 
@@ -204,7 +205,7 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
                     )
                     Pref.setValue(
                         context,
-                        PrefConstants.COUNTRY_ID,
+                        PrefConstants.LANGUAGE_ID,
                         data?.getStringExtra(PrefConstants.SELECTED_ITEMS_ID)!!
                     )
                 }
@@ -219,7 +220,7 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
                     )
                     Pref.setValue(
                         context,
-                        PrefConstants.COUNTRY_ID,
+                        PrefConstants.CURRENCY_ID,
                         data?.getStringExtra(PrefConstants.SELECTED_ITEMS_ID)!!
                     )
                 }
@@ -232,7 +233,6 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
         fun newInstance() =
             SettingsFragment().apply {
                 arguments = Bundle().apply {
-
                 }
             }
     }

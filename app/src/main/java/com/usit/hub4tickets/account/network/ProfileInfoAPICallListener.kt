@@ -12,4 +12,10 @@ interface ProfileInfoAPICallListener {
     fun onAPICallSucceed(route: Enums.APIRoute, responseModel: ProfileViewModel.ProfileResponse)
     fun onAPICallUpdatePersonalInfoSucceed(route: Enums.APIRoute, responseModel: ProfileViewModel.ProfileResponse)
     fun onAPICallFailed(route: Enums.APIRoute, message: String?)
+    fun onAPICallChangePasswordSucceed(
+        route: Enums.APIRoute,
+        response: ProfileViewModel.ProfileResponse,
+        dialogView: android.support.v7.app.AlertDialog
+    )
+
 }

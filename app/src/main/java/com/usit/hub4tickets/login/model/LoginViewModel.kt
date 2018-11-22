@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-class LoginViewModel(var context: Context?){
+class LoginViewModel(var context: Context?) {
     var errorMessage: String? = null
 
     var loginDomain: LoginResponse =

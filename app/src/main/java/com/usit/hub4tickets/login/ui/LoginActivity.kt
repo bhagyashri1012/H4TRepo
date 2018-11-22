@@ -7,7 +7,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.usit.hub4tickets.R
-import com.usit.hub4tickets.dashboard.DashboardActivity
+import com.usit.hub4tickets.dashboard.ui.DashboardActivity
 import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginPresenterImpl
@@ -68,6 +68,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
     private fun redirectToDashboard() {
         val intent = Intent(applicationContext, DashboardActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     private fun forgotPassword() {

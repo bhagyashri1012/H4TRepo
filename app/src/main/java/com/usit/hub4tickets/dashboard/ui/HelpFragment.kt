@@ -20,7 +20,7 @@ class HelpFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() : HelpFragment {
+        fun newInstance(): HelpFragment {
             return HelpFragment()
         }
     }

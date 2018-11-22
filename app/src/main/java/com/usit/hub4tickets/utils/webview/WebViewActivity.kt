@@ -1,7 +1,6 @@
 package com.usit.hub4tickets.utils.webview
 
 import android.os.Bundle
-import android.provider.SyncStateContract
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.usit.hub4tickets.R

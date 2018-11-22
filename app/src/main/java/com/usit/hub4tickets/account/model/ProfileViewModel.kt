@@ -2,7 +2,6 @@ package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
 import com.google.gson.annotations.SerializedName
-import io.reactivex.annotations.Nullable
 
 
 /**

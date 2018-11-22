@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.flight.adapter.OneWayRecyclerViewAdapter
-import com.usit.hub4tickets.flight.adapter.RecyclerViewAdapter
 
 
 class FragmentMultiCity : Fragment() {
