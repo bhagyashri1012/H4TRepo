@@ -72,6 +72,28 @@ class DashboardPresenterImpl(
         }
     }
 
+    override fun callAPIGetState(countryId: String) {
+        if (MainApplication.getInstance.isConnected()) {
+            presentState(LOADING)
+            dashboardBaseInteractor.callAPIGetState(countryId)
+        } else {
+            mView.doRetrieveModel().errorMessage =
+                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            presentState(ERROR)
+        }
+    }
+
+    override fun callAPIGetCity(stateId: String) {
+        if (MainApplication.getInstance.isConnected()) {
+            presentState(LOADING)
+            dashboardBaseInteractor.callAPIGetCity(stateId)
+        } else {
+            mView.doRetrieveModel().errorMessage =
+                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            presentState(ERROR)
+        }
+    }
+
     override fun callAPIGetCurrency() {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
@@ -105,6 +127,8 @@ class DashboardPresenterImpl(
             LANG_SUCCESS -> mView.showState(LANG_SUCCESS)
             CURRENCY_SUCCESS -> mView.showState(CURRENCY_SUCCESS)
             COUNTRY_SUCCESS -> mView.showState(COUNTRY_SUCCESS)
+            STATE_SUCCESS -> mView.showState(STATE_SUCCESS)
+            CITY_SUCCESS -> mView.showState(CITY_SUCCESS)
             ERROR -> mView.showState(ERROR)
         }
     }
@@ -140,13 +164,9 @@ class DashboardPresenterImpl(
             Enums.APIRoute.GET_SAMPLE -> {
                 if (responseModel.status.equals("1")) {
                     mView.doRetrieveModel().settingsDomain = responseModel
-                    CustomDialogPresenter.showDialog(mContext,
-                        mContext?.resources?.getString(R.string.alert_success),
+                    Utility.showCustomDialog(
+                        mContext,
                         responseModel.message,
-                        mContext?.resources?.getString(
-                            R.string.ok
-                        )!!,
-                        null,
                         object : CustomDialogPresenter.CustomDialogView {
                             override fun onPositiveButtonClicked() {
                                 presentState(SAVE_SUCCESS)
@@ -171,6 +191,24 @@ class DashboardPresenterImpl(
             Enums.APIRoute.GET_SAMPLE -> {
                 mView.doRetrieveModel().dashboradCountriesDomain = responseModel
                 presentState(COUNTRY_SUCCESS)
+            }
+        }
+    }
+
+    override fun onAPICallGetStateSucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.StateResponse) {
+        when (route) {
+            Enums.APIRoute.GET_SAMPLE -> {
+                mView.doRetrieveModel().dashboradStateDomain = responseModel
+                presentState(STATE_SUCCESS)
+            }
+        }
+    }
+
+    override fun onAPICallGetCitySucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.CityResponse) {
+        when (route) {
+            Enums.APIRoute.GET_SAMPLE -> {
+                mView.doRetrieveModel().dashboradCityDomain = responseModel
+                presentState(CITY_SUCCESS)
             }
         }
     }

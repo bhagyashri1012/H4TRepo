@@ -6,6 +6,7 @@ import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
 import io.reactivex.Flowable
 import retrofit2.http.Body
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 
@@ -41,10 +42,10 @@ interface Service {
     fun getCurrencies(): Flowable<DashboardViewModel.CurrencyResponse>
 
     @POST("states")
-    fun getStates(): Flowable<DashboardViewModel.CountriesResponse>
+    fun getStates(@Body countryData: CountryData): Flowable<DashboardViewModel.StateResponse>
 
     @POST("cities")
-    fun getCities(): Flowable<DashboardViewModel.CountriesResponse>
+    fun getCities(@Body stateData: StateData): Flowable<DashboardViewModel.CityResponse>
 
     @POST("settingdata")
     fun settingsData(@Body settingsData: SettingsData): Flowable<DashboardViewModel.SettingsResponse>

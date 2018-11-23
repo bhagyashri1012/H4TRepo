@@ -7,8 +7,6 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
@@ -16,7 +14,6 @@ import com.usit.hub4tickets.domain.presentation.screens.main.LoginPresenterImpl
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
 import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.activity_forgot_password.*
-import kotlinx.android.synthetic.main.forgot_password_dialog.*
 import kotlinx.android.synthetic.main.forgot_password_dialog.view.*
 import kotlinx.android.synthetic.main.verify_otp_dialog.view.*
 
@@ -49,16 +46,13 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
             LoginPresenter.MainView.ViewState.CHANGE_PASSWORD_SUCCESS -> redirectToLogin()
             LoginPresenter.MainView.ViewState.ERROR -> {
                 presenter.presentState(LoginPresenter.MainView.ViewState.IDLE)
-                showDialog(null, doRetrieveModel().errorMessage)
+                Utility.showCustomDialog(this, doRetrieveModel().errorMessage, null)
             }
         }
     }
 
-    private fun redirectToLogin() {
-        onBackPressed()
-    }
-
     override fun doRetrieveModel(): LoginViewModel = this.model
+
     override fun showProgress(show: Boolean) {
         if (show)
             Utility.showProgressDialog(context = this)
@@ -76,58 +70,47 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
             email = edt_email_forgot_password.text.toString()
             presenter.callSendOtpAPI(Utility.getDeviceId(this), edt_email_forgot_password.text.toString())
         }
-
-        if (null != edt_new_password) {
-            edt_new_password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptResetPassword()
-                    return@OnEditorActionListener true
-                }
-                false
-            })
-        }
     }
 
-    private fun attemptResetPassword() {
-        // Reset errors.
-        //edt_current_password.error = null
-        edt_new_password.error = null
-
-        // Store values at the time of the login attempt.
-        //val currentPasswordStr = edt_current_password.text.toString()
-        val passwordStr = edt_new_password.text.toString()
-        val confirmPasswordStr = edt_confirm_password.text.toString()
-
+    private fun attemptResetPassword(dialogView: View) {
+        dialogView.edt_new_password.error = null
+        dialogView.edt_confirm_password.error = null
+        val passwordStr = dialogView.edt_new_password.text.toString()
+        val confirmPasswordStr = dialogView.edt_confirm_password.text.toString()
         var cancel = false
         var focusView: View? = null
-        if (TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
-            edt_new_password.error = getString(R.string.error_field_required)
-            focusView = edt_new_password
+        if (TextUtils.isEmpty(passwordStr)) {
+            dialogView.edt_new_password.error = getString(R.string.error_field_required)
+            focusView = dialogView.edt_new_password
+            cancel = true
+        } else if (TextUtils.isEmpty(confirmPasswordStr)) {
+            dialogView.edt_confirm_password.error = getString(R.string.error_field_required)
+            focusView = dialogView.edt_confirm_password
             cancel = true
         }
-        // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
-            edt_new_password.error = getString(R.string.error_invalid_password)
-            focusView = edt_new_password
+            dialogView.edt_new_password.error = getString(R.string.error_invalid_password)
+            focusView = dialogView.edt_new_password
+            cancel = true
+        }
+        if (!TextUtils.isEmpty(confirmPasswordStr) && !isPasswordValid(passwordStr)) {
+            dialogView.edt_confirm_password.error = getString(R.string.error_invalid_password)
+            focusView = dialogView.edt_new_password
             cancel = true
         }
         if (!passwordStr.equals(confirmPasswordStr)) {
-            edt_new_password.error = getString(R.string.error_not_match_password)
-            focusView = edt_new_password
-            cancel = false;
+            dialogView.edt_confirm_password.error = getString(R.string.error_not_match_password)
+            focusView = dialogView.edt_confirm_password
+            cancel = true
         }
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView?.requestFocus()
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
             showProgress(true)
             presenter.callResetPassword(
                 Utility.getDeviceId(this),
-                edt_new_password.text.toString(),
-                edt_confirm_password.text.toString()
+                email,
+                dialogView.edt_confirm_password.text.toString()
             )
         }
     }
@@ -135,7 +118,6 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 4
     }
-
 
     private fun verifyOtp() {
         val dialogBuilder = AlertDialog.Builder(this).create()
@@ -173,7 +155,6 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
         dialogView.resendOtp.setOnClickListener {
             presenter.callSendOtpAPI(Utility.getDeviceId(this), email)
         }
-
         dialogBuilder.setView(dialogView)
         dialogBuilder.setCanceledOnTouchOutside(false)
         dialogBuilder.show()
@@ -184,9 +165,8 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
         val inflater = this.layoutInflater
         val dialogView = inflater.inflate(R.layout.forgot_password_dialog, null)
         dialogView.button_reset_password.setOnClickListener {
-            val newPassword = dialogView.edt_new_password.text.toString()
-            presenter.callResetPassword(Utility.getDeviceId(this), email, newPassword)
-            dialogBuilder.dismiss()
+            Utility.hideKeyBordActivity(this)
+            attemptResetPassword(dialogView)
         }
         dialogView.button_cancel_fp.setOnClickListener {
             Utility.hideProgressBar()
@@ -195,5 +175,9 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
         dialogBuilder.setView(dialogView)
         dialogBuilder.setCanceledOnTouchOutside(false)
         dialogBuilder.show()
+    }
+
+    private fun redirectToLogin() {
+        onBackPressed()
     }
 }

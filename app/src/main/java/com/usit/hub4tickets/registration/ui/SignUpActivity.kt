@@ -59,7 +59,7 @@ class SignUpActivity : BaseActivity(), SignUpPresenter.MainView {
             LoginPresenter.MainView.ViewState.ERROR
             -> {
                 presenter.presentState(SignUpPresenter.MainView.ViewState.IDLE)
-                showDialog(null, doRetrieveModel().errorMessage)
+                Utility.showCustomDialog(this, doRetrieveModel().errorMessage, null)
             }
         }
     }

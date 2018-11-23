@@ -9,32 +9,36 @@ import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.account.ui.AccountInfoFragment
-import com.usit.hub4tickets.dashboard.model.DashboardViewModel
-import com.usit.hub4tickets.domain.presentation.presenters.DashboardPresenter
-import com.usit.hub4tickets.domain.presentation.presenters.DashboardPresenter.MainView.ViewState.*
-import com.usit.hub4tickets.domain.presentation.screens.main.DashboardPresenterImpl
+import com.usit.hub4tickets.domain.presentation.presenters.ProfilePresenter
+import com.usit.hub4tickets.domain.presentation.presenters.ProfilePresenter.MainView.ViewState.*
+import com.usit.hub4tickets.domain.presentation.screens.main.ProfilePresenterImpl
+import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel
 import com.usit.hub4tickets.login.ui.LoginActivity
 import com.usit.hub4tickets.utils.Pref
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
 import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
-import kotlinx.android.synthetic.main.fragment_profile.*
-import kotlinx.android.synthetic.main.fragment_profile.view.*
+import kotlinx.android.synthetic.main.fragment_myaccount.*
+import kotlinx.android.synthetic.main.fragment_myaccount.view.*
 
-class AccountFragment : Fragment(), DashboardPresenter.MainView {
-    private lateinit var model: DashboardViewModel
-    private lateinit var presenter: DashboardPresenter
+class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
+    private lateinit var model: ProfileViewModel
+    private lateinit var presenter: ProfilePresenter
     private var listener: OnFragmentInteractionListener? = null
-    override fun doRetrieveModel(): DashboardViewModel = this.model
-    override fun showState(viewState: DashboardPresenter.MainView.ViewState) {
+    override fun doRetrieveProfileModel(): ProfileViewModel = this.model
+    override fun showState(viewState: ProfilePresenter.MainView.ViewState) {
         when (viewState) {
             IDLE -> showProgress(false)
             LOADING -> showProgress(true)
             SUCCESS -> autoFillFields()
             ERROR
             -> {
-                presenter.presentState(IDLE)
-                Utility.showDialog(null, doRetrieveModel().errorMessage, context, activity)
+                showProgress(false)
+                Utility.showCustomDialog(
+                    context,
+                    doRetrieveProfileModel().errorMessage,
+                    null
+                )
             }
         }
     }
@@ -67,11 +71,12 @@ class AccountFragment : Fragment(), DashboardPresenter.MainView {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        return inflater.inflate(R.layout.fragment_myaccount, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        init()
         if (Pref.getValue(context, PrefConstants.IS_LOGIN, false)) {
             rl_my_acc_info.visibility = View.VISIBLE
             link_login.isClickable = false
@@ -79,6 +84,7 @@ class AccountFragment : Fragment(), DashboardPresenter.MainView {
 
         } else {
             link_login.visibility = View.VISIBLE
+            link_login.text = "Login"
             link_login.isClickable = true
             rl_my_acc_info.visibility = View.GONE
         }
@@ -87,14 +93,13 @@ class AccountFragment : Fragment(), DashboardPresenter.MainView {
         }
 
         link_log_out.setOnClickListener { logoutClearData() }
-
-        init()
     }
 
     private fun autoFillFields() {
-        tv_country_name.text = model.settingsDomain.responseData?.countryName
-        tv_lang_name.text = model.settingsDomain.responseData?.languageName
-        tv_currency_name.text = model.settingsDomain.responseData?.currencyName
+        tv_country_name.text = model.profileDomain.responseData?.country
+        tv_lang_name.text = model.profileDomain.responseData?.language
+        tv_currency_name.text = model.profileDomain.responseData?.currency
+        Pref.setValue(context, PrefConstants.EMAIL_ID, model.profileDomain.responseData?.email.toString())
         showState(IDLE)
     }
 
@@ -119,9 +124,10 @@ class AccountFragment : Fragment(), DashboardPresenter.MainView {
     }
 
     private fun init() {
-        this.model = DashboardViewModel(context)
-        this.presenter = DashboardPresenterImpl(this, context)
-        presenter.callAPIGetSettingsData(Pref.getValue(context, PrefConstants.USER_ID, "0").toString())
+        this.model = ProfileViewModel(context)
+        this.presenter = ProfilePresenterImpl(this, context!!)
+        if (null == model.profileDomain.responseData)
+            presenter.callAPIGetProfile(Pref.getValue(context, PrefConstants.USER_ID, "0").toString())
     }
 
     interface OnFragmentInteractionListener {
@@ -130,8 +136,8 @@ class AccountFragment : Fragment(), DashboardPresenter.MainView {
 
     companion object {
         @JvmStatic
-        fun newInstance(): AccountFragment {
-            return AccountFragment()
+        fun newInstance(): MyAccountFragment {
+            return MyAccountFragment()
         }
     }
 

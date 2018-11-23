@@ -77,3 +77,10 @@ data class UpdateProfileData(
     var languageId: String
 )
 
+data class StateData(
+    val stateId: String
+)
+data class CountryData(
+    val countryId: String
+)
+

@@ -47,7 +47,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
             LoginPresenter.MainView.ViewState.SUCCESS -> redirectToDashboard()
             LoginPresenter.MainView.ViewState.ERROR -> {
                 presenter.presentState(LoginPresenter.MainView.ViewState.IDLE)
-                showDialog(null, doRetrieveModel().errorMessage)
+                Utility.showCustomDialog(this, doRetrieveModel().errorMessage, null)
             }
         }
     }

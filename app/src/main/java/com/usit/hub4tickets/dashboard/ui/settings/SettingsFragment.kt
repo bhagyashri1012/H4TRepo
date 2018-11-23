@@ -46,7 +46,7 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
             DashboardPresenter.MainView.ViewState.COUNTRY_SUCCESS -> {
                 showProgress(false)
                 openSearchActivityCountry(
-                    model.dashboradCountriesDomain.responseData as ArrayList<DashboardViewModel.CountriesResponse.ResponseData>,
+                    model.dashboradCountriesDomain.responseData as ArrayList<DashboardViewModel.CountriesResponse.CountriesResponseData>,
                     this.javaClass.simpleName.toString(),
                     LOCATION_SELECTION_REQUEST
                 )
@@ -144,7 +144,7 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
     }
 
     private fun openSearchActivityCountry(
-        arrayListCountry: ArrayList<DashboardViewModel.CountriesResponse.ResponseData>,
+        arrayListCountry: ArrayList<DashboardViewModel.CountriesResponse.CountriesResponseData>,
         title: String,
         locationSelectionRequest: Int
     ) {

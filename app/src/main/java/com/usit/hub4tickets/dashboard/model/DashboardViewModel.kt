@@ -24,6 +24,12 @@ class DashboardViewModel(var context: Context?) {
     var settingsDomain: DashboardViewModel.SettingsResponse =
         DashboardViewModel.SettingsResponse(responseData = null, message = null, status = null)
 
+    var dashboradStateDomain: DashboardViewModel.StateResponse =
+        DashboardViewModel.StateResponse(message = null, responseData = null, status = null)
+
+    var dashboradCityDomain: DashboardViewModel.CityResponse =
+        DashboardViewModel.CityResponse(message = null, responseData = null, status = null)
+
     data class SettingsResponse(
         @SerializedName("message")
         val message: String?,
@@ -51,26 +57,6 @@ class DashboardViewModel(var context: Context?) {
             val userDetailsId: Int,
             @SerializedName("userId")
             val userId: Int
-        )
-    }
-
-    data class CountriesResponse(
-        @SerializedName("message")
-        val message: String?,
-        @SerializedName("responseData")
-        val responseData: List<ResponseData>?,
-        @SerializedName("status")
-        val status: String?
-    ) : Parcelable {
-        data class ResponseData(
-            @SerializedName("countryCode")
-            val countryCode: String,
-            @SerializedName("countryId")
-            val countryId: Int,
-            @SerializedName("countryName")
-            val countryName: String,
-            @SerializedName("msState")
-            val msState: List<Any>
         ) : Parcelable {
             companion object {
                 @JvmField
@@ -80,43 +66,31 @@ class DashboardViewModel(var context: Context?) {
                 }
             }
 
-            constructor(source: Parcel) : this(
-                source.readString(),
-                source.readInt(),
-                source.readString(),
-                ArrayList<Any>().apply { source.readList(this, Any::class.java.classLoader) }
+            constructor(source: Parcel): this(
+            source.readInt(),
+            source.readString(),
+            source.readInt(),
+            source.readString(),
+            source.readString(),
+            source.readInt(),
+            source.readString(),
+            source.readInt(),
+            source.readInt()
             )
 
             override fun describeContents() = 0
 
             override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-                writeString(countryCode)
                 writeInt(countryId)
                 writeString(countryName)
-                writeList(msState)
+                writeInt(currencyId)
+                writeString(currencyName)
+                writeString(deviceId)
+                writeInt(languageId)
+                writeString(languageName)
+                writeInt(userDetailsId)
+                writeInt(userId)
             }
-        }
-
-        companion object {
-            @JvmField
-            val CREATOR: Parcelable.Creator<CountriesResponse> = object : Parcelable.Creator<CountriesResponse> {
-                override fun createFromParcel(source: Parcel): CountriesResponse = CountriesResponse(source)
-                override fun newArray(size: Int): Array<CountriesResponse?> = arrayOfNulls(size)
-            }
-        }
-
-        constructor(source: Parcel) : this(
-            source.readString(),
-            ArrayList<ResponseData>().apply { source.readList(this, ResponseData::class.java.classLoader) },
-            source.readString()
-        )
-
-        override fun describeContents() = 0
-
-        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-            writeString(message)
-            writeList(responseData)
-            writeString(status)
         }
     }
 
@@ -244,6 +218,234 @@ class DashboardViewModel(var context: Context?) {
         override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
             writeTypedList(responseData)
             writeString(message)
+            writeString(status)
+        }
+    }
+
+    data class CityResponse(
+        @SerializedName("message")
+        val message: String?,
+        @SerializedName("responseData")
+        val responseData: List<ResponseData>?,
+        @SerializedName("status")
+        val status: String?
+    ) : Parcelable {
+        data class ResponseData(
+            @SerializedName("cityId")
+            val cityId: String,
+            @SerializedName("cityname")
+            val cityname: String,
+            @SerializedName("stateId")
+            val stateId: String
+        ) : Parcelable {
+            companion object {
+                @JvmField
+                val CREATOR: Parcelable.Creator<ResponseData> = object : Parcelable.Creator<ResponseData> {
+                    override fun createFromParcel(source: Parcel): ResponseData = ResponseData(source)
+                    override fun newArray(size: Int): Array<ResponseData?> = arrayOfNulls(size)
+                }
+            }
+
+            constructor(source: Parcel) : this(
+                source.readString(),
+                source.readString(),
+                source.readString()
+            )
+
+            override fun describeContents() = 0
+
+            override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+                writeString(cityId)
+                writeString(cityname)
+                writeString(stateId)
+            }
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<CityResponse> = object : Parcelable.Creator<CityResponse> {
+                override fun createFromParcel(source: Parcel): CityResponse = CityResponse(source)
+                override fun newArray(size: Int): Array<CityResponse?> = arrayOfNulls(size)
+            }
+        }
+
+        constructor(source: Parcel) : this(
+            source.readString(),
+            source.createTypedArrayList(ResponseData.CREATOR),
+            source.readString()
+        )
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+            writeString(message)
+            writeTypedList(responseData)
+            writeString(status)
+        }
+    }
+
+    data class StateResponse(
+        @SerializedName("message")
+        val message: String?,
+        @SerializedName("responseData")
+        val responseData: List<ResponseData>?,
+        @SerializedName("status")
+        val status: String?
+    ) : Parcelable {
+        data class ResponseData(
+            @SerializedName("countryId")
+            val countryId: CountryId,
+            @SerializedName("stateId")
+            val stateId: String,
+            @SerializedName("stateName")
+            val stateName: String
+        ) : Parcelable {
+            data class CountryId(
+                @SerializedName("countryCode")
+                val countryCode: String,
+                @SerializedName("countryId")
+                val countryId: String,
+                @SerializedName("countryName")
+                val countryName: String,
+                @SerializedName("msState")
+                val msState: List<Any>
+            ) : Parcelable {
+                companion object {
+                    @JvmField
+                    val CREATOR: Parcelable.Creator<CountryId> = object : Parcelable.Creator<CountryId> {
+                        override fun createFromParcel(source: Parcel): CountryId = CountryId(source)
+                        override fun newArray(size: Int): Array<CountryId?> = arrayOfNulls(size)
+                    }
+                }
+
+                constructor(source: Parcel) : this(
+                    source.readString(),
+                    source.readString(),
+                    source.readString(),
+                    ArrayList<Any>().apply { source.readList(this, Any::class.java.classLoader) }
+                )
+
+                override fun describeContents() = 0
+
+                override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+                    writeString(countryCode)
+                    writeString(countryId)
+                    writeString(countryName)
+                    writeList(msState)
+                }
+            }
+
+            companion object {
+                @JvmField
+                val CREATOR: Parcelable.Creator<ResponseData> = object : Parcelable.Creator<ResponseData> {
+                    override fun createFromParcel(source: Parcel): ResponseData = ResponseData(source)
+                    override fun newArray(size: Int): Array<ResponseData?> = arrayOfNulls(size)
+                }
+            }
+
+            constructor(source: Parcel) : this(
+                source.readParcelable<CountryId>(CountryId::class.java.classLoader),
+                source.readString(),
+                source.readString()
+            )
+
+            override fun describeContents() = 0
+
+            override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+                writeParcelable(countryId, 0)
+                writeString(stateId)
+                writeString(stateName)
+            }
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<StateResponse> = object : Parcelable.Creator<StateResponse> {
+                override fun createFromParcel(source: Parcel): StateResponse = StateResponse(source)
+                override fun newArray(size: Int): Array<StateResponse?> = arrayOfNulls(size)
+            }
+        }
+
+        constructor(source: Parcel) : this(
+            source.readString(),
+            source.createTypedArrayList(ResponseData.CREATOR),
+            source.readString()
+        )
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+            writeString(message)
+            writeTypedList(responseData)
+            writeString(status)
+        }
+    }
+
+    data class CountriesResponse(
+        @SerializedName("message")
+        val message: String?,
+        @SerializedName("responseData")
+        val responseData: List<CountriesResponseData>?,
+        @SerializedName("status")
+        val status: String?
+    ) : Parcelable {
+        data class CountriesResponseData(
+            @SerializedName("countryCode")
+            val countryCode: String,
+            @SerializedName("countryId")
+            val countryId: Int,
+            @SerializedName("countryName")
+            val countryName: String,
+            @SerializedName("msState")
+            val msState: List<Any>
+        ) : Parcelable {
+            companion object {
+                @JvmField
+                val CREATOR: Parcelable.Creator<CountriesResponseData> =
+                    object : Parcelable.Creator<CountriesResponseData> {
+                        override fun createFromParcel(source: Parcel): CountriesResponseData =
+                            CountriesResponseData(source)
+
+                        override fun newArray(size: Int): Array<CountriesResponseData?> = arrayOfNulls(size)
+                    }
+            }
+
+            constructor(source: Parcel) : this(
+                source.readString(),
+                source.readInt(),
+                source.readString(),
+                ArrayList<Any>().apply { source.readList(this, Any::class.java.classLoader) }
+            )
+
+            override fun describeContents() = 0
+
+            override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+                writeString(countryCode)
+                writeInt(countryId)
+                writeString(countryName)
+                writeList(msState)
+            }
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<CountriesResponse> = object : Parcelable.Creator<CountriesResponse> {
+                override fun createFromParcel(source: Parcel): CountriesResponse = CountriesResponse(source)
+                override fun newArray(size: Int): Array<CountriesResponse?> = arrayOfNulls(size)
+            }
+        }
+
+        constructor(source: Parcel) : this(
+            source.readString(),
+            source.createTypedArrayList(CountriesResponseData.CREATOR),
+            source.readString()
+        )
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+            writeString(message)
+            writeTypedList(responseData)
             writeString(status)
         }
     }

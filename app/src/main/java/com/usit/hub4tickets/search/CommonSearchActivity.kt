@@ -14,22 +14,26 @@ import com.usit.hub4tickets.search.model.CommonSelectorPojo
 import com.usit.hub4tickets.utils.Constant
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
-import kotlinx.android.synthetic.main.activity_select_city.*
+import kotlinx.android.synthetic.main.activity_comman_serach.*
 
 class CommonSearchActivity : BaseActivity() {
 
     private var searchItemsListAdapter: CommonSearchAdapter? = null
     private var strActivityTitle: String? = ""
-    private var arrayListCommonSelectorInitial: ArrayList<DashboardViewModel.CountriesResponse.ResponseData> =
+    private var arrayListCommonSelectorInitial: ArrayList<DashboardViewModel.CountriesResponse.CountriesResponseData> =
         ArrayList()
     private var arrayListCommonSelectorLangInitial: ArrayList<DashboardViewModel.LanguageResponse.ResponseData> =
         ArrayList()
     private var arrayListCommonSelectorCurrencyInitial: ArrayList<DashboardViewModel.CurrencyResponse.CurrencyData> =
         ArrayList()
+    private var arrayListCommonSelectorStateInitial: ArrayList<DashboardViewModel.StateResponse.ResponseData> =
+        ArrayList()
+    private var arrayListCommonSelectorCityInitial: ArrayList<DashboardViewModel.CityResponse.ResponseData> =
+        ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_select_city)
+        setContentView(R.layout.activity_comman_serach)
         Utility.hideKeyBordActivity(this)
         if (intent.extras != null) {
             strActivityTitle = intent.extras!!.getString(Constant.Path.ACTIVITY_TITLE)
@@ -37,7 +41,7 @@ class CommonSearchActivity : BaseActivity() {
                 "SettingsFragment" -> {
                     if (null != intent.extras.getSerializable(Constant.Path.LOCATION_LIST))
                         arrayListCommonSelectorInitial =
-                                intent.extras.getSerializable(Constant.Path.LOCATION_LIST) as ArrayList<DashboardViewModel.CountriesResponse.ResponseData>
+                                intent.extras.getSerializable(Constant.Path.LOCATION_LIST) as ArrayList<DashboardViewModel.CountriesResponse.CountriesResponseData>
                     if (null != intent.extras.getSerializable(Constant.Path.LANGUAGE_LIST))
                         arrayListCommonSelectorLangInitial =
                                 intent.extras.getSerializable(Constant.Path.LANGUAGE_LIST) as ArrayList<DashboardViewModel.LanguageResponse.ResponseData>
@@ -45,11 +49,23 @@ class CommonSearchActivity : BaseActivity() {
                         arrayListCommonSelectorCurrencyInitial =
                                 intent.extras.getSerializable(Constant.Path.CURRENCY_LIST) as ArrayList<DashboardViewModel.CurrencyResponse.CurrencyData>
                 }
-                "PersonalInfoActivity" -> arrayListCommonSelectorInitial =
-                        intent.extras.getSerializable(Constant.Path.LOCATION_LIST_PROFILE) as ArrayList<DashboardViewModel.CountriesResponse.ResponseData>
+                "PersonalInfoActivity" -> {
+                    if (null != intent.extras.getSerializable(Constant.Path.LOCATION_LIST_PROFILE))
+                        arrayListCommonSelectorInitial =
+                                intent.extras.getSerializable(Constant.Path.LOCATION_LIST_PROFILE) as ArrayList<DashboardViewModel.CountriesResponse.CountriesResponseData>
+                    if (null != intent.extras.getSerializable(Constant.Path.STATE_LIST_PROFILE))
+                        arrayListCommonSelectorStateInitial =
+                                intent.extras.getSerializable(Constant.Path.STATE_LIST_PROFILE) as ArrayList<DashboardViewModel.StateResponse.ResponseData>
+                    if (null != intent.extras.getSerializable(Constant.Path.CITY_LIST_PROFILE))
+                        arrayListCommonSelectorCityInitial =
+                                intent.extras.getSerializable(Constant.Path.CITY_LIST_PROFILE) as ArrayList<DashboardViewModel.CityResponse.ResponseData>
+                    if (null != intent.extras.getSerializable(Constant.Path.LANGUAGE_LIST_PROFILE))
+                        arrayListCommonSelectorLangInitial =
+                                intent.extras.getSerializable(Constant.Path.LANGUAGE_LIST_PROFILE) as ArrayList<DashboardViewModel.LanguageResponse.ResponseData>
+                }
+
             }
         }
-        search_text.isFocusable = false
         initView()
     }
 
@@ -92,6 +108,31 @@ class CommonSearchActivity : BaseActivity() {
 
             }
         }
+
+        if (arrayListCommonSelectorStateInitial != null) {
+            for (i in arrayListCommonSelectorStateInitial!!.indices) {
+                arrayListCommonSelector.add(
+                    i, CommonSelectorPojo(
+                        arrayListCommonSelectorStateInitial[i].stateId,
+                        arrayListCommonSelectorStateInitial[i].stateName,
+                        ""
+                    )
+                )
+
+            }
+        }
+        if (arrayListCommonSelectorCityInitial != null) {
+            for (i in arrayListCommonSelectorCityInitial!!.indices) {
+                arrayListCommonSelector.add(
+                    i, CommonSelectorPojo(
+                        arrayListCommonSelectorCityInitial[i].cityId,
+                        arrayListCommonSelectorCityInitial[i].cityname,
+                        arrayListCommonSelectorCityInitial[i].stateId
+                    )
+                )
+
+            }
+        }
         if (null != arrayListCommonSelector) {
             searchItemsListAdapter = CommonSearchAdapter(
                 this,
@@ -120,15 +161,16 @@ class CommonSearchActivity : BaseActivity() {
             recycler_city_list!!.layoutManager = mLayoutManager as RecyclerView.LayoutManager?
             recycler_city_list!!.adapter = searchItemsListAdapter
 
-            search_text.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            var searchText = this.findViewById<SearchView>(R.id.search_text)
+            searchText.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     query?.replace("\\s+$".toRegex(), "")
-                    searchItemsListAdapter!!.filter(query!!)
+                    searchItemsListAdapter!!.getFilter().filter(query)
                     return false
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    searchItemsListAdapter!!.filter(newText!!.trim { it <= ' ' })
+                    searchItemsListAdapter!!.getFilter().filter(newText!!.trim { it <= ' ' })
                     return false
                 }
 

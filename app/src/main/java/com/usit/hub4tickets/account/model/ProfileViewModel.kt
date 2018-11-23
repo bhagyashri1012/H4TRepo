@@ -27,6 +27,8 @@ class ProfileViewModel(var context: Context?) {
             val city: String,
             @SerializedName("country")
             val country: String,
+            @SerializedName("currency")
+            val currency: String,
             @SerializedName("email")
             val email: String,
             @SerializedName("firstName")
@@ -47,6 +49,12 @@ class ProfileViewModel(var context: Context?) {
             val dNo: DNo,
             @SerializedName("deviceId")
             val deviceId: String,
+            @SerializedName("countryId")
+            val countryId: String,
+            @SerializedName("stateId")
+            val stateId: String,
+            @SerializedName("cityId")
+            val cityId: String,
             @SerializedName("userId")
             val userId: Int
         ) {

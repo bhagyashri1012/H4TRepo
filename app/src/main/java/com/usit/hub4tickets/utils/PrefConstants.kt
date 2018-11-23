@@ -21,6 +21,10 @@ interface PrefConstants {
         val LANGUAGE_ID = "LANGUAGE_ID"
         val CURRENCY = "CURRENCY"
         val CURRENCY_ID = "CURRENCY_ID"
+        val PROFILE_LANGUAGE_ID = "PROFILE_LANGUAGE_ID"
+        val PROFILE_COUNTRY_ID = "PROFILE_COUNTRY_ID"
+        val STATE_ID = "STATE_ID"
+        val CITY_ID = "CITY_ID"
     }
 
 }

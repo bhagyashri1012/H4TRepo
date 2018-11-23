@@ -673,4 +673,16 @@ object Utility {
         var imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
+
+    fun showCustomDialog(mContext: Context?, message: String?, listner: CustomDialogPresenter.CustomDialogView?) {
+        CustomDialogPresenter.showDialog(
+            mContext,
+            mContext?.resources?.getString(R.string.alert_success),
+            message,
+            mContext?.resources?.getString(
+                R.string.ok
+            )!!,
+            null, listner
+        )
+    }
 }

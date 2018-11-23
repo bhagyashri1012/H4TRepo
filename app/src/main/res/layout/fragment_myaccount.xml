@@ -5,7 +5,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="@drawable/home_bg"
-             tools:context="com.usit.hub4tickets.dashboard.ui.AccountFragment">
+             tools:context="com.usit.hub4tickets.dashboard.ui.MyAccountFragment">
     <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -14,6 +14,7 @@
                 android:fadingEdge="none"
                 android:scrollbars="none"
                 android:overScrollMode="never"
+                android:layout_marginBottom="50dp"
                 android:background="@drawable/home_bg"
     >
         <RelativeLayout android:layout_width="match_parent"
@@ -47,27 +48,34 @@
                                 style="@style/CustomLargeTextView"
                                 android:text="@string/login"
                                 android:padding="@dimen/margin_4dp"
+                                android:layout_marginBottom="@dimen/padding_8dp"
                                 android:textColor="@color/colorPrimary"
-                                android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-                        <RelativeLayout android:id="@+id/rl_my_acc_info"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content">
+                        />
+                        <LinearLayout android:id="@+id/rl_my_acc_info"
+                                      android:layout_width="match_parent"
+                                      android:layout_height="wrap_content"
+                                      android:orientation="horizontal"
+                                      android:weightSum="2"
+                        >
+                            <TextView
+                                    android:id="@+id/link_account_info"
+                                    style="@style/CustomLargeTextView"
+                                    android:layout_weight="1.5"
+                                    android:text="@string/my_account_info"
+                                    android:padding="@dimen/margin_4dp"
+                                    android:layout_marginRight="@dimen/margin_4dp"
+                                    android:textColor="@color/colorPrimary"
+                            />
                             <TextView
                                     android:id="@+id/link_log_out"
                                     style="@style/CustomLargeTextView"
+                                    android:layout_weight=".5"
                                     android:text="@string/logout"
                                     android:textColor="@color/colorPrimary"
                                     android:layout_alignParentRight="true"
                                     android:padding="@dimen/margin_4dp"
-                                    android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-                            <TextView
-                                    android:id="@+id/link_account_info"
-                                    style="@style/CustomLargeTextView"
-                                    android:text="@string/my_account_info"
-                                    android:padding="@dimen/margin_4dp"
-                                    android:textColor="@color/colorPrimary"
-                                    android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-                        </RelativeLayout>
+                            />
+                        </LinearLayout>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
                 <android.support.v7.widget.CardView
@@ -90,51 +98,67 @@
                                 style="@style/CustomLargeBoldTextView"
                                 android:text="Settings"
                                 android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-                        <RelativeLayout android:layout_width="match_parent"
-                                        android:layout_height="wrap_content">
+                        <LinearLayout android:layout_width="match_parent"
+                                      android:layout_height="wrap_content">
                             <TextView
                                     android:id="@+id/tv_country"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
                                     style="@style/CustomRegularTextView"
                                     android:text="@string/country_region"
                                     android:layout_marginRight="@dimen/activity_vertical_margin_half"
                                     android:layout_marginBottom="@dimen/activity_vertical_margin"/>
                             <TextView
                                     android:id="@+id/tv_country_name"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:maxLines="2"
                                     style="@style/CustomRegularTextView"
                                     tools:text="India"
                                     android:layout_toRightOf="@+id/tv_country"
                                     android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-                        </RelativeLayout>
-                        <RelativeLayout android:layout_width="match_parent"
-                                        android:layout_height="wrap_content">
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="match_parent"
+                                      android:layout_height="wrap_content"
+                                      android:orientation="horizontal">
                             <TextView
                                     android:id="@+id/tv_lang"
                                     style="@style/CustomRegularTextView"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
                                     android:text="@string/language"
                                     android:layout_marginRight="@dimen/activity_vertical_margin_half"
                                     android:layout_marginBottom="@dimen/activity_vertical_margin"/>
                             <TextView
                                     android:id="@+id/tv_lang_name"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
                                     style="@style/CustomRegularTextView"
                                     tools:text="Marathi"
+                                    android:maxLines="2"
                                     android:layout_toRightOf="@+id/tv_lang"
                                     android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-                        </RelativeLayout>
-                        <RelativeLayout android:layout_width="match_parent"
-                                        android:layout_height="wrap_content">
+                        </LinearLayout>
+                        <LinearLayout android:layout_width="match_parent"
+                                      android:layout_height="wrap_content">
                             <TextView
                                     android:id="@+id/tv_currency"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
                                     style="@style/CustomRegularTextView"
-                                    android:text="Country / Region :"
+                                    android:text="Currency :"
                                     android:layout_marginRight="@dimen/activity_vertical_margin_half"
                                     android:layout_marginBottom="@dimen/activity_vertical_margin"/>
                             <TextView
                                     android:id="@+id/tv_currency_name"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:maxLines="2"
                                     style="@style/CustomRegularTextView"
-                                    tools:text="INR"
+                                    tools:text="INRsadasdasdasdadsasdadadad"
                                     android:layout_toRightOf="@+id/tv_currency"
                                     android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-                        </RelativeLayout>
+                        </LinearLayout>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
                 <android.support.v7.widget.CardView

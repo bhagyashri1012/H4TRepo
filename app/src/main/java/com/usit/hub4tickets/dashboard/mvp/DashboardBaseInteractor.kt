@@ -65,6 +65,34 @@ class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICall
             })
     }
 
+    fun callAPIGetState(countryId: String) {
+        val route = Enums.APIRoute.GET_SAMPLE
+        val call = APICallManager.getInstance.apiManager.getStates(countryId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+        call.subscribe(
+            { response ->
+                listenerSettingsInfo.onAPICallGetStateSucceed(route, response)
+            },
+            { error ->
+                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+            })
+    }
+
+    fun callAPIGetCity(stateId: String) {
+        val route = Enums.APIRoute.GET_SAMPLE
+        val call = APICallManager.getInstance.apiManager.getCities(stateId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+        call.subscribe(
+            { response ->
+                listenerSettingsInfo.onAPICallGetCitySucceed(route, response)
+            },
+            { error ->
+                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+            })
+    }
+
     fun callAPIGetLanguage() {
         val route = Enums.APIRoute.GET_SAMPLE
         val call = APICallManager.getInstance.apiManager.getLanguages()

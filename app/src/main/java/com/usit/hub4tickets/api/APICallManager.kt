@@ -125,12 +125,14 @@ class APICallManager {
             return service.getCurrencies()
         }
 
-        fun getStates(): Flowable<DashboardViewModel.CountriesResponse> {
-            return service.getStates()
+        fun getStates(countryId: String): Flowable<DashboardViewModel.StateResponse> {
+            val countryData = CountryData(countryId)
+            return service.getStates(countryData)
         }
 
-        fun getCities(): Flowable<DashboardViewModel.CountriesResponse> {
-            return service.getCities()
+        fun getCities(stateId: String): Flowable<DashboardViewModel.CityResponse> {
+            val stateData = StateData(stateId)
+            return service.getCities(stateData)
         }
 
         fun getSettingsData(userId: String, device_id: String): Flowable<DashboardViewModel.SettingsResponse> {

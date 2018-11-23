@@ -59,5 +59,4 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation 'com.github.simbiose:Encryption:2.0.1'
 
-
 }

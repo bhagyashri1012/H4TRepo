@@ -23,7 +23,7 @@ class DashboardActivity : AppCompatActivity() {
                 selectedFragment = HomeFragment.newInstance()
             }
             R.id.navigation_dashboard -> {
-                selectedFragment = AccountFragment.newInstance()
+                selectedFragment = MyAccountFragment.newInstance()
             }
             R.id.navigation_help -> {
                 selectedFragment = HelpFragment.newInstance()
@@ -41,7 +41,7 @@ class DashboardActivity : AppCompatActivity() {
         if (intent.extras != null) {
             when (intent.extras.get("SCREEN_NAME")) {
                 "home" -> loadFragment(HomeFragment.newInstance())
-                "account" -> loadFragment(AccountFragment.newInstance())
+                "account" -> loadFragment(MyAccountFragment.newInstance())
                 "help" -> loadFragment(HelpFragment.newInstance())
 
             }

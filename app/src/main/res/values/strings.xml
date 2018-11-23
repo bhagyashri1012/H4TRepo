@@ -154,4 +154,7 @@
     <string name="prompt_time_zone">Time Zone</string>
     <string name="prompt_city">City</string>
     <string name="prompt_state">State / Province</string>
+    <string name="error_country_select">Please select country first</string>
+    <string name="error_state_select">Please select state first</string>
+
 </resources>

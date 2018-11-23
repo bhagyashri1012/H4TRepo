@@ -24,12 +24,18 @@ import kotlinx.android.synthetic.main.common_toolbar.*
 
 
 class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, DashboardPresenter.MainView {
+
+    private val LOCATION_SELECTION_REQUEST = 201
+    private val LANGUAGE_SELECTION_REQUEST = 102
+    private val STATE_SELECTION_REQUEST = 103
+    private val CITY_SELECTION_REQUEST = 104
     private lateinit var model: ProfileViewModel
     private lateinit var modelDashboard: DashboardViewModel
     private lateinit var presenter: ProfilePresenter
     private lateinit var presenterDashboard: DashboardPresenter
     override fun doRetrieveProfileModel(): ProfileViewModel = this.model
     override fun doRetrieveModel(): DashboardViewModel = this.modelDashboard
+
     override fun showState(viewState: DashboardPresenter.MainView.ViewState) {
         when (viewState) {
             DashboardPresenter.MainView.ViewState.IDLE -> showProgress(false)
@@ -37,7 +43,7 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             DashboardPresenter.MainView.ViewState.COUNTRY_SUCCESS -> {
                 showProgress(false)
                 openSearchActivityCountry(
-                    modelDashboard.dashboradCountriesDomain.responseData as ArrayList<DashboardViewModel.CountriesResponse.ResponseData>,
+                    modelDashboard.dashboradCountriesDomain.responseData as ArrayList<DashboardViewModel.CountriesResponse.CountriesResponseData>,
                     this.javaClass.simpleName.toString(),
                     LOCATION_SELECTION_REQUEST
                 )
@@ -48,6 +54,22 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
                     modelDashboard.dashboradLangDomain.responseData as ArrayList<DashboardViewModel.LanguageResponse.ResponseData>,
                     this.javaClass.simpleName.toString(),
                     LANGUAGE_SELECTION_REQUEST
+                )
+            }
+            DashboardPresenter.MainView.ViewState.STATE_SUCCESS -> {
+                showProgress(false)
+                openSearchActivityForState(
+                    modelDashboard.dashboradStateDomain.responseData as ArrayList<DashboardViewModel.StateResponse.ResponseData>,
+                    this.javaClass.simpleName.toString(),
+                    STATE_SELECTION_REQUEST
+                )
+            }
+            DashboardPresenter.MainView.ViewState.CITY_SUCCESS -> {
+                showProgress(false)
+                openSearchActivityForCity(
+                    modelDashboard.dashboradCityDomain.responseData as ArrayList<DashboardViewModel.CityResponse.ResponseData>,
+                    this.javaClass.simpleName.toString(),
+                    CITY_SELECTION_REQUEST
                 )
             }
             DashboardPresenter.MainView.ViewState.ERROR
@@ -74,7 +96,19 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             presenterDashboard.callAPIGetCountry()
         }
         edt_lang.setOnClickListener {
-            presenterDashboard.callAPIGetCountry()
+            presenterDashboard.callAPIGetLanguage()
+        }
+        edt_state.setOnClickListener {
+            if (edt_country.text.toString().isNotEmpty())
+                presenterDashboard.callAPIGetState(Pref.getValue(this, PrefConstants.PROFILE_COUNTRY_ID, "").toString())
+            else
+                edt_country.error = getString(R.string.error_country_select)
+        }
+        edt_city.setOnClickListener {
+            if (edt_state.text.toString().isNotEmpty())
+                presenterDashboard.callAPIGetCity(Pref.getValue(this, PrefConstants.STATE_ID, "").toString())
+            else
+                edt_state.error = getString(R.string.error_country_select)
         }
     }
 
@@ -110,6 +144,8 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         edt_home_airport.setText(model.profileDomain.responseData?.homeAirPort)
         edt_time_zone.setText(model.profileDomain.responseData?.timeZone)
         edt_lang.setText(model.profileDomain.responseData?.language)
+        Pref.setValue(this, PrefConstants.PROFILE_COUNTRY_ID, model.profileDomain.responseData?.countryId!!)
+        Pref.setValue(this, PrefConstants.STATE_ID, model.profileDomain.responseData?.stateId!!)
         presenter.presentState(ProfilePresenter.MainView.ViewState.IDLE)
     }
 
@@ -162,10 +198,10 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
                 edt_phone_no.text.toString(),
                 edt_home_airport.text.toString(),
                 edt_time_zone.text.toString(),
-                edt_country.text.toString(),
-                edt_state.text.toString(),
-                edt_city.text.toString(),
-                edt_lang.text.toString()
+                Pref.getValue(this, PrefConstants.PROFILE_COUNTRY_ID, "").toString(),
+                Pref.getValue(this, PrefConstants.STATE_ID, "").toString(),
+                Pref.getValue(this, PrefConstants.CITY_ID, "").toString(),
+                Pref.getValue(this, PrefConstants.LANGUAGE_ID, "").toString()
             )
         }
     }
@@ -185,27 +221,54 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         return password.length > 8
     }
 
-    private val LOCATION_SELECTION_REQUEST = 201
-    private val LANGUAGE_SELECTION_REQUEST = 102
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             LOCATION_SELECTION_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK) {
                     edt_country.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME).toString())
+                    Pref.setValue(
+                        this,
+                        PrefConstants.PROFILE_COUNTRY_ID,
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_ID)!!
+                    )
+                }
+            }
+            STATE_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    edt_state.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME).toString())
+                    Pref.setValue(
+                        this,
+                        PrefConstants.STATE_ID,
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_ID)!!
+                    )
+                }
+            }
+            CITY_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    edt_city.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME).toString())
+                    Pref.setValue(
+                        this,
+                        PrefConstants.CITY_ID,
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_ID)!!
+                    )
                 }
             }
             LANGUAGE_SELECTION_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK) {
                     edt_lang.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME).toString())
+                    Pref.setValue(
+                        this,
+                        PrefConstants.PROFILE_LANGUAGE_ID,
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_ID)!!
+                    )
                 }
             }
         }
     }
 
     private fun openSearchActivityCountry(
-        arrayListCountry: ArrayList<DashboardViewModel.CountriesResponse.ResponseData>,
+        arrayListCountry: ArrayList<DashboardViewModel.CountriesResponse.CountriesResponseData>,
         title: String,
         locationSelectionRequest: Int
     ) {
@@ -222,7 +285,29 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         languageSelectionRequest: Int
     ) {
         val intent = Intent(this, CommonSearchActivity::class.java)
-        intent.putParcelableArrayListExtra(Constant.Path.LANGUAGE_LIST, arrayList)
+        intent.putParcelableArrayListExtra(Constant.Path.LANGUAGE_LIST_PROFILE, arrayList)
+        intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
+        startActivityForResult(intent, languageSelectionRequest)
+    }
+
+    private fun openSearchActivityForState(
+        arrayList: ArrayList<DashboardViewModel.StateResponse.ResponseData>,
+        title: String,
+        languageSelectionRequest: Int
+    ) {
+        val intent = Intent(this, CommonSearchActivity::class.java)
+        intent.putParcelableArrayListExtra(Constant.Path.STATE_LIST_PROFILE, arrayList)
+        intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
+        startActivityForResult(intent, languageSelectionRequest)
+    }
+
+    private fun openSearchActivityForCity(
+        arrayList: ArrayList<DashboardViewModel.CityResponse.ResponseData>,
+        title: String,
+        languageSelectionRequest: Int
+    ) {
+        val intent = Intent(this, CommonSearchActivity::class.java)
+        intent.putParcelableArrayListExtra(Constant.Path.CITY_LIST_PROFILE, arrayList)
         intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
         startActivityForResult(intent, languageSelectionRequest)
     }
