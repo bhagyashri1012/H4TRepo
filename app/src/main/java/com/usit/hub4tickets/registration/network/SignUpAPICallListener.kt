@@ -10,5 +10,5 @@ import com.usit.hub4tickets.utils.Enums
  */
 interface SignUpAPICallListener {
     fun onAPICallSucceed(route: Enums.APIRoute, responseModel: SignUpViewModel.SignUpResponse)
-    fun onAPICallFailed(route: Enums.APIRoute, message: String?)
+    fun onAPICallFailed(route: Enums.APIRoute, message: String)
 }

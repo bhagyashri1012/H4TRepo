@@ -1,4 +1,4 @@
-package com.usit.hub4tickets.presentation.presenters
+package com.usit.hub4tickets.utils.presentation.presenters
 
 /**
  * Created by Bhagyashri Burade

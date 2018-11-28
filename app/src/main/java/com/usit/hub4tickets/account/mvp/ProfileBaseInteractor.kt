@@ -3,7 +3,7 @@ package com.usit.hub4tickets.login
 import com.usit.hub4tickets.api.network.ErrorResponse
 import com.usit.hub4tickets.domain.api.APICallManager
 import com.usit.hub4tickets.domain.api.ProfileInfoAPICallListener
-import com.usit.hub4tickets.presentation.presenters.BaseInteractor
+import com.usit.hub4tickets.utils.presentation.presenters.BaseInteractor
 import com.usit.hub4tickets.utils.Enums
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -25,7 +25,7 @@ class ProfileBaseInteractor(private var listenerProfileInfo: ProfileInfoAPICallL
                 listenerProfileInfo.onAPICallSucceed(route, response)
             },
             { error ->
-                listenerProfileInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listenerProfileInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 
@@ -65,7 +65,7 @@ class ProfileBaseInteractor(private var listenerProfileInfo: ProfileInfoAPICallL
                 listenerProfileInfo.onAPICallUpdatePersonalInfoSucceed(route, response)
             },
             { error ->
-                listenerProfileInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listenerProfileInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 
@@ -85,7 +85,7 @@ class ProfileBaseInteractor(private var listenerProfileInfo: ProfileInfoAPICallL
                 listenerProfileInfo.onAPICallChangePasswordSucceed(route, response, dialogView)
             },
             { error ->
-                listenerProfileInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listenerProfileInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 }

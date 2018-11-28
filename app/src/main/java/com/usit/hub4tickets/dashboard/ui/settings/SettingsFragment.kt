@@ -35,16 +35,16 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
     override fun doRetrieveModel(): DashboardViewModel = this.model
     override fun showState(viewState: DashboardPresenter.MainView.ViewState) {
         when (viewState) {
-            DashboardPresenter.MainView.ViewState.IDLE -> showProgress(false)
-            DashboardPresenter.MainView.ViewState.LOADING -> showProgress(true)
-            DashboardPresenter.MainView.ViewState.SAVE_SUCCESS -> showProgress(false)
+            DashboardPresenter.MainView.ViewState.IDLE -> Utility.showProgress(false, context)
+            DashboardPresenter.MainView.ViewState.LOADING -> Utility.showProgress(true, context)
+            DashboardPresenter.MainView.ViewState.SAVE_SUCCESS -> Utility.showProgress(false, context)
             DashboardPresenter.MainView.ViewState.SUCCESS -> setData(
                 model.settingsDomain.responseData?.countryName,
                 model.settingsDomain.responseData?.languageName,
                 model.settingsDomain.responseData?.currencyName
             )
             DashboardPresenter.MainView.ViewState.COUNTRY_SUCCESS -> {
-                showProgress(false)
+                Utility.showProgress(false, context)
                 openSearchActivityCountry(
                     model.dashboradCountriesDomain.responseData as ArrayList<DashboardViewModel.CountriesResponse.CountriesResponseData>,
                     this.javaClass.simpleName.toString(),
@@ -52,7 +52,7 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
                 )
             }
             DashboardPresenter.MainView.ViewState.LANG_SUCCESS -> {
-                showProgress(false)
+                Utility.showProgress(false, context)
                 openSearchActivityForLanguage(
                     model.dashboradLangDomain.responseData as ArrayList<DashboardViewModel.LanguageResponse.ResponseData>,
                     this.javaClass.simpleName.toString(),
@@ -60,7 +60,7 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
                 )
             }
             DashboardPresenter.MainView.ViewState.CURRENCY_SUCCESS -> {
-                showProgress(false)
+                Utility.showProgress(false, context)
                 openSearchActivityForCurrency(
                     model.dashboradCurrencyDomain.currencyData as ArrayList<DashboardViewModel.CurrencyResponse.CurrencyData>,
                     this.javaClass.simpleName.toString(),
@@ -70,16 +70,9 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
             DashboardPresenter.MainView.ViewState.ERROR
             -> {
                 presenter.presentState(DashboardPresenter.MainView.ViewState.IDLE)
-                Utility.showDialog(null, doRetrieveModel().errorMessage, context, activity)
+                Utility.showCustomDialog(null, doRetrieveModel().errorMessage, R.string.alert_failure,null)
             }
         }
-    }
-
-    private fun showProgress(show: Boolean) {
-        if (show)
-            Utility.showProgressDialog(context = context)
-        else
-            Utility.hideProgressBar()
     }
 
     override fun onCreateView(

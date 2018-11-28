@@ -40,7 +40,7 @@ class SignUpPresenterImpl(
             )
         } else {
             mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+                    mView.doRetrieveModel().context!!.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -94,7 +94,7 @@ class SignUpPresenterImpl(
         }
     }
 
-    override fun onAPICallFailed(route: Enums.APIRoute, message: String?) {
+    override fun onAPICallFailed(route: Enums.APIRoute, message: String) {
         Utility.hideProgressBar()
         mView.doRetrieveModel().errorMessage = message
         presentState(ERROR)

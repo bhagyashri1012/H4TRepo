@@ -10,12 +10,18 @@ import android.view.View
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
+import com.usit.hub4tickets.flight.model.FlightViewModel
 import com.usit.hub4tickets.search.model.CommonSelectorPojo
 import com.usit.hub4tickets.utils.Constant
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.activity_comman_serach.*
 
+/**
+ * Created by Bhagyashri Burade
+ * Date: 24/10/2018
+ * Email: bhagyashri.burade@usit.net.in
+ */
 class CommonSearchActivity : BaseActivity() {
 
     private var searchItemsListAdapter: CommonSearchAdapter? = null
@@ -30,6 +36,9 @@ class CommonSearchActivity : BaseActivity() {
         ArrayList()
     private var arrayListCommonSelectorCityInitial: ArrayList<DashboardViewModel.CityResponse.ResponseData> =
         ArrayList()
+    private var arrayListCommonSelectorFromInitial: ArrayList<FlightViewModel.AirPortDataResponse.ResponseData> =
+        ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +73,15 @@ class CommonSearchActivity : BaseActivity() {
                                 intent.extras.getSerializable(Constant.Path.LANGUAGE_LIST_PROFILE) as ArrayList<DashboardViewModel.LanguageResponse.ResponseData>
                 }
 
+                "FragmentReturn" -> {
+                    if (null != intent.extras.getParcelableArrayList<FlightViewModel.AirPortDataResponse.ResponseData>(
+                            Constant.Path.AIRPORT_FROM_LIST
+                        )
+                    )
+                        arrayListCommonSelectorFromInitial =
+                                intent.extras.getSerializable(Constant.Path.AIRPORT_FROM_LIST) as ArrayList<FlightViewModel.AirPortDataResponse.ResponseData>
+                }
+
             }
         }
         initView()
@@ -80,7 +98,6 @@ class CommonSearchActivity : BaseActivity() {
                         arrayListCommonSelectorInitial[i].countryCode
                     )
                 )
-
             }
         }
 
@@ -93,7 +110,6 @@ class CommonSearchActivity : BaseActivity() {
                         arrayListCommonSelectorLangInitial[i].languageCode
                     )
                 )
-
             }
         }
         if (arrayListCommonSelectorCurrencyInitial != null) {
@@ -105,7 +121,6 @@ class CommonSearchActivity : BaseActivity() {
                         arrayListCommonSelectorCurrencyInitial[i].code
                     )
                 )
-
             }
         }
 
@@ -118,7 +133,6 @@ class CommonSearchActivity : BaseActivity() {
                         ""
                     )
                 )
-
             }
         }
         if (arrayListCommonSelectorCityInitial != null) {
@@ -130,7 +144,17 @@ class CommonSearchActivity : BaseActivity() {
                         arrayListCommonSelectorCityInitial[i].stateId
                     )
                 )
-
+            }
+        }
+        if (arrayListCommonSelectorFromInitial != null) {
+            for (i in arrayListCommonSelectorFromInitial!!.indices) {
+                arrayListCommonSelector.add(
+                    i, CommonSelectorPojo(
+                        arrayListCommonSelectorFromInitial[i].airPortId.toString(),
+                        arrayListCommonSelectorFromInitial[i].airPortName,
+                        arrayListCommonSelectorFromInitial[i].airPortCode
+                    )
+                )
             }
         }
         if (null != arrayListCommonSelector) {

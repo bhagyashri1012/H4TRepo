@@ -9,24 +9,27 @@
               android:orientation="vertical">
 
     <EditText
+            android:id="@+id/edt_from"
             style="@style/CustomRegularEditText"
             android:layout_width="match_parent"
             android:padding="@dimen/padding_8dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:focusableInTouchMode="true"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
             android:inputType="textPersonName"
             android:hint="From"
             android:ems="10"/>
     <EditText
+            android:id="@+id/edt_to"
             style="@style/CustomRegularEditText"
             android:layout_width="match_parent"
             android:padding="@dimen/padding_8dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
             android:inputType="textPersonName"
             android:hint="To"
             android:ems="10"/>
     <RelativeLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin_half"
                     android:orientation="horizontal">
         <LinearLayout
                 android:id="@+id/ll_buttons"
@@ -42,32 +45,33 @@
                     style="@style/CustomRegularEditText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight=".4"
+                    android:layout_weight=".45"
                     android:drawableLeft="@drawable/ic_calender"
                     android:drawablePadding="@dimen/margin_4dp"
-                    android:padding="@dimen/padding_8dp"
-                    android:layout_marginRight="@dimen/activity_vertical_margin_half"
+                    android:padding="@dimen/margin_4dp"
+                    android:layout_marginRight="@dimen/margin_2dp"
                     android:inputType="textPersonName"
                     android:hint="Depart"
                     android:ems="10"/>
             <TextView
-                    android:id="@+id/txt_return"
+                    android:id="@+id/tv_return"
                     style="@style/CustomRegularEditText"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight=".4"
+                    android:layout_weight=".45"
                     android:drawableLeft="@drawable/ic_calender"
                     android:drawablePadding="@dimen/margin_4dp"
-                    android:padding="@dimen/padding_8dp"
+                    android:padding="@dimen/margin_4dp"
                     android:inputType="textPersonName"
                     android:hint="Return"
                     android:ems="10"/>
             <ImageButton
+                    android:id="@+id/im_btn_search"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight=".1"
-                    android:minWidth="25dp"
-                    android:padding="@dimen/padding_8dp"
+                    android:layout_weight=".15"
+                    android:minWidth="35dp"
+                    android:padding="@dimen/margin_4dp"
                     android:layout_toRightOf="@+id/ll_buttons"
                     android:background="@null"
                     android:layout_centerVertical="true"
@@ -92,7 +96,8 @@
                 android:textAllCaps="false"
                 android:textColor="@color/cool_grey"
         />
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
                       android:weightSum="3"
                       android:orientation="horizontal"
                       android:gravity="center_vertical"

@@ -85,6 +85,7 @@
                 android:name=".search.CommonSearchActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/NoActionBarAppTheme"
+                android:launchMode="singleTop"
                 android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
         <activity

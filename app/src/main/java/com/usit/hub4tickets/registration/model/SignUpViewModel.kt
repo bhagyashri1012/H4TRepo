@@ -8,12 +8,12 @@ import android.content.Context
  * Email: bhagyashri.burade@usit.net.in
  */
 class SignUpViewModel(var context: Context?) {
-    var errorMessage: String? = null
+    var errorMessage: String = ""
     var signUpDomain: SignUpResponse =
-        SignUpResponse(message = null, responseData = null, status = null)
+        SignUpResponse(message = "", responseData = null, status = null)
 
     data class SignUpResponse(
-        val message: String?,
+        val message: String,
         val responseData: ResponseData?,
         val status: String?
     )

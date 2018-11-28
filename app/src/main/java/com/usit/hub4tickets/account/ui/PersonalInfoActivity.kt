@@ -75,7 +75,7 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             DashboardPresenter.MainView.ViewState.ERROR
             -> {
                 presenterDashboard.presentState(DashboardPresenter.MainView.ViewState.IDLE)
-                Utility.showDialog(null, doRetrieveModel().errorMessage, this, this)
+                Utility.showCustomDialog(null, doRetrieveModel().errorMessage, R.string.alert_failure, null)
             }
         }
     }
@@ -123,11 +123,17 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         when (viewState) {
             IDLE -> showProgress(false)
             LOADING -> showProgress(true)
-            SUCCESS -> autoFillFields()
-            UPDATE_SUCCESS -> onBackPressed()
+            SUCCESS -> {
+                showProgress(false)
+                autoFillFields()
+            }
+            UPDATE_SUCCESS -> {
+                showProgress(false)
+                onBackPressed()
+            }
             ERROR
             -> {
-                presenter.presentState(ProfilePresenter.MainView.ViewState.IDLE)
+                presenter.presentState(IDLE)
                 showDialog(null, doRetrieveProfileModel().errorMessage)
             }
         }

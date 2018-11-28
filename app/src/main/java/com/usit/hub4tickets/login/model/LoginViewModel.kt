@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName
  * Email: bhagyashri.burade@usit.net.in
  */
 class LoginViewModel(var context: Context?) {
-    var errorMessage: String? = null
+    var errorMessage: String? = ""
 
     var loginDomain: LoginResponse =
         LoginResponse(responseData = null, message = null, status = null, timeStamp = null)

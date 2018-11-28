@@ -4,9 +4,9 @@ import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
+import com.usit.hub4tickets.flight.model.FlightViewModel
 import io.reactivex.Flowable
 import retrofit2.http.Body
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 
@@ -61,5 +61,11 @@ interface Service {
 
     @POST("updateprofile")
     fun updateProfileData(@Body updateProfileData: UpdateProfileData): Flowable<ProfileViewModel.ProfileResponse>
+
+    @POST("airportsByFilter")
+    fun getAirportData(@Body airportData: AirportData): Flowable<FlightViewModel.AirPortDataResponse>
+
+    @POST("flights")
+    fun getFlightDetails(@Body flightData: FlightData): Flowable<FlightViewModel.AirPortDataResponse>
 
 }

@@ -3,7 +3,7 @@ package com.usit.hub4tickets.login
 import com.usit.hub4tickets.api.network.ErrorResponse
 import com.usit.hub4tickets.domain.api.APICallManager
 import com.usit.hub4tickets.domain.api.DashboardAPICallListener
-import com.usit.hub4tickets.presentation.presenters.BaseInteractor
+import com.usit.hub4tickets.utils.presentation.presenters.BaseInteractor
 import com.usit.hub4tickets.utils.Enums
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -25,7 +25,7 @@ class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICall
                 listenerSettingsInfo.onAPICallSucceed(route, response)
             },
             { error ->
-                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 
@@ -46,7 +46,7 @@ class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICall
                 listenerSettingsInfo.onAPICallSaveSucceed(route, response)
             },
             { error ->
-                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 
@@ -61,7 +61,7 @@ class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICall
                 listenerSettingsInfo.onAPICallGetCountrySucceed(route, response)
             },
             { error ->
-                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 
@@ -75,7 +75,7 @@ class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICall
                 listenerSettingsInfo.onAPICallGetStateSucceed(route, response)
             },
             { error ->
-                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 
@@ -89,7 +89,7 @@ class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICall
                 listenerSettingsInfo.onAPICallGetCitySucceed(route, response)
             },
             { error ->
-                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 
@@ -103,7 +103,7 @@ class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICall
                 listenerSettingsInfo.onAPICallGetLanguageSucceed(route, response)
             },
             { error ->
-                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 
@@ -117,7 +117,7 @@ class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICall
                 listenerSettingsInfo.onAPICallGetCurrencySucceed(route, response)
             },
             { error ->
-                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 }

@@ -37,6 +37,7 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
                 Utility.showCustomDialog(
                     context,
                     doRetrieveProfileModel().errorMessage,
+                    R.string.alert_failure,
                     null
                 )
             }

@@ -11,7 +11,7 @@ import com.usit.hub4tickets.utils.Enums
 interface ProfileInfoAPICallListener {
     fun onAPICallSucceed(route: Enums.APIRoute, responseModel: ProfileViewModel.ProfileResponse)
     fun onAPICallUpdatePersonalInfoSucceed(route: Enums.APIRoute, responseModel: ProfileViewModel.ProfileResponse)
-    fun onAPICallFailed(route: Enums.APIRoute, message: String?)
+    fun onAPICallFailed(route: Enums.APIRoute, message: String)
     fun onAPICallChangePasswordSucceed(
         route: Enums.APIRoute,
         response: ProfileViewModel.ProfileResponse,

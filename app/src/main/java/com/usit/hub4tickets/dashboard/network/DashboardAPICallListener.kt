@@ -16,5 +16,5 @@ interface DashboardAPICallListener {
     fun onAPICallGetCitySucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.CityResponse)
     fun onAPICallGetLanguageSucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.LanguageResponse)
     fun onAPICallGetCurrencySucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.CurrencyResponse)
-    fun onAPICallFailed(route: Enums.APIRoute, message: String?)
+    fun onAPICallFailed(route: Enums.APIRoute, message: String)
 }

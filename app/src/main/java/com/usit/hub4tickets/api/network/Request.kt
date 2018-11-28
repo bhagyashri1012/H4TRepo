@@ -1,5 +1,6 @@
 package com.usit.hub4tickets.domain.api.sample
 
+
 /**
  * Created by Bhagyashri Burade
  * Date: 24/10/2018
@@ -80,7 +81,25 @@ data class UpdateProfileData(
 data class StateData(
     val stateId: String
 )
+
 data class CountryData(
     val countryId: String
+)
+
+data class AirportData(
+    val filterValue: String
+)
+
+data class FlightData(
+    val adults: String,
+    val travel_class: String,
+    val children: String,
+    val date_from: String,
+    val flight_type: String,
+    val fly_from: String,
+    val fly_to: String,
+    val infants: String,
+    val locale: String,
+    val return_from: String
 )
 

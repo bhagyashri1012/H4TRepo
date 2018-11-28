@@ -27,6 +27,11 @@ class Constant {
         val STATE_LIST_PROFILE = "STATE_LIST_PROFILE"
         val CITY_LIST_PROFILE = "CITY_LIST_PROFILE"
         val ACTIVITY_TITLE = "ACTIVITY_TITLE"
+        val FROM = "FROM"
+        val TO = "TO"
+        val AIRPORT_FROM_LIST = "AIRPORT_FROM_LIST"
+        val AIRPORT_TO_LIST = "AIRPORT_TO_LIST"
+
 
     }
 }

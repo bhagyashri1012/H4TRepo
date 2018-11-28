@@ -167,6 +167,7 @@ class DashboardPresenterImpl(
                     Utility.showCustomDialog(
                         mContext,
                         responseModel.message,
+                        R.string.alert_success,
                         object : CustomDialogPresenter.CustomDialogView {
                             override fun onPositiveButtonClicked() {
                                 presentState(SAVE_SUCCESS)
@@ -175,9 +176,6 @@ class DashboardPresenterImpl(
                             override fun onNegativeButtonClicked() {
                             }
                         })
-                } else {
-                    mView.doRetrieveModel().errorMessage = responseModel.message
-                    presentState(ERROR)
                 }
             }
         }
@@ -218,7 +216,6 @@ class DashboardPresenterImpl(
         responseModel: DashboardViewModel.LanguageResponse
     ) {
         when (route) {
-
             Enums.APIRoute.GET_SAMPLE -> {
                 mView.doRetrieveModel().dashboradLangDomain = responseModel
                 presentState(LANG_SUCCESS)
@@ -231,7 +228,6 @@ class DashboardPresenterImpl(
         responseModel: DashboardViewModel.CurrencyResponse
     ) {
         when (route) {
-
             Enums.APIRoute.GET_SAMPLE -> {
                 mView.doRetrieveModel().dashboradCurrencyDomain = responseModel
                 presentState(CURRENCY_SUCCESS)
@@ -239,7 +235,7 @@ class DashboardPresenterImpl(
         }
     }
 
-    override fun onAPICallFailed(route: Enums.APIRoute, message: String?) {
+    override fun onAPICallFailed(route: Enums.APIRoute, message: String) {
         Utility.hideProgressBar()
         mView.doRetrieveModel().errorMessage = message
         presentState(ERROR)

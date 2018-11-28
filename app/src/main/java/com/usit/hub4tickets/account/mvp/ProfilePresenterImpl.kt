@@ -127,8 +127,8 @@ class ProfilePresenterImpl(
 
     override fun onAPICallSucceed(route: Enums.APIRoute, responseModel: ProfileViewModel.ProfileResponse) =
         when (route) {
-
             Enums.APIRoute.GET_SAMPLE -> {
+
                 mView.doRetrieveProfileModel().profileDomain = responseModel
                 presentState(SUCCESS)
             }
@@ -182,9 +182,9 @@ class ProfilePresenterImpl(
             })
     }
 
-    override fun onAPICallFailed(route: Enums.APIRoute, message: String?) {
+    override fun onAPICallFailed(route: Enums.APIRoute, message: String) {
         Utility.hideProgressBar()
         mView.doRetrieveProfileModel().errorMessage = message
-        presentState(ERROR)
+        //presentState(ERROR)
     }
 }

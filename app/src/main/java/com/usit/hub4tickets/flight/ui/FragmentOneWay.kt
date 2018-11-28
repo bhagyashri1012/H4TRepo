@@ -26,7 +26,7 @@ class FragmentOneWay : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        txt_return.visibility = View.GONE
+        tv_return.visibility = View.GONE
         val items = resources.getStringArray(R.array.tab_B)
         val adapter = OneWayRecyclerViewAdapter(items)
         recyclerView = view.findViewById(R.id.recycler_view_one_way) as RecyclerView

@@ -3,7 +3,7 @@ package com.usit.hub4tickets.login
 import com.usit.hub4tickets.api.network.ErrorResponse
 import com.usit.hub4tickets.domain.api.APICallManager
 import com.usit.hub4tickets.domain.api.LoginAPICallListener
-import com.usit.hub4tickets.presentation.presenters.BaseInteractor
+import com.usit.hub4tickets.utils.presentation.presenters.BaseInteractor
 import com.usit.hub4tickets.utils.Enums
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -25,7 +25,7 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
                 listener.onAPICallSucceed(route, response)
             },
             { error ->
-                listener.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listener.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 
@@ -39,7 +39,7 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
                 listener.onSentOtpAPICallSucceed(route, response)
             },
             { error ->
-                listener.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listener.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 
@@ -53,7 +53,7 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
                 listener.onVerifyOtpAPICallSucceed(route, response)
             },
             { error ->
-                listener.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listener.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 
@@ -67,7 +67,7 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
                 listener.onForgotPasswordAPICallSucceed(route, response)
             },
             { error ->
-                listener.onAPICallFailed(route, ErrorResponse.parseError(error))
+                listener.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
 

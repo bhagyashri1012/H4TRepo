@@ -6,6 +6,7 @@ import com.usit.hub4tickets.domain.api.sample.*
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
+import com.usit.hub4tickets.flight.model.FlightViewModel
 import com.usit.hub4tickets.utils.Constant
 import io.reactivex.Flowable
 import okhttp3.OkHttpClient
@@ -196,7 +197,38 @@ class APICallManager {
             )
             return service.updateProfileData(profData)
         }
-    }
 
+        fun getAirportData(filterValue: String): Flowable<FlightViewModel.AirPortDataResponse> {
+            val airportData = AirportData(filterValue)
+            return service.getAirportData(airportData)
+        }
+
+        fun getFlightDetails(
+            adults: String,
+            cabinClass: String,
+            children: String,
+            dateFrom: String,
+            flightType: String,
+            flyFrom: String,
+            flyTo: String,
+            infants: String,
+            locale: String,
+            returnFrom: String
+        ): Flowable<FlightViewModel.AirPortDataResponse> {
+            val flightData = FlightData(
+                adults,
+                cabinClass,
+                children,
+                dateFrom,
+                flightType,
+                flyFrom,
+                flyTo,
+                infants,
+                locale,
+                returnFrom
+            )
+            return service.getFlightDetails(flightData)
+        }
+    }
     //endregion
 }
