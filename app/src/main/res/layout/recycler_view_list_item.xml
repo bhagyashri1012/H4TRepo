@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_margin="@dimen/activity_vertical_margin"
+              android:layout_marginLeft="@dimen/margin_16dp"
+              android:layout_marginRight="@dimen/margin_16dp"
+              android:layout_marginTop="@dimen/padding_8dp"
 >
     <LinearLayout
             android:layout_width="match_parent"
@@ -14,14 +16,16 @@
     >
         <LinearLayout
                 android:id="@+id/ll_first"
-                android:layout_weight=".2"
+                android:layout_weight=".1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
             <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/imv_inbound"
+                    android:layout_width="@dimen/imv_width"
+                    android:layout_height="@dimen/imv_width"
                     android:layout_marginRight="@dimen/activity_vertical_margin_half"
+                    android:adjustViewBounds="true"
                     android:src="@mipmap/ic_launcher"/>
             <View android:layout_width="1dp"
                   android:layout_height="match_parent"
@@ -31,7 +35,7 @@
         </LinearLayout>
         <LinearLayout
                 android:id="@+id/ll_second"
-                android:layout_weight=".4"
+                android:layout_weight=".5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/margin_4dp"
@@ -39,15 +43,19 @@
                 android:orientation="vertical"
         >
 
-            <TextView style="@style/CustomRegularTextView"
-                      android:text="2.14am - 4.25am"
-                      android:layout_marginBottom="@dimen/margin_4dp"
-                      android:maxLines="2"
+            <TextView
+                    android:id="@+id/tv_time"
+                    style="@style/CustomRegularTextView"
+                    tools:text="2.14am - 4.25am"
+                    android:layout_marginBottom="@dimen/margin_4dp"
+                    android:maxLines="2"
             />
-            <TextView style="@style/CustomRegularTextView"
-                      android:text="BOM-PNQ ,GoAir"
-                      android:textColor="@color/cool_grey"
-                      android:maxLines="2"
+            <TextView
+                    android:id="@+id/tv_destination"
+                    style="@style/CustomRegularTextView"
+                    tools:text="BOM-PNQ ,GoAir"
+                    android:textColor="@color/cool_grey"
+                    android:maxLines="2"
             />
         </LinearLayout>
         <LinearLayout
@@ -59,13 +67,15 @@
                 android:orientation="vertical"
         >
 
-            <TextView style="@style/CustomRegularTextView"
-                      android:gravity="end"
-                      android:layout_width="match_parent"
-                      android:textAlignment="viewEnd"
-                      android:text="2.hr 5min"
-                      android:maxLines="2"
-                      android:layout_marginBottom="@dimen/margin_4dp"
+            <TextView
+                    android:id="@+id/tv_duration"
+                    style="@style/CustomRegularTextView"
+                    android:gravity="end"
+                    android:layout_width="match_parent"
+                    android:textAlignment="viewEnd"
+                    tools:text="2.hr 5min"
+                    android:maxLines="2"
+                    android:layout_marginBottom="@dimen/margin_4dp"
             />
         </LinearLayout>
     </LinearLayout>
@@ -77,14 +87,16 @@
     >
         <LinearLayout
                 android:id="@+id/ll2_first"
-                android:layout_weight=".2"
+                android:layout_weight=".1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
             <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/imv_out_bound"
+                    android:layout_width="@dimen/imv_width"
+                    android:layout_height="@dimen/imv_width"
                     android:layout_marginRight="@dimen/activity_vertical_margin_half"
+                    android:adjustViewBounds="true"
                     android:src="@mipmap/ic_launcher"/>
             <View android:layout_width="1dp"
                   android:layout_height="match_parent"
@@ -93,7 +105,7 @@
             />
         </LinearLayout>
         <LinearLayout
-                android:layout_weight=".4"
+                android:layout_weight=".5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/margin_4dp"
@@ -101,15 +113,19 @@
                 android:orientation="vertical"
         >
 
-            <TextView style="@style/CustomRegularTextView"
-                      android:text="2.14am - 4.25am"
-                      android:layout_marginBottom="@dimen/margin_4dp"
-                      android:maxLines="2"
+            <TextView
+                    android:id="@+id/tv_out_bound_time"
+                    style="@style/CustomRegularTextView"
+                    tools:text="2.14am - 4.25am"
+                    android:layout_marginBottom="@dimen/margin_4dp"
+                    android:maxLines="2"
             />
-            <TextView style="@style/CustomRegularTextView"
-                      android:text="BOM-PNQ ,GoAir"
-                      android:textColor="@color/cool_grey"
-                      android:maxLines="2"
+            <TextView
+                    android:id="@+id/tv_out_bound_destination"
+                    style="@style/CustomRegularTextView"
+                    tools:text="BOM-PNQ ,GoAir"
+                    android:textColor="@color/cool_grey"
+                    android:maxLines="2"
             />
         </LinearLayout>
         <LinearLayout
@@ -121,20 +137,22 @@
                 android:orientation="vertical"
         >
 
-            <TextView style="@style/CustomRegularTextView"
-                      android:gravity="end"
-                      android:layout_width="match_parent"
-                      android:textAlignment="viewEnd"
-                      android:text="2.hr 5min"
-                      android:maxLines="2"
-                      android:layout_marginBottom="@dimen/margin_4dp"
+            <TextView
+                    android:id="@+id/tv_out_bound_duration"
+                    style="@style/CustomRegularTextView"
+                    android:gravity="end"
+                    android:layout_width="match_parent"
+                    android:textAlignment="viewEnd"
+                    android:text="2.hr 5min"
+                    android:maxLines="2"
+                    android:layout_marginBottom="@dimen/margin_4dp"
             />
         </LinearLayout>
     </LinearLayout>
 
     <TextView
             android:id="@+id/list_item"
-            android:text="$8,000 $"
+            tools:text="$8,000 $"
             android:layout_gravity="end"
             android:textColor="@android:color/holo_blue_light"
             android:maxLines="2"

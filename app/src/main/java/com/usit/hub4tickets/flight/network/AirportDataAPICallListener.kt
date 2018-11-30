@@ -17,7 +17,7 @@ interface AirportDataAPICallListener {
 
     fun onAPICallFlightDetailsSucceed(
         route: Enums.APIRoute,
-        responseModel: FlightViewModel.AirPortDataResponse
+        responseModel: FlightViewModel.FlightListResponse
     )
 
     fun onAPICallFailed(route: Enums.APIRoute, message: String)

@@ -22,7 +22,6 @@ import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.activity_personal_info.*
 import kotlinx.android.synthetic.main.common_toolbar.*
 
-
 class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, DashboardPresenter.MainView {
 
     private val LOCATION_SELECTION_REQUEST = 201
@@ -37,6 +36,7 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
     override fun doRetrieveModel(): DashboardViewModel = this.modelDashboard
 
     override fun showState(viewState: DashboardPresenter.MainView.ViewState) {
+
         when (viewState) {
             DashboardPresenter.MainView.ViewState.IDLE -> showProgress(false)
             DashboardPresenter.MainView.ViewState.LOADING -> showProgress(true)

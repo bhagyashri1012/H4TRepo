@@ -73,7 +73,7 @@
     <string name="direct">Direct</string>
     <string name="n_scales">%d scales</string>
     <string name="via_agent">via %s</string>
-    <string name="one_adult">1 Adult, 1 Child , 1 Infants</string>
+    <string name="one_adult">1 Adult, 1 Child , 0 Infants</string>
     <string name="first_class">First Class</string>
     <string name="filter">Filter</string>
     <string name="sort">Sort</string>
@@ -156,5 +156,26 @@
     <string name="prompt_state">State / Province</string>
     <string name="error_country_select">Please select country first</string>
     <string name="error_state_select">Please select state first</string>
+    <string name="cabin_class">Cabin Class</string>
+    <string name="price_text">Price</string>
+    <string name="duration_text">Duration</string>
+    <string name="morning_arrival_text">Morning Arrival</string>
+    <string name="price_code">price</string>
+    <string name="duration_code">duration</string>
+    <string name="morning_arr_code">Morning_Arrival</string>
+    <string name="morning_departure_code">Morning_Departure</string>
+    <string name="morning_departure_text">Morning Departure</string>
+    <string name="evening_departure_text">Evening Departure</string>
+    <string name="evening_departure_code">Evening_Departure</string>
+    <string name="evening_arrival_text">Evening Arrival</string>
+    <string name="evening_arrival_code">Evening_Arrival</string>
+    <string name="economy_text">ECONOMY</string>
+    <string name="economy_code">ECONOMY</string>
+    <string name="pre_economy_text">PREMIUM ECONOMY</string>
+    <string name="pre_economy_code">PREMIUM_ECONOMY</string>
+    <string name="business_text">BUSINESS</string>
+    <string name="business_code">BUSINESS</string>
+    <string name="first_text">FIRST</string>
+    <string name="first_code">FIRST</string>
 
 </resources>

@@ -81,6 +81,14 @@ class CommonSearchActivity : BaseActivity() {
                         arrayListCommonSelectorFromInitial =
                                 intent.extras.getSerializable(Constant.Path.AIRPORT_FROM_LIST) as ArrayList<FlightViewModel.AirPortDataResponse.ResponseData>
                 }
+                "FragmentOneWay" -> {
+                    if (null != intent.extras.getParcelableArrayList<FlightViewModel.AirPortDataResponse.ResponseData>(
+                            Constant.Path.AIRPORT_RETURN_LIST
+                        )
+                    )
+                        arrayListCommonSelectorFromInitial =
+                                intent.extras.getSerializable(Constant.Path.AIRPORT_RETURN_LIST) as ArrayList<FlightViewModel.AirPortDataResponse.ResponseData>
+                }
 
             }
         }

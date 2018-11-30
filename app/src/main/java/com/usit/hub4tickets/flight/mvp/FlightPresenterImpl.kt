@@ -76,6 +76,7 @@ class FlightPresenterImpl(
             LOADING -> mView.showState(LOADING)
             SUCCESS_FROM -> mView.showState(SUCCESS_FROM)
             SUCCESS_TO -> mView.showState(SUCCESS_TO)
+            FLIGHT_DETAILS_SUCCESS -> mView.showState(FLIGHT_DETAILS_SUCCESS)
             ERROR -> mView.showState(ERROR)
         }
     }
@@ -98,14 +99,14 @@ class FlightPresenterImpl(
 
     override fun onAPICallFlightDetailsSucceed(
         route: Enums.APIRoute,
-        responseModel: FlightViewModel.AirPortDataResponse
+        responseModel: FlightViewModel.FlightListResponse
     ) {
         when (route) {
 
             Enums.APIRoute.GET_SAMPLE -> {
                 if (responseModel.responseData?.size!! > 0) {
                     presentState(IDLE)
-                    mView.doRetrieveModel().flightViewModel = responseModel
+                    mView.doRetrieveModel().flightListViewModel = responseModel
                     presentState(FLIGHT_DETAILS_SUCCESS)
                 } else {
                     mView.doRetrieveModel().errorMessage.message = responseModel.message.toString()

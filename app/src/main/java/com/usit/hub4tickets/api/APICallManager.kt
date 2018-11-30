@@ -214,7 +214,7 @@ class APICallManager {
             infants: String,
             locale: String,
             returnFrom: String
-        ): Flowable<FlightViewModel.AirPortDataResponse> {
+        ): Flowable<FlightViewModel.FlightListResponse> {
             val flightData = FlightData(
                 adults,
                 cabinClass,

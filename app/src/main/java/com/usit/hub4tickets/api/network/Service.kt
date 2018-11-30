@@ -66,6 +66,6 @@ interface Service {
     fun getAirportData(@Body airportData: AirportData): Flowable<FlightViewModel.AirPortDataResponse>
 
     @POST("flights")
-    fun getFlightDetails(@Body flightData: FlightData): Flowable<FlightViewModel.AirPortDataResponse>
+    fun getFlightDetails(@Body flightData: FlightData): Flowable<FlightViewModel.FlightListResponse>
 
 }

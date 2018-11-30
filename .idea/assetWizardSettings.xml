@@ -34,6 +34,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="outputName" value="ic_calender" />
+                                      <entry key="theme" value="CUSTOM" />
+                                      <entry key="themeColor" value="c5c5c5" />
                                     </map>
                                   </option>
                                 </PersistentState>

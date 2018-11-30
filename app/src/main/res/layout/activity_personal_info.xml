@@ -105,7 +105,6 @@
                         android:maxLines="1"
                         android:maxLength="200"
                         android:singleLine="true"/>
-
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -119,19 +118,17 @@
                         android:layout_width="match_parent"
                         style="@style/CustomRegularTextView"
                         android:hint="@string/prompt_time_zone"
-                        android:inputType="text"
+                        android:inputType="number"
+                        android:digits="0123456789"
                         android:maxLines="1"
                         android:singleLine="true"/>
-
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                     android:id="@+id/text_input_edt_country"
                     app:hintTextAppearance="@style/TextAppearance.TextInputLayout.Black"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-            >
-
+                    android:layout_height="wrap_content">
                 <EditText
                         android:id="@+id/edt_country"
                         android:layout_width="match_parent"
@@ -140,7 +137,7 @@
                         android:paddingBottom="@dimen/margin_16dp"
                         android:focusableInTouchMode="false"
                         android:hint="@string/prompt_country"
-                        android:inputType="text"
+                        android:inputType="textPostalAddress"
                         android:maxLines="1"
                         android:singleLine="true"/>
 
@@ -157,7 +154,7 @@
                         style="@style/CustomRegularTextView"
                         android:focusableInTouchMode="false"
                         android:hint="@string/prompt_state"
-                        android:inputType="text"
+                        android:inputType="textPostalAddress"
                         android:maxLines="1"
                         android:singleLine="true"/>
 
@@ -173,7 +170,7 @@
                         android:layout_width="match_parent"
                         style="@style/CustomRegularTextView"
                         android:hint="@string/prompt_city"
-                        android:inputType="text"
+                        android:inputType="textPostalAddress"
                         android:maxLines="1"
                         android:focusableInTouchMode="false"
                         android:singleLine="true"/>
@@ -197,13 +194,11 @@
 
             </android.support.design.widget.TextInputLayout>
 
-
             <android.support.v7.widget.AppCompatCheckBox
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:text="@string/yes_i_want_to_receive_promotions"
-            />
+                    android:text="@string/yes_i_want_to_receive_promotions"/>
 
             <Button
                     android:id="@+id/update_button"
@@ -212,7 +207,6 @@
                     android:layout_gravity="center_horizontal"
                     android:text="@string/action_update"
                     android:textStyle="bold"/>
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

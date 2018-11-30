@@ -29,8 +29,10 @@ class Constant {
         val ACTIVITY_TITLE = "ACTIVITY_TITLE"
         val FROM = "FROM"
         val TO = "TO"
+        val FLIGHT_DETAILS = "FLIGHT_DETAILS"
+        val TO_ONE_WAY = "TO_ONE_WAY"
         val AIRPORT_FROM_LIST = "AIRPORT_FROM_LIST"
-        val AIRPORT_TO_LIST = "AIRPORT_TO_LIST"
+        val AIRPORT_RETURN_LIST = "AIRPORT_RETURN_LIST"
 
 
     }

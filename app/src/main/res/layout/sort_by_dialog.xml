@@ -6,54 +6,57 @@
               android:orientation="vertical"
 >
     <TextView
-            android:text="@string/sort_by"
+            android:id="@+id/tv_dialog_header"
             android:layout_gravity="center_horizontal"
             style="@style/CustomLargeBoldDialogHeader"
             android:layout_weight="1"/>
-    <RadioGroup
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/selection_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <RadioButton
-                android:text="Price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_4dp"
-                android:id="@+id/radioButton1"
-                android:layout_weight="1"/>
-        <RadioButton
-                android:text="Duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_4dp"
-                android:id="@+id/radioButton2"
-                android:layout_weight="1"/>
-        <RadioButton
-                android:text="Morning Departure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_4dp"
-                android:id="@+id/radioButton3"
-                android:layout_weight="1"/>
-        <RadioButton
-                android:text="Morning Arrival"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_4dp"
-                android:id="@+id/radioButton4"
-                android:layout_weight="1"/>
-        <RadioButton
-                android:text="Evening Departure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_4dp"
-                android:id="@+id/radioButton5" android:layout_weight="1"/>
-        <RadioButton
-                android:text="Evening Arrival"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_4dp"
-                android:id="@+id/radioButton6"
-                android:layout_weight="1"/>
-    </RadioGroup>
+            android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+<!--
+    <CheckBox
+            android:text="Price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_4dp"
+            android:id="@+id/radioButton1"
+            android:layout_weight="1"/>
+    <CheckBox
+            android:text="Duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_4dp"
+            android:id="@+id/radioButton2"
+            android:layout_weight="1"/>
+    <CheckBox
+            android:text="Morning Departure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_4dp"
+            android:id="@+id/radioButton3"
+            android:layout_weight="1"/>
+    <CheckBox
+            android:text="Morning Arrival"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_4dp"
+            android:id="@+id/radioButton4"
+            android:layout_weight="1"/>
+    <CheckBox
+            android:text="Evening Departure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_4dp"
+            android:id="@+id/radioButton5" android:layout_weight="1"/>
+    <CheckBox
+            android:text="Evening Arrival"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_4dp"
+            android:id="@+id/radioButton6"
+            android:layout_weight="1"/>-->
 
 </LinearLayout>

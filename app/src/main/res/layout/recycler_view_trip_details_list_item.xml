@@ -11,13 +11,15 @@
             android:orientation="horizontal"
     >
 
-        <TextView style="@style/CustomRegularTextView"
+        <TextView android:id="@+id/trip_title"
+                  style="@style/CustomRegularTextView"
                   android:layout_weight="1"
                   android:text="Pune - Mumbai"
                   android:layout_marginBottom="@dimen/margin_4dp"
                   android:maxLines="2"
         />
-        <TextView style="@style/CustomRegularTextView"
+        <TextView android:id="@+id/trip_date"
+                  style="@style/CustomRegularTextView"
                   android:text="Thursday 16 Nov"
                   android:maxLines="2"
                   android:layout_weight="1"
@@ -30,6 +32,7 @@
                   android:orientation="vertical"
                   android:padding="@dimen/activity_vertical_margin">
         <LinearLayout
+                android:id="@+id/ll_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_vertical_margin_half"
@@ -38,7 +41,6 @@
         >
 
             <LinearLayout
-                    android:id="@+id/ll_second"
                     android:layout_weight=".5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -46,17 +48,19 @@
                     android:orientation="vertical"
             >
 
-                <TextView style="@style/CustomRegularTextView"
-                          android:text="2.14am - 4.25am"
-                          android:layout_marginBottom="@dimen/margin_4dp"
+                <TextView android:id="@+id/tv_destination"
+                          style="@style/CustomLargeTextView"
+                          android:text="BOM-PNQ "
                           android:maxLines="2"
                 />
-                <TextView style="@style/CustomRegularTextView"
-                          android:text="BOM-PNQ ,GoAir"
+                <TextView android:id="@+id/tv_airline"
+                          style="@style/CustomRegularTextView"
+                          android:text="Spice jet"
                           android:textColor="@color/cool_grey"
                           android:maxLines="2"
                 />
             </LinearLayout>
+
             <LinearLayout
                     android:layout_weight=".5"
                     android:layout_width="wrap_content"
@@ -65,60 +69,36 @@
                     android:orientation="vertical"
             >
 
-                <TextView style="@style/CustomRegularTextView"
-                          android:gravity="end"
-                          android:layout_width="match_parent"
+                <TextView android:id="@+id/tv_time"
+                          style="@style/CustomRegularTextView"
+                          android:text="2.14am - 4.25am"
                           android:textAlignment="viewEnd"
-                          android:text="2.hr 5min"
-                          android:maxLines="2"
                           android:layout_marginBottom="@dimen/margin_4dp"
+                          android:maxLines="2"
+                          android:layout_gravity="end"/>
+                <TextView
+                        android:id="@+id/tv_duration"
+                        style="@style/CustomRegularTextView"
+                        android:gravity="end"
+                        android:layout_width="match_parent"
+                        android:textAlignment="viewEnd"
+                        android:text="(2.hr 5min)"
+                        android:maxLines="2"
+                        android:layout_marginBottom="@dimen/margin_4dp"
                 />
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1"
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginBottom="@dimen/padding_8dp"
+                      android:background="@drawable/grey_border"
         >
-
-            <LinearLayout
-                    android:layout_weight=".5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/margin_4dp"
-                    android:orientation="vertical"
-            >
-
-                <TextView style="@style/CustomRegularTextView"
-                          android:text="2.14am - 4.25am"
-                          android:layout_marginBottom="@dimen/margin_4dp"
-                          android:maxLines="2"
-                />
-                <TextView style="@style/CustomRegularTextView"
-                          android:text="BOM-PNQ ,GoAir"
-                          android:textColor="@color/cool_grey"
-                          android:maxLines="2"
-                />
-            </LinearLayout>
-            <LinearLayout
-                    android:layout_weight=".5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/ll_second"
-                    android:layout_alignParentRight="true"
-                    android:orientation="vertical"
-            >
-
-                <TextView style="@style/CustomRegularTextView"
-                          android:gravity="end"
-                          android:layout_width="match_parent"
-                          android:textAlignment="viewEnd"
-                          android:text="2.hr 5min"
-                          android:maxLines="2"
-                          android:layout_marginBottom="@dimen/margin_4dp"
-                />
-            </LinearLayout>
+            <TextView
+                    style="@style/CustomRegularTextView"
+                    android:text="2.14am - 4.25am"
+                    android:layout_margin="@dimen/padding_8dp"
+                    android:gravity="center_vertical"
+            />
         </LinearLayout>
         <LinearLayout
                 android:layout_width="match_parent"
@@ -136,7 +116,6 @@
                            android:src="@drawable/flight"/>
             </LinearLayout>
             <TextView
-                    android:id="@+id/list_item"
                     android:text="@string/see_details"
                     android:layout_gravity="end"
                     android:textColor="@android:color/holo_blue_light"

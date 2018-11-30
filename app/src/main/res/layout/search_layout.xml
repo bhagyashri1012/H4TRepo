@@ -82,11 +82,15 @@
         </LinearLayout>
 
     </RelativeLayout>
-    <RelativeLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
     >
         <Button android:id="@+id/btn_passengers"
-                style="@style/CustomSmallTextView"
+                style="@style/CustomRegularTextView"
+                android:layout_width="@dimen/height_0dp"
+                android:layout_weight="1.1"
+                android:textAlignment="textStart"
                 android:text="@string/one_adult"
                 android:background="@null"
                 android:layout_alignParentLeft="true"
@@ -95,9 +99,10 @@
                 android:layout_marginRight="@dimen/margin_4dp"
                 android:textAllCaps="false"
                 android:textColor="@color/cool_grey"
-        />
-        <LinearLayout android:layout_width="wrap_content"
+                android:layout_gravity="start"/>
+        <LinearLayout android:layout_width="@dimen/height_0dp"
                       android:layout_height="wrap_content"
+                      android:layout_weight=".9"
                       android:weightSum="3"
                       android:orientation="horizontal"
                       android:gravity="center_vertical"
@@ -106,9 +111,9 @@
         >
             <Button
                     android:id="@+id/btn_class"
-                    style="@style/CustomSmallTextView"
+                    style="@style/CustomRegularTextView"
                     android:layout_width="@dimen/height_0dp"
-                    android:layout_weight="1.4"
+                    android:layout_weight="1.5"
                     android:text="@string/first_class"
                     android:layout_marginRight="@dimen/margin_2dp"
                     android:background="@null"
@@ -116,9 +121,9 @@
                     android:textColor="@color/cool_grey"
             />
             <Button android:id="@+id/btn_sort"
-                    style="@style/CustomSmallTextView"
+                    style="@style/CustomRegularTextView"
                     android:layout_width="@dimen/height_0dp"
-                    android:layout_weight=".8"
+                    android:layout_weight=".7"
                     android:layout_toRightOf="@id/btn_class"
                     android:layout_marginRight="@dimen/margin_2dp"
                     android:text="@string/sort"
@@ -128,7 +133,7 @@
             />
 
             <Button android:id="@+id/btn_filter"
-                    style="@style/CustomSmallTextView"
+                    style="@style/CustomRegularTextView"
                     android:layout_weight=".8"
                     android:layout_width="@dimen/height_0dp"
                     android:layout_toRightOf="@+id/btn_sort"
@@ -139,5 +144,5 @@
                     android:textColor="@android:color/holo_blue_light"
             />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>
