@@ -167,7 +167,7 @@ class DashboardPresenterImpl(
                     Utility.showCustomDialog(
                         mContext,
                         responseModel.message,
-                        R.string.alert_success,
+                        "",
                         object : CustomDialogPresenter.CustomDialogView {
                             override fun onPositiveButtonClicked() {
                                 presentState(SAVE_SUCCESS)

@@ -107,7 +107,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
 
     override fun onForgotPasswordAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
         CustomDialogPresenter.showDialog(mContext,
-            mContext.resources.getString(R.string.alert_success),
+            "",
             responseModel.message,
             mContext.resources.getString(
                 R.string.ok
@@ -170,6 +170,5 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
                     mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
-
     }
 }

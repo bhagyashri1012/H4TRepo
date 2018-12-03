@@ -37,7 +37,7 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
                 Utility.showCustomDialog(
                     context,
                     doRetrieveProfileModel().errorMessage,
-                    R.string.alert_failure,
+                    "",
                     null
                 )
             }
@@ -65,6 +65,16 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
             val intent = Intent(context, AlertsActivity::class.java)
             startActivity(intent)
         }
+
+        if (Pref.getValue(context, PrefConstants.IS_LOGIN, false)) {
+            rl_my_acc_info.visibility = View.VISIBLE
+            link_login.isClickable = false
+        } else {
+            link_login.visibility = View.VISIBLE
+            link_login.text = "Login"
+            link_login.isClickable = true
+            rl_my_acc_info.visibility = View.GONE
+        }
     }
 
     override fun onCreateView(
@@ -78,17 +88,7 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
-        if (Pref.getValue(context, PrefConstants.IS_LOGIN, false)) {
-            rl_my_acc_info.visibility = View.VISIBLE
-            link_login.isClickable = false
-            link_login.text = Pref.getValue(context, PrefConstants.EMAIL_ID, "")
 
-        } else {
-            link_login.visibility = View.VISIBLE
-            link_login.text = "Login"
-            link_login.isClickable = true
-            rl_my_acc_info.visibility = View.GONE
-        }
         link_account_info.setOnClickListener {
             initScreen()
         }
@@ -101,6 +101,9 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
         tv_lang_name.text = model.profileDomain.responseData?.language
         tv_currency_name.text = model.profileDomain.responseData?.currency
         Pref.setValue(context, PrefConstants.EMAIL_ID, model.profileDomain.responseData?.email.toString())
+        link_login.text = Pref.getValue(context, PrefConstants.EMAIL_ID, "")
+        if (link_login.text.equals("null"))
+            link_login.text = " "
         showState(IDLE)
     }
 
@@ -150,7 +153,7 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
             context?.resources!!.getString(
                 R.string.ok
             ),
-            null,
+            getString(R.string.no),
             object : CustomDialogPresenter.CustomDialogView {
                 override fun onPositiveButtonClicked() {
                     Pref.setValue(context, PrefConstants.IS_LOGIN, false)

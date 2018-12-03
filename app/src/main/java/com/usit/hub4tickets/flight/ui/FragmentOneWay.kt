@@ -40,8 +40,8 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
     private var isItemClickedTo: Boolean = false
     private var fromCode: String? = null
     private var toCode: String? = null
-    var sortByCode: String? = null
-    var travelClassCode: String? = null
+    private var sortByCode: String? = null
+    private var travelClassCode: String? = null
     private val FROM_SELECTION_REQUEST = 601
     private val TO_SELECTION_REQUEST = 602
     private var recyclerView: RecyclerView? = null
@@ -54,7 +54,6 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         listener = null
     )
     private val dataListAll: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? = ArrayList()
-
     override fun doRetrieveModel(): FlightViewModel = this.model
     override fun showState(viewState: FlightPresenter.MainView.ViewState) {
         when (viewState) {
@@ -82,21 +81,18 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
             FlightPresenter.MainView.ViewState.ERROR
             -> {
                 presenter.presentState(FlightPresenter.MainView.ViewState.IDLE)
-                Utility.showCustomDialog(context, doRetrieveModel().errorMessage.message, R.string.alert_failure, null)
+                Utility.showCustomDialog(context, doRetrieveModel().errorMessage.message, "", null)
             }
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(
-            R.layout.fragment_one_way, container, false
-        )
+        return inflater.inflate(R.layout.fragment_one_way, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
-
         recyclerView = view.findViewById(R.id.recycler_view_one_way) as RecyclerView
         val layoutManager = LinearLayoutManager(context)
         recyclerView!!.layoutManager = layoutManager as RecyclerView.LayoutManager?
@@ -140,7 +136,6 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
     private fun init() {
         this.model = FlightViewModel(context)
         this.presenter = FlightPresenterImpl(this, context)
-
         //sort by
         dataListSortBy?.add(
             CommonSelectorPojo(
@@ -225,7 +220,6 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         )
     }
 
-
     override fun onFlightRowClick(responseData: FlightViewModel.FlightListResponse.ResponseData) {
         enterNextFragment(responseData)
     }
@@ -260,8 +254,6 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
                     position: Int
                 ) {
                     travelClassCode = dataList[position].code
-                    Log.d("sortby selected", travelClassCode)
-                    Log.d("sortby is selected", dataList[position].isSelected.toString())
                     dialogBuilder.dismiss()
                 }
             })
@@ -270,7 +262,6 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         dialogBuilder.setCanceledOnTouchOutside(false)
         dialogBuilder.show()
     }
-
 
     private fun sortBy() {
         val dialogBuilder = AlertDialog.Builder(this.context!!).create()
@@ -321,7 +312,6 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
                     isItemClicked = true
                     edt_from.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME))
                     fromCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
-
                 }
             }
             TO_SELECTION_REQUEST -> {
@@ -335,11 +325,8 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
     }
 
     abstract inner class TextWatcherExtended : TextWatcher {
-
         private var lastLength: Int = 0
-
         abstract fun afterTextChanged(s: Editable, backSpace: Boolean)
-
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             lastLength = s.length
         }
@@ -353,48 +340,38 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         super.onResume()
         edt_from.addTextChangedListener(object : TextWatcherExtended() {
             override fun afterTextChanged(s: Editable, backSpace: Boolean) {
-                // Here you are! You got missing "backSpace" flag
                 if (!backSpace) {
-                    if (s?.length!! > 2)
+                    if (s.length > 2)
                         if (!isItemClicked && isVisible) {
-
                             callAPIAirportData(Constant.Path.FROM, s.toString())
                         }
                 } else {
-                    if (s?.length!! == 0)
+                    if (s.isEmpty()) {
                         isItemClicked = false
+                    }
                 }
             }
 
-
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // Do something useful if you wish.
-                // Or override it in TextWatcherExtended class if want to avoid it here
-
             }
         })
 
         edt_to.addTextChangedListener(
             object : TextWatcherExtended() {
-
                 override fun afterTextChanged(s: Editable, backSpace: Boolean) {
-                    // Here you are! You got missing "backSpace" flag
                     if (!backSpace) {
-                        if (s?.length!! > 2) {
+                        if (s.length > 2) {
                             if (!isItemClickedTo && isVisible) {
-
                                 callAPIAirportData(Constant.Path.TO, s.toString())
                             }
                         }
                     } else {
-                        if (s?.length!! == 0)
+                        if (s.isEmpty())
                             isItemClickedTo = false
                     }
                 }
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    // Do something useful if you wish.
-                    // Or override it in TextWatcherExtended class if want to avoid it here
                 }
             })
     }

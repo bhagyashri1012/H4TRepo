@@ -142,7 +142,7 @@ class ProfilePresenterImpl(
 
             Enums.APIRoute.GET_SAMPLE -> {
                 CustomDialogPresenter.showDialog(mContext,
-                    mContext.resources.getString(R.string.alert_success),
+                    "",
                     responseModel.message,
                     mContext.resources.getString(
                         R.string.ok
@@ -165,7 +165,7 @@ class ProfilePresenterImpl(
         dialogView: AlertDialog
     ) {
         CustomDialogPresenter.showDialog(mContext,
-            mContext.resources.getString(R.string.alert_success),
+            "",
             responseModel.message,
             mContext.resources.getString(
                 R.string.ok

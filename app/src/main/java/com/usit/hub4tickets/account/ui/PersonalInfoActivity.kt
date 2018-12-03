@@ -75,7 +75,7 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             DashboardPresenter.MainView.ViewState.ERROR
             -> {
                 presenterDashboard.presentState(DashboardPresenter.MainView.ViewState.IDLE)
-                Utility.showCustomDialog(null, doRetrieveModel().errorMessage, R.string.alert_failure, null)
+                Utility.showCustomDialog(null, doRetrieveModel().errorMessage, "", null)
             }
         }
     }

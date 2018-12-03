@@ -12,11 +12,14 @@
     <string name="prompt_current_password">Current Password</string>
     <string name="prompt_confirm_password">Re-type Password</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_not_match_password">Passwords not matching</string>
+    <string name="error_invalid_email">Please enter valid email address</string>
+    <string name="error_field_required_password">Please enter your password</string>
+    <string name="error_field_required_re_password">Please Re-enter your password</string>
+    <string name="error_password_too_short">This password is too short</string>
+    <string name="error_invalid_password">This password is incorrect</string>
+    <string name="error_not_match_password">Password does not match</string>
     <string name="error_field_required">This field is required</string>
+    <string name="error_field_required_email">Please enter your email address</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="action_sign_up">Sign up</string>
     <string name="action_forgot_password">Forgot Password</string>
@@ -177,5 +180,7 @@
     <string name="business_code">BUSINESS</string>
     <string name="first_text">FIRST</string>
     <string name="first_code">FIRST</string>
+    <string name="no">No</string>
+    <string name="flight_return">round</string>
 
 </resources>

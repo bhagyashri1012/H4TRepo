@@ -3,8 +3,8 @@ package com.usit.hub4tickets.login
 import com.usit.hub4tickets.api.network.ErrorResponse
 import com.usit.hub4tickets.domain.api.APICallManager
 import com.usit.hub4tickets.domain.api.LoginAPICallListener
-import com.usit.hub4tickets.utils.presentation.presenters.BaseInteractor
 import com.usit.hub4tickets.utils.Enums
+import com.usit.hub4tickets.utils.presentation.presenters.BaseInteractor
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -70,6 +70,4 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
                 listener.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
-
-
 }

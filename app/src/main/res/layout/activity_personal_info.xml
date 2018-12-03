@@ -67,6 +67,7 @@
                         android:layout_width="match_parent"
                         style="@style/CustomRegularTextView"
                         android:hint="@string/prompt_email"
+                        android:enabled="false"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
                         android:singleLine="true"/>
@@ -195,9 +196,11 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/checkbox_promotions_account"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:checked="true"
                     android:text="@string/yes_i_want_to_receive_promotions"/>
 
             <Button

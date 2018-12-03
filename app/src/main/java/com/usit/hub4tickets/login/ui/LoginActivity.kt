@@ -26,9 +26,10 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
 
     private lateinit var model: LoginViewModel
     private lateinit var presenter: LoginPresenter
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
+    override fun getLayoutResource(): Int {
+        return R.layout.common_toolbar;
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -36,9 +37,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
         setClickListeners()
     }
 
-    override fun getLayoutResource(): Int {
-        return R.layout.common_toolbar;
-    }
+    override fun doRetrieveModel(): LoginViewModel = this.model
 
     override fun showState(viewState: LoginPresenter.MainView.ViewState) {
         when (viewState) {
@@ -47,12 +46,11 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
             LoginPresenter.MainView.ViewState.SUCCESS -> redirectToDashboard()
             LoginPresenter.MainView.ViewState.ERROR -> {
                 presenter.presentState(LoginPresenter.MainView.ViewState.IDLE)
-                Utility.showCustomDialog(this, doRetrieveModel().errorMessage, R.string.alert_failure,null)
+                Utility.showCustomDialog(this, doRetrieveModel().errorMessage, "", null)
             }
         }
     }
 
-    override fun doRetrieveModel(): LoginViewModel = this.model
     override fun showProgress(show: Boolean) {
         if (show)
             Utility.showProgressDialog(context = this)
@@ -89,7 +87,6 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
             }
             false
         })
-
         sign_in_button.setOnClickListener { attemptLogin() }
         sign_up_button.setOnClickListener { attemptSignUp() }
         forgot_pass_button.setOnClickListener { forgotPassword() }
@@ -100,41 +97,32 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
         // Reset errors.
         edt_email_login.error = null
         edt_password_login.error = null
-
-        // Store values at the time of the login attempt.
         val emailStr = edt_email_login.text.toString()
         val passwordStr = edt_password_login.text.toString()
-
         var cancel = false
         var focusView: View? = null
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
-            edt_password_login.error = getString(R.string.error_invalid_password)
-            focusView = edt_password_login
-            cancel = true
-        }
-
-        // Check for a valid email address.
         if (TextUtils.isEmpty(emailStr)) {
-            edt_email_login.error = getString(R.string.error_field_required)
+            edt_email_login.error = getString(R.string.error_field_required_email)
             focusView = edt_email_login
             cancel = true
         } else if (!isEmailValid(emailStr)) {
             edt_email_login.error = getString(R.string.error_invalid_email)
             focusView = edt_email_login
             cancel = true
+        } else if (TextUtils.isEmpty(passwordStr)) {
+            edt_password_login.error = getString(R.string.error_field_required_password)
+            focusView = edt_password_login
+            cancel = true
+        } else if (!TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
+            edt_password_login.error = getString(R.string.error_invalid_password)
+            focusView = edt_password_login
+            cancel = true
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView?.requestFocus()
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
             showProgress(true)
-            // load data from API,
             presenter.callAPI(
                 Utility.getDeviceId(this),
                 edt_email_login.text.toString(),
@@ -150,5 +138,4 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 2
     }
-
 }

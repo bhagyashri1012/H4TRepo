@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,13 +29,11 @@ import kotlinx.android.synthetic.main.sort_by_dialog.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 /**
  * Created by Bhagyashri Burade
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-
 class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, FlightPresenter.MainView {
 
     val c = Calendar.getInstance()
@@ -44,19 +41,16 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     private var isItemClickedTo: Boolean = false
     private var fromCode: String? = null
     private var toCode: String? = null
-    var sortByCode: String? = null
-    var travelClassCode: String? = null
-
+    private var sortByCode: String? = null
+    private var travelClassCode: String? = null
     private val FROM_SELECTION_REQUEST = 501
     private val TO_SELECTION_REQUEST = 502
-
     private var recyclerView: RecyclerView? = null
     private lateinit var model: FlightViewModel
     private lateinit var presenter: FlightPresenter
     private var dataListSortBy: ArrayList<CommonSelectorPojo>? = ArrayList()
     private var dataListTravelClass: ArrayList<CommonSelectorPojo>? = ArrayList()
     private val dataListAll: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? = ArrayList()
-
     var adapter: RecyclerViewAdapter? = RecyclerViewAdapter(
         items = emptyList(),
         listener = null
@@ -89,7 +83,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             ERROR
             -> {
                 presenter.presentState(IDLE)
-                Utility.showCustomDialog(context, doRetrieveModel().errorMessage.message, R.string.alert_failure, null)
+                Utility.showCustomDialog(context, doRetrieveModel().errorMessage.message, "", null)
             }
         }
     }
@@ -104,17 +98,12 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(
-            R.layout.fragment, container, false
-        )
-        return view
+        return inflater.inflate(R.layout.fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
-        /* val items = resources.getStringArray(R.array.tab_A)
-         val adapter = RecyclerViewAdapter(items, this)*/
         recyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         val layoutManager = LinearLayoutManager(context)
         recyclerView!!.layoutManager = layoutManager as RecyclerView.LayoutManager?
@@ -136,16 +125,14 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         }
         tv_departure.setOnClickListener { Utility.dateDialog(c, activity, tv_departure) }
         tv_return.setOnClickListener { Utility.dateDialog(c, activity, tv_return) }
-        btn_class.setOnClickListener {
-            selectTravelClass()
-        }
+        btn_class.setOnClickListener { selectTravelClass() }
         im_btn_search.setOnClickListener {
             presenter.callFlightDetails(
                 "1",
                 "ECONOMY",//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
                 "1",
                 tv_departure.text.toString(),
-                "round",
+                getString(R.string.flight_return),
                 fromCode.toString(),
                 toCode.toString(),
                 "0",
@@ -158,7 +145,6 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     private fun init() {
         this.model = FlightViewModel(context)
         this.presenter = FlightPresenterImpl(this, context)
-
         //sort by
         dataListSortBy?.add(
             CommonSelectorPojo(
@@ -244,11 +230,8 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     }
 
     abstract inner class TextWatcherExtended : TextWatcher {
-
         private var lastLength: Int = 0
-
         abstract fun afterTextChanged(s: Editable, backSpace: Boolean)
-
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             lastLength = s.length
         }
@@ -262,48 +245,37 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         super.onResume()
         edt_from.addTextChangedListener(object : TextWatcherExtended() {
             override fun afterTextChanged(s: Editable, backSpace: Boolean) {
-                // Here you are! You got missing "backSpace" flag
                 if (!backSpace) {
-                    if (s?.length!! > 2)
+                    if (s.length > 2)
                         if (!isItemClicked && isVisible) {
-
                             callAPIAirportData(Constant.Path.FROM, s.toString())
                         }
                 } else {
-                    if (s?.length!! == 0)
+                    if (s.isEmpty())
                         isItemClicked = false
                 }
             }
 
-
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // Do something useful if you wish.
-                // Or override it in TextWatcherExtended class if want to avoid it here
-
             }
         })
 
         edt_to.addTextChangedListener(
             object : TextWatcherExtended() {
-
                 override fun afterTextChanged(s: Editable, backSpace: Boolean) {
-                    // Here you are! You got missing "backSpace" flag
                     if (!backSpace) {
-                        if (s?.length!! > 2) {
+                        if (s.length > 2) {
                             if (!isItemClickedTo && isVisible) {
-
                                 callAPIAirportData(Constant.Path.TO, s.toString())
                             }
                         }
                     } else {
-                        if (s?.length!! == 0)
+                        if (s.isEmpty())
                             isItemClickedTo = false
                     }
                 }
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    // Do something useful if you wish.
-                    // Or override it in TextWatcherExtended class if want to avoid it here
                 }
             })
     }
@@ -311,7 +283,6 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     private fun callAPIAirportData(flag: String?, toString: String) {
         presenter.callAPIAirportData(flag, toString)
     }
-
 
     override fun onFlightRowClick(responseData: FlightViewModel.FlightListResponse.ResponseData) {
         enterNextFragment(responseData)
@@ -333,8 +304,6 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                     position: Int
                 ) {
                     travelClassCode = dataList[position].code
-                    Log.d("sortby selected", travelClassCode)
-                    Log.d("sortby is selected", dataList[position].isSelected.toString())
                     dialogBuilder.dismiss()
                 }
             })
@@ -343,7 +312,6 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         dialogBuilder.setCanceledOnTouchOutside(false)
         dialogBuilder.show()
     }
-
 
     private fun sortBy() {
         val dialogBuilder = AlertDialog.Builder(this.context!!).create()
@@ -361,8 +329,6 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                     position: Int
                 ) {
                     sortByCode = dataList[position].code
-                    Log.d("sortby selected", sortByCode)
-                    Log.d("sortby is selected", dataList[position].isSelected.toString())
                     dialogBuilder.dismiss()
                 }
             })
@@ -371,7 +337,6 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         dialogBuilder.setCanceledOnTouchOutside(false)
         dialogBuilder.show()
     }
-
 
     private fun enterNextFragment(responseData: FlightViewModel.FlightListResponse.ResponseData) {
         val intent = Intent(activity?.baseContext, TripDetailsActivity::class.java)
@@ -401,7 +366,6 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                     isItemClicked = true
                     edt_from.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME))
                     fromCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
-
                 }
             }
             TO_SELECTION_REQUEST -> {

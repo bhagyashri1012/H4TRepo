@@ -70,7 +70,7 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
             DashboardPresenter.MainView.ViewState.ERROR
             -> {
                 presenter.presentState(DashboardPresenter.MainView.ViewState.IDLE)
-                Utility.showCustomDialog(null, doRetrieveModel().errorMessage, R.string.alert_failure,null)
+                Utility.showCustomDialog(context, doRetrieveModel().errorMessage,"", null)
             }
         }
     }

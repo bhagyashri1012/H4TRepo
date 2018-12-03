@@ -1,15 +1,12 @@
 package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
-import android.provider.Settings.Secure
-import android.util.Log
 import com.usit.hub4tickets.MainApplication
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.api.SignUpAPICallListener
 import com.usit.hub4tickets.domain.presentation.presenters.SignUpPresenter
 import com.usit.hub4tickets.domain.presentation.presenters.SignUpPresenter.MainView.ViewState.*
 import com.usit.hub4tickets.login.SignUpBaseInteractor
-import com.usit.hub4tickets.registration.ui.SignUpActivity
 import com.usit.hub4tickets.utils.Constant
 import com.usit.hub4tickets.utils.Enums
 import com.usit.hub4tickets.utils.Utility
@@ -27,13 +24,12 @@ class SignUpPresenterImpl(
     private val signUpBaseInteractor: SignUpBaseInteractor =
         SignUpBaseInteractor(this)
     private val mContext = context
-    private var device_id = Secure.getString(mContext.contentResolver, Secure.ANDROID_ID)
 
     override fun callAPI(email: String, password: String) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
             signUpBaseInteractor.callAPIGetSignUp(
-                device_id,
+                Utility.getDeviceId(context = mContext),
                 email,
                 password,
                 Constant.Path.DEVICE_FLAG
@@ -46,8 +42,6 @@ class SignUpPresenterImpl(
     }
 
     override fun presentState(state: SignUpPresenter.MainView.ViewState) {
-        // user state logging
-        Log.i(SignUpActivity::class.java.simpleName, state.name)
         when (state) {
             IDLE -> mView.showState(IDLE)
             LOADING -> mView.showState(LOADING)
@@ -77,7 +71,7 @@ class SignUpPresenterImpl(
         Enums.APIRoute.GET_SAMPLE -> {
             mView.doRetrieveModel().signUpDomain = responseModel
             CustomDialogPresenter.showDialog(mContext,
-                mContext.resources.getString(R.string.alert_success),
+                "",
                 responseModel.message,
                 mContext.resources.getString(
                     R.string.ok

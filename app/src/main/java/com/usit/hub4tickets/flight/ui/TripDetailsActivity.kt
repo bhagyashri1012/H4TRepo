@@ -13,6 +13,13 @@ import kotlinx.android.synthetic.main.common_toolbar.*
 
 class TripDetailsActivity : BaseActivity() {
 
+    private val tripDetailsArrayList: ArrayList<FlightViewModel.TripAllDetails> = ArrayList()
+    private val dataListAll: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? = ArrayList()
+    var adapter: TripDetailsViewAdapter? = TripDetailsViewAdapter(
+        items = emptyList(),
+        listener = null
+    )
+
     override fun getLayoutResource(): Int {
         return R.layout.common_toolbar
     }
@@ -24,7 +31,6 @@ class TripDetailsActivity : BaseActivity() {
         if (null != intent.extras) {
             setDataToRecyclerViewAdapter(intent.extras.getParcelable(Constant.Path.FLIGHT_DETAILS) as FlightViewModel.FlightListResponse.ResponseData)
         }
-
         btn_continue_booking.setOnClickListener {
             val intent = Intent(baseContext, TripProvidersListActivity::class.java)
             startActivity(intent)
@@ -37,13 +43,6 @@ class TripDetailsActivity : BaseActivity() {
         val layoutManager = LinearLayoutManager(this)
         recycler_view!!.layoutManager = layoutManager
     }
-
-    private val dataListAll: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? = ArrayList()
-    var adapter: TripDetailsViewAdapter? = TripDetailsViewAdapter(
-        items = emptyList(),
-        listener = null
-    )
-    val tripDetailsArrayList: ArrayList<FlightViewModel.TripAllDetails> = ArrayList()
 
     private fun setDataToRecyclerViewAdapter(responseData: FlightViewModel.FlightListResponse.ResponseData?) {
         if (responseData != null) {
@@ -70,7 +69,6 @@ class TripDetailsActivity : BaseActivity() {
                     flightDetails.toCity
                 )
                 tripDetailsArrayList.add(i, tripAllDetails)
-
                 val flightDetailsOutBound = dataListAll[i].outbondFlightDetails!!
                 val tripAllDetailsOutBound = FlightViewModel.TripAllDetails(
                     flightDetailsOutBound.airline,

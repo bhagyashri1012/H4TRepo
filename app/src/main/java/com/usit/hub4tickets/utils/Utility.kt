@@ -681,12 +681,12 @@ object Utility {
     fun showCustomDialog(
         mContext: Context?,
         message: String?,
-        title: Int,
+        title: String?,
         listner: CustomDialogPresenter.CustomDialogView?
     ) {
         CustomDialogPresenter.showDialog(
             mContext,
-            mContext?.resources?.getString(title),
+            title,
             message,
             mContext?.resources?.getString(
                 R.string.ok
