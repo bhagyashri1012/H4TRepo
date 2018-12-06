@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ import com.usit.hub4tickets.utils.Constant
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.SignleSelectionAdapter
 import com.usit.hub4tickets.utils.Utility
+import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 import kotlinx.android.synthetic.main.search_layout.*
 import kotlinx.android.synthetic.main.sort_by_dialog.view.*
 import java.util.*
@@ -66,7 +68,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                 openSearchActivityFlightReturn(
                     model.flightViewModel.responseData as ArrayList<FlightViewModel.AirPortDataResponse.ResponseData>,
                     this.javaClass.simpleName.toString(),
-                    FROM_SELECTION_REQUEST
+                    FROM_SELECTION_REQUEST, Constant.Path.FROM
                 )
             }
             SUCCESS_TO -> {
@@ -74,7 +76,8 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                 openSearchActivityFlightReturn(
                     model.flightViewModel.responseData as ArrayList<FlightViewModel.AirPortDataResponse.ResponseData>,
                     this.javaClass.simpleName.toString(),
-                    TO_SELECTION_REQUEST
+                    TO_SELECTION_REQUEST,
+                    Constant.Path.TO
                 )
             }
             FLIGHT_DETAILS_SUCCESS -> {
@@ -104,6 +107,8 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
+        tv_departure.text = Utility.getCurrentDateNow()
+        tv_return.text = Utility.getCurrentDateAfter()
         recyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         val layoutManager = LinearLayoutManager(context)
         recyclerView!!.layoutManager = layoutManager as RecyclerView.LayoutManager?
@@ -123,22 +128,11 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                 }
             }
         }
-        tv_departure.setOnClickListener { Utility.dateDialog(c, activity, tv_departure) }
-        tv_return.setOnClickListener { Utility.dateDialog(c, activity, tv_return) }
+        tv_departure.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_departure, 12) }
+        tv_return.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_return, 12) }
         btn_class.setOnClickListener { selectTravelClass() }
         im_btn_search.setOnClickListener {
-            presenter.callFlightDetails(
-                "1",
-                "ECONOMY",//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
-                "1",
-                tv_departure.text.toString(),
-                getString(R.string.flight_return),
-                fromCode.toString(),
-                toCode.toString(),
-                "0",
-                "in-EN",
-                tv_return.text.toString()
-            )
+            attemptSearch()
         }
     }
 
@@ -347,7 +341,8 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     private fun openSearchActivityFlightReturn(
         arrayListAirPortData: ArrayList<FlightViewModel.AirPortDataResponse.ResponseData>,
         title: String,
-        selectionRequest: Int
+        selectionRequest: Int,
+        flag: String
     ) {
         if (arrayListAirPortData.size > 0) {
             val intent = Intent(context, CommonSearchActivity::class.java)
@@ -355,6 +350,11 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             intent.putParcelableArrayListExtra(Constant.Path.AIRPORT_FROM_LIST, arrayListAirPortData)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivityForResult(intent, selectionRequest)
+        } else {
+            if (flag == Constant.Path.TO)
+                edt_to.setText("")
+            else if (flag == Constant.Path.FROM)
+                edt_from.setText("")
         }
     }
 
@@ -364,17 +364,91 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             FROM_SELECTION_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK) {
                     isItemClicked = true
-                    edt_from.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME))
+                    edt_from.setText(
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
+                    )
                     fromCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
                 }
             }
             TO_SELECTION_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK) {
                     isItemClickedTo = true
-                    edt_to.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME))
+                    edt_to.setText(
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
+                    )
                     toCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
                 }
             }
         }
+    }
+
+    private fun attemptSearch() {
+        // Reset errors.
+        edt_from.error = null
+        edt_to.error = null
+        val edtFrom = edt_from.text.toString()
+        val edtTo = edt_to.text.toString()
+        val departureDate = tv_departure.text.toString()
+        val returnDate = tv_return.text.toString()
+        var cancel = false
+        var focusView: View? = null
+        if (TextUtils.isEmpty(edtFrom)) {
+            edt_from.error = getString(R.string.error_field_required_from_airport)
+            focusView = edt_from
+            cancel = true
+        } else if (TextUtils.isEmpty(edtTo)) {
+            edt_to.error = getString(R.string.error_field_required_to_airport)
+            focusView = edt_to
+            cancel = true
+        } else if (TextUtils.isEmpty(departureDate)) {
+            CustomDialogPresenter.showDialog(
+                context,
+                "",
+                getString(R.string.error_field_required_departure),
+                context!!.resources.getString(
+                    R.string.ok
+                ),
+                null,
+                null
+            )
+            focusView = tv_departure
+            cancel = true
+        } else if (TextUtils.isEmpty(returnDate)) {
+            CustomDialogPresenter.showDialog(
+                context,
+                "",
+                getString(R.string.error_field_required_return),
+                context!!.resources.getString(
+                    R.string.ok
+                ),
+                null,
+                null
+            )
+            focusView = tv_return
+            cancel = true
+        }
+        if (cancel) {
+            focusView?.requestFocus()
+        } else {
+            Utility.showProgress(true, context)
+            presenter.callFlightDetails(
+                "1",
+                "ECONOMY",//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
+                "1",
+                tv_departure.text.toString(),
+                getString(R.string.flight_return),
+                fromCode.toString(),
+                toCode.toString(),
+                "0",
+                "in-EN",
+                tv_return.text.toString()
+            )
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        edt_from.error = null//removes error
+        edt_to.error = null
     }
 }

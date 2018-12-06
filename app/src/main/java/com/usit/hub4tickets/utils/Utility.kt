@@ -638,6 +638,31 @@ object Utility {
         dpDialog.show()
     }
 
+    fun dateDialogWithMinMaxDate(
+        c: Calendar?,
+        activity: Activity?,
+        textView: TextView,
+        maxDate: Int
+    ) {
+        val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+        var day = c!!.get(Calendar.DAY_OF_MONTH)
+        var year = c!!.get(Calendar.YEAR)
+        var month = c!!.get(Calendar.MONTH)
+        val listener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+            val newDate = Calendar.getInstance()
+            newDate.set(year, monthOfYear, dayOfMonth)
+            textView.text = dateFormatter.format(newDate.time)
+        }
+        val dpDialog = DatePickerDialog(activity!!, listener, year, month, day)
+        dpDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+        val maxDate = Calendar.getInstance()
+        maxDate.add(Calendar.YEAR, 1)
+        dpDialog.datePicker.maxDate = maxDate.timeInMillis
+
+        dpDialog.show()
+    }
+
+
     fun hideKeyBordActivity(activity: Activity) {
 
         if (activity.currentFocus != null) {
@@ -702,4 +727,18 @@ object Utility {
             hideProgressBar()
     }
 
+    fun getCurrentDateNow(): String {
+        var c = Calendar.getInstance().time
+        val df = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+        return df.format(c)
+    }
+
+    fun getCurrentDateAfter(): String {
+        var calendar = Calendar.getInstance()
+        val df = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+        calendar.time = Calendar.getInstance().time
+        calendar.add(Calendar.DAY_OF_MONTH, 1)
+        var newDate = calendar.time
+        return df.format(newDate)
+    }
 }

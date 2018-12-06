@@ -8,7 +8,9 @@
             android:id="@+id/search_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_16dp"
+            android:layout_marginRight="@dimen/margin_16dp"
+            android:layout_marginLeft="@dimen/margin_16dp"
+            android:layout_marginTop="@dimen/margin_16dp"
             android:background="@drawable/grey_border"
             app:defaultQueryHint="Search"
             app:iconifiedByDefault="false"
@@ -21,7 +23,6 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/search_text"
             android:layout_margin="@dimen/padding_8dp"
-            android:background="@color/white"
             android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView

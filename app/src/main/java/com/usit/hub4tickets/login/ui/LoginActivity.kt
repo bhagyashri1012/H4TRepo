@@ -13,7 +13,10 @@ import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginPresenterImpl
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
 import com.usit.hub4tickets.registration.ui.SignUpActivity
+import com.usit.hub4tickets.utils.Pref
+import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
+import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 import kotlinx.android.synthetic.main.activity_login.*
 
 /**
@@ -138,4 +141,31 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 2
     }
+
+    override fun onBackPressed() {
+        if (!Pref.getValue(this, PrefConstants.IS_LOGIN,false)) {
+            CustomDialogPresenter.showDialog(
+                this!!,
+                resources!!.getString(R.string.alert_exit),
+                getString(R.string.alert_exit_msg),
+                resources!!.getString(
+                    R.string.ok
+                ),
+                getString(R.string.no),
+                object : CustomDialogPresenter.CustomDialogView {
+                    override fun onPositiveButtonClicked() {
+                        finish()
+                    }
+
+                    override fun onNegativeButtonClicked() {
+
+                    }
+                })
+        }else
+        {
+            super.onBackPressed()
+        }
+    }
+
+
 }

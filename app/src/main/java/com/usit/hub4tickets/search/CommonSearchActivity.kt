@@ -158,16 +158,16 @@ class CommonSearchActivity : BaseActivity() {
             for (i in arrayListCommonSelectorFromInitial!!.indices) {
                 arrayListCommonSelector.add(
                     i, CommonSelectorPojo(
-                        arrayListCommonSelectorFromInitial[i].airPortId.toString(),
-                        arrayListCommonSelectorFromInitial[i].airPortName,
-                        arrayListCommonSelectorFromInitial[i].airPortCode
+                        arrayListCommonSelectorFromInitial[i].airPortCode,
+                        arrayListCommonSelectorFromInitial[i].airPortNameAndCode,
+                        arrayListCommonSelectorFromInitial[i].airPortCountry
                     )
                 )
             }
         }
         if (null != arrayListCommonSelector) {
             searchItemsListAdapter = CommonSearchAdapter(
-                this,
+                strActivityTitle,
                 arrayListCommonSelector,
                 object : CommonSearchAdapter.OnItemClickListener {
                     override fun onListItemClick(data: CommonSelectorPojo) {
@@ -175,7 +175,7 @@ class CommonSearchActivity : BaseActivity() {
                         val intent = Intent()
                         intent.putExtra(PrefConstants.SELECTED_ITEMS_ID, data.id)
                         intent.putExtra(PrefConstants.SELECTED_ITEMS_NAME, data.itemsName)
-                        intent.putExtra(PrefConstants.SELECTED_ITEMS_TYPE, data.code)
+                        intent.putExtra(PrefConstants.SELECTED_ITEMS_TYPE, data.id)
                         setResult(Activity.RESULT_OK, intent)
                         finish()
                     }

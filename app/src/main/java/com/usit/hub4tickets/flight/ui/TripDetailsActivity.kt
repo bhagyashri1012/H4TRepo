@@ -48,48 +48,53 @@ class TripDetailsActivity : BaseActivity() {
         if (responseData != null) {
             dataListAll?.add(responseData)
             for (i in dataListAll!!.indices) {
-                val flightDetails = dataListAll[i].inbondFlightDetails!!
-                val tripAllDetails = FlightViewModel.TripAllDetails(
-                    flightDetails.airline,
-                    dataListAll[i].inbondFlightDetails!!.currency,
-                    dataListAll[i].inbondFlightDetails!!.duration,
-                    dataListAll[i].price.toString(),
-                    flightDetails.endAirPortName,
-                    flightDetails.endDate,
-                    flightDetails.endTime,
-                    flightDetails.flightNo,
-                    flightDetails.fromCity,
-                    flightDetails.imgUrl,
-                    flightDetails.startAirPortName,
-                    flightDetails.startDate,
-                    flightDetails.startTime,
-                    flightDetails.stopCount,
-                    flightDetails.stopDetails,
-                    null,
-                    flightDetails.toCity
-                )
-                tripDetailsArrayList.add(i, tripAllDetails)
-                val flightDetailsOutBound = dataListAll[i].outbondFlightDetails!!
-                val tripAllDetailsOutBound = FlightViewModel.TripAllDetails(
-                    flightDetailsOutBound.airline,
-                    dataListAll[i].inbondFlightDetails!!.currency,
-                    dataListAll[i].inbondFlightDetails!!.duration,
-                    dataListAll[i].price.toString(),
-                    flightDetailsOutBound.endAirPortName,
-                    flightDetailsOutBound.endDate,
-                    flightDetailsOutBound.endTime,
-                    flightDetailsOutBound.flightNo,
-                    flightDetailsOutBound.fromCity,
-                    flightDetailsOutBound.imgUrl,
-                    flightDetailsOutBound.startAirPortName,
-                    flightDetailsOutBound.startDate,
-                    flightDetailsOutBound.startTime,
-                    flightDetailsOutBound.stopCount,
-                    null,
-                    flightDetailsOutBound.stopDetails,
-                    flightDetailsOutBound.toCity
-                )
-                tripDetailsArrayList.add(i, tripAllDetailsOutBound)
+                val flightDetails = dataListAll[i].inbondFlightDetails
+                if (null != flightDetails) {
+                    val tripAllDetails = FlightViewModel.TripAllDetails(
+                        flightDetails?.airline,
+                        dataListAll[i].inbondFlightDetails?.currency,
+                        dataListAll[i].inbondFlightDetails?.duration,
+                        dataListAll[i].price.toString(),
+                        flightDetails?.endAirPortName,
+                        flightDetails?.endDate,
+                        flightDetails?.endTime,
+                        flightDetails?.flightNo,
+                        flightDetails?.fromCity,
+                        flightDetails?.imgUrl,
+                        flightDetails?.startAirPortName,
+                        flightDetails?.startDate,
+                        flightDetails?.startTime,
+                        flightDetails?.stopCount,
+                        flightDetails?.stopDetails,
+                        null,
+                        flightDetails?.toCity
+                    )
+                    tripDetailsArrayList.add(i, tripAllDetails)
+                }
+
+                val flightDetailsOutBound = dataListAll[i].outbondFlightDetails
+                if (null != flightDetailsOutBound) {
+                    val tripAllDetailsOutBound = FlightViewModel.TripAllDetails(
+                        flightDetailsOutBound?.airline,
+                        dataListAll[i].outbondFlightDetails?.currency,
+                        dataListAll[i].outbondFlightDetails?.duration,
+                        dataListAll[i].price.toString(),
+                        flightDetailsOutBound?.endAirPortName,
+                        flightDetailsOutBound?.endDate,
+                        flightDetailsOutBound?.endTime,
+                        flightDetailsOutBound?.flightNo,
+                        flightDetailsOutBound?.fromCity,
+                        flightDetailsOutBound?.imgUrl,
+                        flightDetailsOutBound?.startAirPortName,
+                        flightDetailsOutBound?.startDate,
+                        flightDetailsOutBound?.startTime,
+                        flightDetailsOutBound?.stopCount,
+                        null,
+                        flightDetailsOutBound?.stopDetails,
+                        flightDetailsOutBound?.toCity
+                    )
+                    tripDetailsArrayList.add(i, tripAllDetailsOutBound)
+                }
             }
         }
         adapter = TripDetailsViewAdapter(tripDetailsArrayList, null)

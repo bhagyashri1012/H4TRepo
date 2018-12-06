@@ -21,7 +21,7 @@ class FragmentMultiCity : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val items = resources.getStringArray(R.array.tab_A)
-        val adapter = OneWayRecyclerViewAdapter(items)
+        val adapter = OneWayRecyclerViewAdapter(items,items)
         recyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager

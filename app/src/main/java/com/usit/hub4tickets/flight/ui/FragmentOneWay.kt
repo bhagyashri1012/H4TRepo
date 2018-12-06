@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import com.usit.hub4tickets.utils.Constant
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.SignleSelectionAdapter
 import com.usit.hub4tickets.utils.Utility
+import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 import kotlinx.android.synthetic.main.search_layout.*
 import kotlinx.android.synthetic.main.sort_by_dialog.view.*
 import java.util.*
@@ -112,24 +114,14 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
                 }
             }
         }
+        tv_departure.text = Utility.getCurrentDateNow()
         tv_departure.setOnClickListener { Utility.dateDialog(c, activity, tv_departure) }
         tv_return.visibility = View.GONE
         btn_class.setOnClickListener {
             selectTravelClass()
         }
         im_btn_search.setOnClickListener {
-            presenter.callFlightDetails(
-                "1",
-                "ECONOMY",//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
-                "1",
-                tv_departure.text.toString(),
-                "oneway",
-                fromCode.toString(),
-                toCode.toString(),
-                "0",
-                "in-EN",
-                ""
-            )
+            attemptSearch()
         }
     }
 
@@ -378,5 +370,62 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
 
     private fun callAPIAirportData(flag: String?, toString: String) {
         presenter.callAPIAirportData(flag, toString)
+    }
+
+    private fun attemptSearch() {
+        // Reset errors.
+        edt_from.error = null
+        edt_to.error = null
+        val edtFrom = edt_from.text.toString()
+        val edtTo = edt_to.text.toString()
+        val departureDate = tv_departure.text.toString()
+        val returnDate = tv_return.text.toString()
+        var cancel = false
+        var focusView: View? = null
+        if (TextUtils.isEmpty(edtFrom)) {
+            edt_from.error = getString(R.string.error_field_required_from_airport)
+            focusView = edt_from
+            cancel = true
+        } else if (TextUtils.isEmpty(edtTo)) {
+            edt_to.error = getString(R.string.error_field_required_to_airport)
+            focusView = edt_to
+            cancel = true
+        } else if (TextUtils.isEmpty(departureDate)) {
+            CustomDialogPresenter.showDialog(
+                context,
+                "",
+                getString(R.string.error_field_required_departure),
+                context!!.resources.getString(
+                    R.string.ok
+                ),
+                null,
+                null
+            )
+            focusView = tv_departure
+            cancel = true
+        }
+        if (cancel) {
+            focusView?.requestFocus()
+        } else {
+            Utility.showProgress(true, context)
+            presenter.callFlightDetails(
+                "1",
+                "ECONOMY",//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
+                "1",
+                tv_departure.text.toString(),
+                getString(R.string.oneway),
+                fromCode.toString(),
+                toCode.toString(),
+                "0",
+                "in-EN",
+                ""
+            )
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        edt_from.error = null//removes error
+        edt_to.error = null
     }
 }

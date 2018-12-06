@@ -39,6 +39,7 @@
                 android:name=".login.ui.LoginActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
                 android:screenOrientation="portrait"
+                android:launchMode="singleTop"
                 android:theme="@style/NoActionBarAppTheme"
                 android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
@@ -86,7 +87,7 @@
                 android:screenOrientation="portrait"
                 android:theme="@style/NoActionBarAppTheme"
                 android:launchMode="singleTop"
-                android:windowSoftInputMode="stateHidden|adjustPan">
+                android:windowSoftInputMode="stateHidden|adjustPan|stateAlwaysHidden">
         </activity>
         <activity
                 android:name=".account.ui.PersonalInfoActivity"

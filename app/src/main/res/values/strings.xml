@@ -20,6 +20,10 @@
     <string name="error_not_match_password">Password does not match</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_field_required_email">Please enter your email address</string>
+    <string name="error_field_required_from_airport">Please enter your origin city</string>
+    <string name="error_field_required_to_airport">Please enter your destination city</string>
+    <string name="error_field_required_departure">Please enter your departure date</string>
+    <string name="error_field_required_return">Please enter your return date</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="action_sign_up">Sign up</string>
     <string name="action_forgot_password">Forgot Password</string>
@@ -182,5 +186,8 @@
     <string name="first_code">FIRST</string>
     <string name="no">No</string>
     <string name="flight_return">round</string>
+    <string name="alert_exit"></string>
+    <string name="alert_exit_msg">Are you sure you want to exit?</string>
+    <string name="oneway">oneway</string>
 
 </resources>

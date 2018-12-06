@@ -5,6 +5,9 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.utils.Pref
+import com.usit.hub4tickets.utils.PrefConstants
+import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 /**
@@ -58,17 +61,36 @@ class DashboardActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    override fun onBackPressed() {
 
-        if (navigation.selectedItemId === R.id.navigation_home) {
-            super.onBackPressed()
+    override fun onBackPressed() {
+        if (!Pref.getValue(this, PrefConstants.IS_LOGIN, false)) {
+            CustomDialogPresenter.showDialog(
+                this!!,
+                resources!!.getString(R.string.alert_exit),
+                getString(R.string.alert_exit_msg),
+                resources!!.getString(
+                    R.string.ok
+                ),
+                getString(R.string.no),
+                object : CustomDialogPresenter.CustomDialogView {
+                    override fun onPositiveButtonClicked() {
+                        finish()
+                    }
+
+                    override fun onNegativeButtonClicked() {
+
+                    }
+                })
         } else {
-            if (supportFragmentManager?.backStackEntryCount == 0) {
-                navigation.selectedItemId = R.id.navigation_home
+            if (navigation.selectedItemId === R.id.navigation_home) {
+                super.onBackPressed()
             } else {
-                supportFragmentManager?.popBackStackImmediate()
+                if (supportFragmentManager?.backStackEntryCount == 0) {
+                    navigation.selectedItemId = R.id.navigation_home
+                } else {
+                    supportFragmentManager?.popBackStackImmediate()
+                }
             }
         }
     }
-
 }

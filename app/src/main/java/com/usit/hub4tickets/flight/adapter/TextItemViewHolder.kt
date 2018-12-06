@@ -15,7 +15,15 @@ class TextItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
 }
+class TextItemViewHolderForCommonSearch(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private val textView: TextView = itemView.findViewById(R.id.list_item) as TextView
+    val textCountryView: TextView = itemView.findViewById(R.id.list_sub_item) as TextView
+    fun bind(text: String, country: String) {
+        textView.text = text
+        textCountryView.text = country
+    }
 
+}
 class TextItemViewForTripDetailsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val tripTitle: TextView = itemView.findViewById(R.id.trip_title) as TextView
     private val tripDate: TextView = itemView.findViewById(R.id.trip_date) as TextView

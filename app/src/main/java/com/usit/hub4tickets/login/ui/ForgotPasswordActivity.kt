@@ -80,11 +80,11 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
         var cancel = false
         var focusView: View? = null
         if (TextUtils.isEmpty(passwordStr)) {
-            dialogView.edt_new_password.error = getString(R.string.error_field_required)
+            dialogView.edt_new_password.error = getString(R.string.error_field_required_password)
             focusView = dialogView.edt_new_password
             cancel = true
         } else if (TextUtils.isEmpty(confirmPasswordStr)) {
-            dialogView.edt_confirm_password.error = getString(R.string.error_field_required)
+            dialogView.edt_confirm_password.error = getString(R.string.error_field_required_re_password)
             focusView = dialogView.edt_confirm_password
             cancel = true
         }

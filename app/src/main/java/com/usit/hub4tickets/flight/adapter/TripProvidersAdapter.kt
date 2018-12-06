@@ -12,8 +12,7 @@ import com.usit.hub4tickets.R
 class TripProvidersAdapter(private var items: Array<String>) : RecyclerView.Adapter<TextItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TextItemViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_trip_providers_list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_trip_providers_list_item, parent, false)
         return TextItemViewHolder(view)
     }
 

@@ -380,10 +380,14 @@ class FlightViewModel(var context: Context?) {
         data class ResponseData(
             @SerializedName("airPortCode")
             val airPortCode: String,
+            @SerializedName("airPortCountry")
+            val airPortCountry: String,
             @SerializedName("airPortId")
             val airPortId: Int,
             @SerializedName("airPortName")
-            val airPortName: String
+            val airPortName: String,
+            @SerializedName("airPortNameAndCode")
+            val airPortNameAndCode: String
         ) : Parcelable {
             companion object {
                 @JvmField
@@ -395,7 +399,9 @@ class FlightViewModel(var context: Context?) {
 
             constructor(source: Parcel) : this(
                 source.readString(),
+                source.readString(),
                 source.readInt(),
+                source.readString(),
                 source.readString()
             )
 
@@ -403,8 +409,10 @@ class FlightViewModel(var context: Context?) {
 
             override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
                 writeString(airPortCode)
+                writeString(airPortCountry)
                 writeInt(airPortId)
                 writeString(airPortName)
+                writeString(airPortNameAndCode)
             }
         }
 
@@ -431,24 +439,25 @@ class FlightViewModel(var context: Context?) {
         }
     }
 
+
     data class TripAllDetails(
-        val airline: String,
-        val currency: String,
-        val duration: String,
-        val price: String,
-        val endAirPortName: String,
-        val endDate: String,
-        val endTime: String,
-        val flightNo: String,
-        val fromCity: String,
-        val imgUrl: String,
-        val startAirPortName: String,
-        val startDate: String,
-        val startTime: String,
-        val stopCount: Int,
+        val airline: String?,
+        val currency: String?,
+        val duration: String?,
+        val price: String?,
+        val endAirPortName: String?,
+        val endDate: String?,
+        val endTime: String?,
+        val flightNo: String?,
+        val fromCity: String?,
+        val imgUrl: String?,
+        val startAirPortName: String?,
+        val startDate: String?,
+        val startTime: String?,
+        val stopCount: Int?,
         val stopDetailsInBound: ArrayList<FlightListResponse.ResponseData.InbondFlightDetails.StopDetail>?,
         val stopDetailsOutBound: List<FlightListResponse.ResponseData.OutbondFlightDetails.StopDetail>?,
-        val toCity: String
+        val toCity: String?
 
     )
 

@@ -102,7 +102,7 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
         tv_currency_name.text = model.profileDomain.responseData?.currency
         Pref.setValue(context, PrefConstants.EMAIL_ID, model.profileDomain.responseData?.email.toString())
         link_login.text = Pref.getValue(context, PrefConstants.EMAIL_ID, "")
-        if (link_login.text.equals("null"))
+        if (link_login.text == "null")
             link_login.text = " "
         showState(IDLE)
     }
@@ -160,6 +160,8 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
                     Pref.setValue(context, PrefConstants.USER_ID, "0")
                     Pref.setValue(context, PrefConstants.EMAIL_ID, "")
                     val intent = Intent(context, LoginActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 }
 
