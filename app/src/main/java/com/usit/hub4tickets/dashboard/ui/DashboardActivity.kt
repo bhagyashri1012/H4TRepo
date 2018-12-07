@@ -38,7 +38,7 @@ class DashboardActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
     private lateinit var presenter: DashboardPresenter
     private val TAG = "DashboardActivity"
-    private lateinit var mGoogleApiClient: GoogleApiClient
+    private var mGoogleApiClient: GoogleApiClient? = null
     private var mLocationManager: LocationManager? = null
     lateinit var mLocation: Location
     private var mLocationRequest: LocationRequest? = null
@@ -67,20 +67,20 @@ class DashboardActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     override fun onStart() {
         super.onStart()
         if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
+            mGoogleApiClient!!.connect();
         }
     }
 
     override fun onStop() {
         super.onStop()
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
+        if (mGoogleApiClient!!.isConnected()) {
+            mGoogleApiClient!!.disconnect()
         }
     }
 
     override fun onConnectionSuspended(p0: Int) {
         Log.i(TAG, "Connection Suspended")
-        mGoogleApiClient.connect()
+        mGoogleApiClient!!.connect()
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
@@ -130,18 +130,18 @@ class DashboardActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
 
-            init()
-            if (intent.extras != null) {
-                when (intent.extras.get("SCREEN_NAME")) {
-                    "home" -> loadFragment(HomeFragment.newInstance())
-                    "account" -> loadFragment(MyAccountFragment.newInstance())
-                    "help" -> loadFragment(HelpFragment.newInstance())
+        init()
+        if (intent.extras != null) {
+            when (intent.extras.get("SCREEN_NAME")) {
+                "home" -> loadFragment(HomeFragment.newInstance())
+                "account" -> loadFragment(MyAccountFragment.newInstance())
+                "help" -> loadFragment(HelpFragment.newInstance())
 
-                }
-            } else
-                loadFragment(HomeFragment.newInstance())
+            }
+        } else
+            loadFragment(HomeFragment.newInstance())
 
-            navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         if (Pref.getValue(this, PrefConstants.IS_LOGIN, false)) {
         } else {
             mGoogleApiClient = GoogleApiClient.Builder(this)
