@@ -25,13 +25,14 @@ class SignUpPresenterImpl(
         SignUpBaseInteractor(this)
     private val mContext = context
 
-    override fun callAPI(email: String, password: String) {
+    override fun callAPI(email: String, password: String, check: String) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
             signUpBaseInteractor.callAPIGetSignUp(
                 Utility.getDeviceId(context = mContext),
                 email,
                 password,
+                check,
                 Constant.Path.DEVICE_FLAG
             )
         } else {

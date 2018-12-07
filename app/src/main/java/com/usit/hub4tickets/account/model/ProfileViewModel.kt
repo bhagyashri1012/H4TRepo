@@ -2,6 +2,7 @@ package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
 import com.google.gson.annotations.SerializedName
+import io.reactivex.annotations.Nullable
 
 
 /**
@@ -15,53 +16,53 @@ class ProfileViewModel(var context: Context?) {
         ProfileResponse(message = null, responseData = null, status = null)
 
     data class ProfileResponse(
-        @SerializedName("message")
-        val message: String?,
-        @SerializedName("responseData")
+        @Nullable
+@SerializedName("message")        val message: String?,
+        @Nullable  @SerializedName("responseData")
         val responseData: ResponseData?,
-        @SerializedName("status")
+        @Nullable  @SerializedName("status")
         val status: String?
     ) {
         data class ResponseData(
-            @SerializedName("city")
+            @Nullable  @SerializedName("city")
             val city: String,
-            @SerializedName("country")
+            @Nullable  @SerializedName("country")
             val country: String,
-            @SerializedName("currency")
+            @Nullable  @SerializedName("currency")
             val currency: String,
-            @SerializedName("email")
+            @Nullable  @SerializedName("email")
             val email: String,
-            @SerializedName("firstName")
+            @Nullable  @SerializedName("firstName")
             val firstName: String,
-            @SerializedName("homeAirPort")
+            @Nullable  @SerializedName("homeAirPort")
             val homeAirPort: String,
-            @SerializedName("language")
+            @Nullable  @SerializedName("language")
             val language: String,
-            @SerializedName("lastName")
+            @Nullable  @SerializedName("lastName")
             val lastName: String,
-            @SerializedName("phoneNumber")
+            @Nullable  @SerializedName("phoneNumber")
             val phoneNumber: String,
-            @SerializedName("state")
+            @Nullable  @SerializedName("state")
             val state: String,
-            @SerializedName("timeZone")
+            @Nullable  @SerializedName("timeZone")
             val timeZone: String,
-            @SerializedName("dNo")
+            @Nullable  @SerializedName("dNo")
             val dNo: DNo,
-            @SerializedName("deviceId")
+            @Nullable  @SerializedName("deviceId")
             val deviceId: String,
-            @SerializedName("countryId")
+            @Nullable  @SerializedName("countryId")
             val countryId: String,
-            @SerializedName("stateId")
+            @Nullable  @SerializedName("stateId")
             val stateId: String,
-            @SerializedName("cityId")
+            @Nullable  @SerializedName("cityId")
             val cityId: String,
-            @SerializedName("userId")
+            @Nullable  @SerializedName("userId")
             val userId: Int
         ) {
             data class DNo(
-                @SerializedName("dname")
+                @Nullable  @SerializedName("dname")
                 val dname: String,
-                @SerializedName("dno")
+                @Nullable  @SerializedName("dno")
                 val dno: Int
             )
         }

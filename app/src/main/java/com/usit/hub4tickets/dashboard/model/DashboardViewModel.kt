@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import io.reactivex.annotations.Nullable
 
 /**
  * Created by Bhagyashri Burade
@@ -31,6 +32,7 @@ class DashboardViewModel(var context: Context?) {
         DashboardViewModel.CityResponse(message = null, responseData = null, status = null)
 
     data class SettingsResponse(
+        @Nullable
         @SerializedName("message")
         val message: String?,
         @SerializedName("responseData")
@@ -66,16 +68,16 @@ class DashboardViewModel(var context: Context?) {
                 }
             }
 
-            constructor(source: Parcel): this(
-            source.readInt(),
-            source.readString(),
-            source.readInt(),
-            source.readString(),
-            source.readString(),
-            source.readInt(),
-            source.readString(),
-            source.readInt(),
-            source.readInt()
+            constructor(source: Parcel) : this(
+                source.readInt(),
+                source.readString(),
+                source.readInt(),
+                source.readString(),
+                source.readString(),
+                source.readInt(),
+                source.readString(),
+                source.readInt(),
+                source.readInt()
             )
 
             override fun describeContents() = 0
@@ -95,6 +97,7 @@ class DashboardViewModel(var context: Context?) {
     }
 
     data class CurrencyResponse(
+        @Nullable
         @SerializedName("message")
         val message: String?,
         @SerializedName("responseData")
@@ -163,8 +166,7 @@ class DashboardViewModel(var context: Context?) {
     data class LanguageResponse(
         @SerializedName("responseData")
         val responseData: List<ResponseData>?,
-        @SerializedName("message")
-        val message: String?,
+        @Nullable @SerializedName("message") val message: String?,
         @SerializedName("status")
         val status: String?
     ) : Parcelable {
@@ -223,8 +225,7 @@ class DashboardViewModel(var context: Context?) {
     }
 
     data class CityResponse(
-        @SerializedName("message")
-        val message: String?,
+        @Nullable @SerializedName("message") val message: String?,
         @SerializedName("responseData")
         val responseData: List<ResponseData>?,
         @SerializedName("status")
@@ -285,8 +286,7 @@ class DashboardViewModel(var context: Context?) {
     }
 
     data class StateResponse(
-        @SerializedName("message")
-        val message: String?,
+        @Nullable @SerializedName("message") val message: String?,
         @SerializedName("responseData")
         val responseData: List<ResponseData>?,
         @SerializedName("status")
@@ -382,8 +382,7 @@ class DashboardViewModel(var context: Context?) {
     }
 
     data class CountriesResponse(
-        @SerializedName("message")
-        val message: String?,
+        @Nullable @SerializedName("message") val message: String?,
         @SerializedName("responseData")
         val responseData: List<CountriesResponseData>?,
         @SerializedName("status")

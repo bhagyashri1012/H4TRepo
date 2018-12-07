@@ -15,9 +15,9 @@ import io.reactivex.schedulers.Schedulers
  */
 class SignUpBaseInteractor(private var listenerSignUp: SignUpAPICallListener) :
     BaseInteractor {
-    fun callAPIGetSignUp(device_id: String, email: String, password: String, deviceFlag: Int) {
+    fun callAPIGetSignUp(device_id: String, email: String, password: String,promoChecked: String, deviceFlag: Int) {
         val route = Enums.APIRoute.GET_SAMPLE
-        val call = APICallManager.getInstance.apiManager.getSignUp(device_id, email, password, deviceFlag)
+        val call = APICallManager.getInstance.apiManager.getSignUp(device_id, email, password,promoChecked, deviceFlag)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
         call.subscribe(

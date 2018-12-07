@@ -54,7 +54,8 @@ interface ProfilePresenter : BasePresenter {
         countryId: String,
         stateId: String,
         cityId: String,
-        languageId: String
+        languageId: String,
+        check: String
     )
 
     fun callAPIChangePassword(

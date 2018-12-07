@@ -87,6 +87,7 @@ class SignUpActivity : BaseActivity(), SignUpPresenter.MainView {
         val emailStr = edt_email.text.toString()
         val passwordStr = edt_password.text.toString()
         val confirmPasswordStr = edt_confirm_password_signup.text.toString()
+        var check = if (!checkbox_promotion.isChecked) "0" else "1"
         var cancel = false
         var focusView: View? = null
         if (TextUtils.isEmpty(emailStr)) {
@@ -114,22 +115,15 @@ class SignUpActivity : BaseActivity(), SignUpPresenter.MainView {
             focusView = edt_confirm_password_signup
             cancel = true
         }
-        /*  else if(!checkbox_promotion.isChecked)
-          {
-              checkbox_promotion.error = getString(R.string.error_not_match_password)
-              focusView = checkbox_promotion
-              cancel = true
-          }
-          checkbox_promotion.setOnCheckedChangeListener { buttonView, isChecked ->
-              if (isChecked) {
-                  //Do Whatever you want in isChecked
-              }
-          }*/
+        checkbox_promotion.setOnCheckedChangeListener { buttonView, isChecked ->
+            check = if (isChecked) "0" else "1"
+        }
+
         if (cancel) {
             focusView?.requestFocus()
         } else {
             showProgress(true)
-            presenter.callAPI(edt_email.text.toString(), edt_password.text.toString())
+            presenter.callAPI(edt_email.text.toString(), edt_password.text.toString(), check.toString())
         }
     }
 

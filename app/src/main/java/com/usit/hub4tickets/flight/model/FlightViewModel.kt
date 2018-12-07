@@ -19,82 +19,83 @@ class FlightViewModel(var context: Context?) {
         FlightViewModel.FlightListResponse(message = null, responseData = null, status = null)
 
     data class ErrorResponse(
-        @SerializedName("message")
-        var message: String
+        @Nullable
+@SerializedName("message") var message: String
     )
 
     data class FlightListResponse(
-        @SerializedName("message")
+        @Nullable
+@SerializedName("message")
         val message: String?,
-        @SerializedName("responseData")
+        @Nullable  @SerializedName("responseData")
         val responseData: List<ResponseData>?,
-        @SerializedName("status")
+        @Nullable  @SerializedName("status")
         val status: String?
     ) : Parcelable {
         data class ResponseData(
-            @SerializedName("currency")
+            @Nullable  @SerializedName("currency")
             val currency: String,
-            @SerializedName("dataProvider")
+            @Nullable  @SerializedName("dataProvider")
             val dataProvider: String,
 
             @Nullable
-            @SerializedName("inbondFlightDetails")
+              @SerializedName("inbondFlightDetails")
             val inbondFlightDetails: InbondFlightDetails?,
-            @SerializedName("outbondFlightDetails")
+            @Nullable  @SerializedName("outbondFlightDetails")
             val outbondFlightDetails: OutbondFlightDetails?,
-            @SerializedName("price")
+            @Nullable  @SerializedName("price")
             val price: Double
         ) : Parcelable {
             data class InbondFlightDetails(
-                @SerializedName("airline")
+                @Nullable  @SerializedName("airline")
                 val airline: String,
-                @SerializedName("currency")
+                @Nullable  @SerializedName("currency")
                 val currency: String,
-                @SerializedName("duration")
+                @Nullable  @SerializedName("duration")
                 val duration: String,
-                @SerializedName("endAirPortName")
+                @Nullable  @SerializedName("endAirPortName")
                 val endAirPortName: String,
-                @SerializedName("endDate")
+                @Nullable  @SerializedName("endDate")
                 val endDate: String,
-                @SerializedName("endTime")
+                @Nullable  @SerializedName("endTime")
                 val endTime: String,
-                @SerializedName("flightNo")
+                @Nullable  @SerializedName("flightNo")
                 val flightNo: String,
-                @SerializedName("fromCity")
+                @Nullable  @SerializedName("fromCity")
                 val fromCity: String,
-                @SerializedName("imgUrl")
+                @Nullable  @SerializedName("imgUrl")
                 val imgUrl: String,
-                @SerializedName("startAirPortName")
+                @Nullable  @SerializedName("startAirPortName")
                 val startAirPortName: String,
-                @SerializedName("startDate")
+                @Nullable  @SerializedName("startDate")
                 val startDate: String,
-                @SerializedName("startTime")
+                @Nullable  @SerializedName("startTime")
                 val startTime: String,
-                @SerializedName("stopCount")
+                @Nullable  @SerializedName("stopCount")
                 val stopCount: Int,
-                @SerializedName("stopDetails")
+                @Nullable  @SerializedName("stopDetails")
                 val stopDetails: ArrayList<StopDetail>,
-                @SerializedName("toCity")
+                @Nullable  @SerializedName("toCity")
                 val toCity: String
             ) : Parcelable {
                 data class StopDetail(
-                    @SerializedName("airline")
+                    @Nullable  @SerializedName("airline")
                     val airline: String,
-                    @SerializedName("endAirPortName")
+                    @Nullable  @SerializedName("endAirPortName")
                     val endAirPortName: String,
-                    @SerializedName("endDate")
+                    @Nullable  @SerializedName("endDate")
                     val endDate: String,
-                    @SerializedName("endTime")
+                    @Nullable  @SerializedName("endTime")
                     val endTime: String,
-                    @SerializedName("flightNo")
+                    @Nullable  @SerializedName("flightNo")
                     val flightNo: String,
-                    @SerializedName("imgUrl")
+                    @Nullable  @SerializedName("imgUrl")
                     val imgUrl: String,
-                    @SerializedName("startAirPortName")
+                    @Nullable  @SerializedName("startAirPortName")
                     val startAirPortName: String,
-                    @SerializedName("startDate")
+                    @Nullable  @SerializedName("startDate")
                     val startDate: String,
-                    @SerializedName("startTime")
+                    @Nullable  @SerializedName("startTime")
                     val startTime: String
                 ) : Parcelable {
                     companion object {
@@ -183,55 +184,55 @@ class FlightViewModel(var context: Context?) {
             }
 
             data class OutbondFlightDetails(
-                @SerializedName("airline")
+                @Nullable  @SerializedName("airline")
                 val airline: String,
-                @SerializedName("currency")
+                @Nullable  @SerializedName("currency")
                 val currency: String,
-                @SerializedName("duration")
+                @Nullable  @SerializedName("duration")
                 val duration: String,
-                @SerializedName("endAirPortName")
+                @Nullable  @SerializedName("endAirPortName")
                 val endAirPortName: String,
-                @SerializedName("endDate")
+                @Nullable  @SerializedName("endDate")
                 val endDate: String,
-                @SerializedName("endTime")
+                @Nullable  @SerializedName("endTime")
                 val endTime: String,
-                @SerializedName("flightNo")
+                @Nullable  @SerializedName("flightNo")
                 val flightNo: String,
-                @SerializedName("fromCity")
+                @Nullable  @SerializedName("fromCity")
                 val fromCity: String,
-                @SerializedName("imgUrl")
+                @Nullable  @SerializedName("imgUrl")
                 val imgUrl: String,
-                @SerializedName("startAirPortName")
+                @Nullable  @SerializedName("startAirPortName")
                 val startAirPortName: String,
-                @SerializedName("startDate")
+                @Nullable  @SerializedName("startDate")
                 val startDate: String,
-                @SerializedName("startTime")
+                @Nullable  @SerializedName("startTime")
                 val startTime: String,
-                @SerializedName("stopCount")
+                @Nullable  @SerializedName("stopCount")
                 val stopCount: Int,
-                @SerializedName("stopDetails")
+                @Nullable  @SerializedName("stopDetails")
                 val stopDetails: List<StopDetail>,
-                @SerializedName("toCity")
+                @Nullable  @SerializedName("toCity")
                 val toCity: String
             ) : Parcelable {
                 data class StopDetail(
-                    @SerializedName("airline")
+                    @Nullable  @SerializedName("airline")
                     val airline: String,
-                    @SerializedName("endAirPortName")
+                    @Nullable  @SerializedName("endAirPortName")
                     val endAirPortName: String,
-                    @SerializedName("endDate")
+                    @Nullable  @SerializedName("endDate")
                     val endDate: String,
-                    @SerializedName("endTime")
+                    @Nullable  @SerializedName("endTime")
                     val endTime: String,
-                    @SerializedName("flightNo")
+                    @Nullable  @SerializedName("flightNo")
                     val flightNo: String,
-                    @SerializedName("imgUrl")
+                    @Nullable  @SerializedName("imgUrl")
                     val imgUrl: String,
-                    @SerializedName("startAirPortName")
+                    @Nullable  @SerializedName("startAirPortName")
                     val startAirPortName: String,
-                    @SerializedName("startDate")
+                    @Nullable  @SerializedName("startDate")
                     val startDate: String,
-                    @SerializedName("startTime")
+                    @Nullable  @SerializedName("startTime")
                     val startTime: String
                 ) : Parcelable {
                     companion object {
@@ -370,23 +371,22 @@ class FlightViewModel(var context: Context?) {
     }
 
     data class AirPortDataResponse(
-        @SerializedName("message")
-        val message: String?,
-        @SerializedName("responseData")
+        @Nullable   @SerializedName("message") val message: String?,
+        @Nullable  @SerializedName("responseData")
         val responseData: List<ResponseData>?,
-        @SerializedName("status")
+        @Nullable  @SerializedName("status")
         val status: String?
     ) : Parcelable {
         data class ResponseData(
-            @SerializedName("airPortCode")
+            @Nullable  @SerializedName("airPortCode")
             val airPortCode: String,
-            @SerializedName("airPortCountry")
+            @Nullable  @SerializedName("airPortCountry")
             val airPortCountry: String,
-            @SerializedName("airPortId")
+            @Nullable  @SerializedName("airPortId")
             val airPortId: Int,
-            @SerializedName("airPortName")
+            @Nullable  @SerializedName("airPortName")
             val airPortName: String,
-            @SerializedName("airPortNameAndCode")
+            @Nullable  @SerializedName("airPortNameAndCode")
             val airPortNameAndCode: String
         ) : Parcelable {
             companion object {

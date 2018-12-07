@@ -68,4 +68,7 @@ interface Service {
     @POST("flights")
     fun getFlightDetails(@Body flightData: FlightData): Flowable<FlightViewModel.FlightListResponse>
 
+    @POST("savesettingdata")
+    fun setLocationSettingsData(@Body saveLocationData: SaveLocationData): Flowable<DashboardViewModel.SettingsResponse>
+
 }

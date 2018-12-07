@@ -39,5 +39,5 @@ interface SignUpPresenter : BasePresenter {
      */
     fun presentState(state: MainView.ViewState)
 
-    fun callAPI(email: String, password: String)
+    fun callAPI(email: String, password: String, check: String)
 }

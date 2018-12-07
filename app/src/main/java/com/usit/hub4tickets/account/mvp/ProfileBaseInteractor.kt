@@ -41,7 +41,8 @@ class ProfileBaseInteractor(private var listenerProfileInfo: ProfileInfoAPICallL
         countryId: String,
         stateId: String,
         cityId: String,
-        languageId: String
+        languageId: String,
+        check: String
     ) {
         val route = Enums.APIRoute.GET_SAMPLE
         val call = APICallManager.getInstance.apiManager.updateProfileData(
@@ -56,7 +57,8 @@ class ProfileBaseInteractor(private var listenerProfileInfo: ProfileInfoAPICallL
             countryId,
             stateId,
             cityId,
-            languageId
+            languageId,
+            check
         )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

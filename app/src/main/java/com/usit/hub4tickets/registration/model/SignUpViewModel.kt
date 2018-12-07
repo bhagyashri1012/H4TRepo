@@ -1,6 +1,7 @@
 package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
+import io.reactivex.annotations.Nullable
 
 /**
  * Created by Bhagyashri Burade
@@ -13,6 +14,7 @@ class SignUpViewModel(var context: Context?) {
         SignUpResponse(message = "", responseData = null, status = null)
 
     data class SignUpResponse(
+        @Nullable
         val message: String,
         val responseData: ResponseData?,
         val status: String?

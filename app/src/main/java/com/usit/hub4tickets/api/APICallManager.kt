@@ -93,9 +93,10 @@ class APICallManager {
             device_id: String,
             email: String,
             password: String,
+            promoChecked: String,
             deviceFlag: Int
         ): Flowable<SignUpViewModel.SignUpResponse> {
-            val signUp = SignUp(device_id, email, password, deviceFlag)
+            val signUp = SignUp(device_id, email, password, promoChecked, deviceFlag)
             return service.getRegistration(signUp)
         }
 
@@ -179,7 +180,8 @@ class APICallManager {
             countryId: String,
             stateId: String,
             cityId: String,
-            languageId: String
+            languageId: String,
+            check: String
         ): Flowable<ProfileViewModel.ProfileResponse> {
             val profData = UpdateProfileData(
                 userId,
@@ -193,7 +195,8 @@ class APICallManager {
                 countryId,
                 stateId,
                 cityId,
-                languageId
+                languageId,
+                check
             )
             return service.updateProfileData(profData)
         }
@@ -228,6 +231,16 @@ class APICallManager {
                 returnFrom
             )
             return service.getFlightDetails(flightData)
+        }
+
+        fun setLocation(
+            userId: String,
+            deviceId: String,
+            locationCode: String,
+            langId: String
+        ): Flowable<DashboardViewModel.SettingsResponse> {
+            val saveLocationData = SaveLocationData(deviceId, userId,"","", locationCode, langId)
+            return service.setLocationSettingsData(saveLocationData)
         }
     }
     //endregion

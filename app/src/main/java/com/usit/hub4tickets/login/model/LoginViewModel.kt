@@ -2,6 +2,7 @@ package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
 import com.google.gson.annotations.SerializedName
+import io.reactivex.annotations.Nullable
 
 
 /**
@@ -18,6 +19,7 @@ class LoginViewModel(var context: Context?) {
     data class LoginResponse(
         @SerializedName("responseData")
         val responseData: ResponseData?,
+        @Nullable
         @SerializedName("message")
         var message: String?,
         @SerializedName("status")

@@ -8,6 +8,8 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.*
+import android.location.Address
+import android.location.Geocoder
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
@@ -612,9 +614,9 @@ object Utility {
         textView.setText(spannable, TextView.BufferType.SPANNABLE)
     }
 
-    fun getDeviceId(context: Context): String {
+    fun getDeviceId(context: Context?): String {
         val deviceId: String = Settings.Secure.getString(
-            context.contentResolver,
+            context?.contentResolver,
             Settings.Secure.ANDROID_ID
         )
         return deviceId
@@ -740,5 +742,30 @@ object Utility {
         calendar.add(Calendar.DAY_OF_MONTH, 1)
         var newDate = calendar.time
         return df.format(newDate)
+    }
+
+    fun getAddress(context: Context, LATITUDE: Double, LONGITUDE: Double): String {
+        //Set Address
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val addresses: List<Address> = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1)
+        var countryCode: String? = null
+        var language: String? = null
+        if (addresses != null && addresses.isNotEmpty()) {
+            var address = addresses[0]
+                .getAddressLine(0)
+            var city = addresses[0].locality
+            var state = addresses[0].adminArea
+            countryCode = addresses[0].countryCode
+            var postalCode = addresses[0].postalCode
+            language = addresses[0].locale.language // Only if available else return NULL
+
+            Log.d(TAG, "getAddress:" + address)
+            Log.d(TAG, "city:" + city)
+            Log.d(TAG, "countryCode:" + countryCode)
+            Log.d(TAG, "postalCode:" + postalCode)
+            Log.d(TAG, "language:" + language)
+        }
+        Log.e("loc addrs", countryCode + " " + language)
+        return countryCode + " / " + language
     }
 }

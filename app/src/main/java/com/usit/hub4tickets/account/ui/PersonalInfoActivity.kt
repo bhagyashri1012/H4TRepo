@@ -170,6 +170,8 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         // Store values at the time of the login attempt.
         val emailStr = edt_email.text.toString()
         val passwordStr = edt_phone_no.text.toString()
+        var check = if (!checkbox_promotions_account.isChecked) "0" else "1"
+
         var cancel = false
         var focusView: View? = null
         // Check for a valid password, if the user entered one.
@@ -188,6 +190,11 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             focusView = edt_email
             cancel = true
         }
+
+        checkbox_promotions_account.setOnCheckedChangeListener { buttonView, isChecked ->
+            check = if (isChecked) "0" else "1"
+        }
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -207,7 +214,8 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
                 Pref.getValue(this, PrefConstants.PROFILE_COUNTRY_ID, "").toString(),
                 Pref.getValue(this, PrefConstants.STATE_ID, "").toString(),
                 Pref.getValue(this, PrefConstants.CITY_ID, "").toString(),
-                Pref.getValue(this, PrefConstants.LANGUAGE_ID, "").toString()
+                Pref.getValue(this, PrefConstants.LANGUAGE_ID, "").toString(),
+                check
             )
         }
     }

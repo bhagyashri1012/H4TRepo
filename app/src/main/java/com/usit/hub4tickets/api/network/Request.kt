@@ -18,6 +18,7 @@ data class SignUp(
     val deviceId: String,
     var email: String,
     var password: String,
+    val promoChecked: String,
     val deviceType: Int
 )
 
@@ -51,6 +52,15 @@ data class SaveSettingsData(
     var languageId: String
 )
 
+data class SaveLocationData(
+    val deviceId: String,
+    var userId: String,
+    var countryId: String,
+    var currencyId: String,
+    var location: String,
+    var language: String
+)
+
 data class ChangePassword(
     val deviceId: String,
     var userId: String,
@@ -75,7 +85,8 @@ data class UpdateProfileData(
     var countryId: String,
     var stateId: String,
     var cityId: String,
-    var languageId: String
+    var languageId: String,
+    var promoChecked: String
 )
 
 data class StateData(

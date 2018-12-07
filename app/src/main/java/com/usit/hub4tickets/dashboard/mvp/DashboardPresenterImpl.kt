@@ -1,7 +1,6 @@
 package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
-import android.provider.Settings.Secure
 import android.util.Log
 import com.usit.hub4tickets.MainApplication
 import com.usit.hub4tickets.R
@@ -21,25 +20,24 @@ import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
  * Email: bhagyashri.burade@usit.net.in
  */
 class DashboardPresenterImpl(
-    private val mView: DashboardPresenter.MainView,
+    private val mView: DashboardPresenter.MainView?,
     context: Context?
 ) : DashboardPresenter, DashboardAPICallListener {
 
     private val dashboardBaseInteractor: DashboardBaseInteractor =
         DashboardBaseInteractor(this)
     private val mContext = context
-    private var device_id = Secure.getString(mContext?.contentResolver, Secure.ANDROID_ID)
 
     override fun callAPIGetSettingsData(userId: String) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
             dashboardBaseInteractor.callAPIGetSettingsData(
-                device_id,
+                Utility.getDeviceId(context = mContext),
                 userId
             )
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView?.doRetrieveModel()?.errorMessage =
+                    mView?.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -49,14 +47,14 @@ class DashboardPresenterImpl(
             presentState(LOADING)
             dashboardBaseInteractor.callAPISaveSettingsData(
                 userId,
-                device_id,
+                Utility.getDeviceId(context = mContext),
                 countryId,
                 currencyId,
                 langId
             )
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView?.doRetrieveModel()?.errorMessage =
+                    mView?.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -66,8 +64,8 @@ class DashboardPresenterImpl(
             presentState(LOADING)
             dashboardBaseInteractor.callAPIGetCountry()
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView?.doRetrieveModel()?.errorMessage =
+                    mView?.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -77,8 +75,8 @@ class DashboardPresenterImpl(
             presentState(LOADING)
             dashboardBaseInteractor.callAPIGetState(countryId)
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView?.doRetrieveModel()?.errorMessage =
+                    mView?.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -88,8 +86,8 @@ class DashboardPresenterImpl(
             presentState(LOADING)
             dashboardBaseInteractor.callAPIGetCity(stateId)
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView?.doRetrieveModel()?.errorMessage =
+                    mView?.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -99,8 +97,8 @@ class DashboardPresenterImpl(
             presentState(LOADING)
             dashboardBaseInteractor.callAPIGetCurrency()
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView?.doRetrieveModel()?.errorMessage =
+                    mView?.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -110,8 +108,18 @@ class DashboardPresenterImpl(
             presentState(LOADING)
             dashboardBaseInteractor.callAPIGetLanguage()
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView?.doRetrieveModel()?.errorMessage =
+                    mView?.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
+            presentState(ERROR)
+        }
+    }
+    override fun callAPISetLocation(userId: String, locationCode: String, langId: String) {
+        if (MainApplication.getInstance.isConnected()) {
+            presentState(LOADING)
+            dashboardBaseInteractor.callAPISetLocation(userId,Utility.getDeviceId(context = mContext),locationCode,langId)
+        } else {
+            mView?.doRetrieveModel()?.errorMessage =
+                    mView?.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -120,16 +128,16 @@ class DashboardPresenterImpl(
         // user state logging
         Log.i(PersonalInfoActivity::class.java.simpleName, state.name)
         when (state) {
-            IDLE -> mView.showState(IDLE)
-            LOADING -> mView.showState(LOADING)
-            SUCCESS -> mView.showState(SUCCESS)
-            SAVE_SUCCESS -> mView.showState(SAVE_SUCCESS)
-            LANG_SUCCESS -> mView.showState(LANG_SUCCESS)
-            CURRENCY_SUCCESS -> mView.showState(CURRENCY_SUCCESS)
-            COUNTRY_SUCCESS -> mView.showState(COUNTRY_SUCCESS)
-            STATE_SUCCESS -> mView.showState(STATE_SUCCESS)
-            CITY_SUCCESS -> mView.showState(CITY_SUCCESS)
-            ERROR -> mView.showState(ERROR)
+            IDLE -> mView?.showState(IDLE)
+            LOADING -> mView?.showState(LOADING)
+            SUCCESS -> mView?.showState(SUCCESS)
+            SAVE_SUCCESS -> mView?.showState(SAVE_SUCCESS)
+            LANG_SUCCESS -> mView?.showState(LANG_SUCCESS)
+            CURRENCY_SUCCESS -> mView?.showState(CURRENCY_SUCCESS)
+            COUNTRY_SUCCESS -> mView?.showState(COUNTRY_SUCCESS)
+            STATE_SUCCESS -> mView?.showState(STATE_SUCCESS)
+            CITY_SUCCESS -> mView?.showState(CITY_SUCCESS)
+            ERROR -> mView?.showState(ERROR)
         }
     }
 
@@ -153,7 +161,7 @@ class DashboardPresenterImpl(
         when (route) {
 
             Enums.APIRoute.GET_SAMPLE -> {
-                mView.doRetrieveModel().settingsDomain = responseModel
+                mView?.doRetrieveModel()?.settingsDomain = responseModel
                 presentState(SUCCESS)
                 presentState(IDLE)
             }
@@ -163,7 +171,7 @@ class DashboardPresenterImpl(
         when (route) {
             Enums.APIRoute.GET_SAMPLE -> {
                 if (responseModel.status.equals("1")) {
-                    mView.doRetrieveModel().settingsDomain = responseModel
+                    mView?.doRetrieveModel()?.settingsDomain = responseModel
                     Utility.showCustomDialog(
                         mContext,
                         responseModel.message,
@@ -187,7 +195,7 @@ class DashboardPresenterImpl(
     ) {
         when (route) {
             Enums.APIRoute.GET_SAMPLE -> {
-                mView.doRetrieveModel().dashboradCountriesDomain = responseModel
+                mView?.doRetrieveModel()?.dashboradCountriesDomain = responseModel
                 presentState(COUNTRY_SUCCESS)
             }
         }
@@ -196,7 +204,7 @@ class DashboardPresenterImpl(
     override fun onAPICallGetStateSucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.StateResponse) {
         when (route) {
             Enums.APIRoute.GET_SAMPLE -> {
-                mView.doRetrieveModel().dashboradStateDomain = responseModel
+                mView?.doRetrieveModel()?.dashboradStateDomain = responseModel
                 presentState(STATE_SUCCESS)
             }
         }
@@ -205,7 +213,7 @@ class DashboardPresenterImpl(
     override fun onAPICallGetCitySucceed(route: Enums.APIRoute, responseModel: DashboardViewModel.CityResponse) {
         when (route) {
             Enums.APIRoute.GET_SAMPLE -> {
-                mView.doRetrieveModel().dashboradCityDomain = responseModel
+                mView?.doRetrieveModel()?.dashboradCityDomain = responseModel
                 presentState(CITY_SUCCESS)
             }
         }
@@ -217,7 +225,7 @@ class DashboardPresenterImpl(
     ) {
         when (route) {
             Enums.APIRoute.GET_SAMPLE -> {
-                mView.doRetrieveModel().dashboradLangDomain = responseModel
+                mView?.doRetrieveModel()?.dashboradLangDomain = responseModel
                 presentState(LANG_SUCCESS)
             }
         }
@@ -229,7 +237,7 @@ class DashboardPresenterImpl(
     ) {
         when (route) {
             Enums.APIRoute.GET_SAMPLE -> {
-                mView.doRetrieveModel().dashboradCurrencyDomain = responseModel
+                mView?.doRetrieveModel()?.dashboradCurrencyDomain = responseModel
                 presentState(CURRENCY_SUCCESS)
             }
         }
@@ -237,7 +245,7 @@ class DashboardPresenterImpl(
 
     override fun onAPICallFailed(route: Enums.APIRoute, message: String) {
         Utility.hideProgressBar()
-        mView.doRetrieveModel().errorMessage = message
+        mView?.doRetrieveModel()?.errorMessage = message
         presentState(ERROR)
     }
 }

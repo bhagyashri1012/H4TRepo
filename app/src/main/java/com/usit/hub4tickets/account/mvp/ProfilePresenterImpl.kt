@@ -35,7 +35,8 @@ class ProfilePresenterImpl(
         countryId: String,
         stateId: String,
         cityId: String,
-        languageId: String
+        languageId: String,
+        check: String
     ) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
@@ -51,7 +52,8 @@ class ProfilePresenterImpl(
                 countryId,
                 stateId,
                 cityId,
-                languageId
+                languageId,
+                check
             )
         } else {
             mView.doRetrieveProfileModel().errorMessage =

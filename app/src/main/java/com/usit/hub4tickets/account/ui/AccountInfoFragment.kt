@@ -15,6 +15,8 @@ import com.usit.hub4tickets.flight.ui.RootFragment
 import com.usit.hub4tickets.utils.Pref
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
+import kotlinx.android.synthetic.main.activity_personal_info.*
+import kotlinx.android.synthetic.main.activity_signup.*
 import kotlinx.android.synthetic.main.change_password_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_account_info.*
 
@@ -110,15 +112,15 @@ class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
         var focusView: View? = null
         // Check for a valid email address.
         if (TextUtils.isEmpty(olPassStr)) {
-            dialogView.edt_change_current_password.error = getString(R.string.error_field_required)
+            dialogView.edt_change_current_password.error = getString(R.string.error_field_required_password)
             focusView = dialogView.edt_change_current_password
             cancel = true
         } else if (TextUtils.isEmpty(newPasswordStr)) {
-            dialogView.edt_new_change_password.error = getString(R.string.error_field_required)
+            dialogView.edt_new_change_password.error = getString(R.string.error_field_required_password)
             focusView = dialogView.edt_new_change_password
             cancel = true
         } else if (TextUtils.isEmpty(confirmPasswordStr)) {
-            dialogView.edt_change_confirm_password.error = getString(R.string.error_field_required)
+            dialogView.edt_change_confirm_password.error = getString(R.string.error_field_required_re_password)
             focusView = dialogView.edt_change_confirm_password
             cancel = true
         }

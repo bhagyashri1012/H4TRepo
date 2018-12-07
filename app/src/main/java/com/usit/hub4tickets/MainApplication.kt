@@ -3,6 +3,9 @@ package com.usit.hub4tickets
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import android.support.multidex.MultiDex
+
+
 
 /**
  * Created by Bhagyashri Burade
@@ -47,4 +50,8 @@ open class MainApplication : Application() {
         return connected
     }
 
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        MultiDex.install(this@MainApplication)
+    }
 }

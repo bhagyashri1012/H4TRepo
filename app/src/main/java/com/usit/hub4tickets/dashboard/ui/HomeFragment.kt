@@ -34,23 +34,7 @@ class HomeFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
-    internal var titles = arrayOf(
-        "Android",
-        "Beta",
-        "Cupcake",
-        "Donut",
-        "Eclair",
-        "Froyo",
-        "Gingerbread",
-        "Honeycomb",
-        "Ice Cream Sandwich",
-        "Jelly Bean",
-        "KitKat",
-        "Lollipop",
-        "Marshmallow",
-        "Nougat",
-        "Oreo"
-    )
+
     private val hotDealsImagesArray =
         intArrayOf(R.drawable.image1, R.drawable.image2, R.drawable.image3, R.drawable.image4, R.drawable.image5)
 
