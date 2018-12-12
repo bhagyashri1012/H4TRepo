@@ -122,7 +122,7 @@
                     android:minHeight="40dp"
                     android:layout_width="@dimen/height_0dp"
                     android:layout_weight="1.5"
-                    android:text="@string/first_class"
+                    android:text="@string/default_class"
                     android:layout_marginRight="@dimen/margin_2dp"
                     android:background="@null"
                     android:textAllCaps="false"

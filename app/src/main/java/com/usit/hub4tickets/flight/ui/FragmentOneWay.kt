@@ -43,7 +43,8 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
     private var fromCode: String? = null
     private var toCode: String? = null
     private var sortByCode: String? = null
-    private var travelClassCode: String? = null
+    private var travelClassCode: String? = "ECONOMY"
+    private var travelClass: String? = "Economy"
     private val FROM_SELECTION_REQUEST = 601
     private val TO_SELECTION_REQUEST = 602
     private var recyclerView: RecyclerView? = null
@@ -339,6 +340,7 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
             btn_passengers.text = dialogView.tv_quantity_adult.text.toString() + " Adult " +
                     dialogView.tv_quantity_children.text.toString() + " Children " +
                     dialogView.tv_quantity_infants.text.toString() + " Infants "
+            btn_class.text=travelClassCode
             dialogBuilder.dismiss()
         }
         dialogView.button_dialog_cancel.setOnClickListener {
@@ -355,6 +357,7 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
                     position: Int
                 ) {
                     travelClassCode = dataList[position].code
+                    travelClass = dataList[position].itemsName
                 }
             })
 

@@ -81,7 +81,7 @@
     <string name="n_scales">%d scales</string>
     <string name="via_agent">via %s</string>
     <string name="one_adult">1 Adult, 0 Children , 0 Infants</string>
-    <string name="first_class">First Class</string>
+    <string name="default_class">Economy</string>
     <string name="filter">Filter</string>
     <string name="sort">Sort</string>
     <string name="sort_by">Sort By</string>

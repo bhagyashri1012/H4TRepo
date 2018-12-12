@@ -13,7 +13,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.presenters.FlightPresenter
 import com.usit.hub4tickets.domain.presentation.presenters.FlightPresenter.MainView.ViewState.*
@@ -45,7 +44,8 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     private var fromCode: String? = null
     private var toCode: String? = null
     private var sortByCode: String? = null
-    private var travelClassCode: String? = null
+    private var travelClassCode: String? = "ECONOMY"
+    private var travelClass: String? = "Economy"
     private val FROM_SELECTION_REQUEST = 501
     private val TO_SELECTION_REQUEST = 502
     private var recyclerView: RecyclerView? = null
@@ -332,6 +332,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             btn_passengers.text = dialogView.tv_quantity_adult.text.toString() + " Adult " +
                     dialogView.tv_quantity_children.text.toString() + " Children " +
                     dialogView.tv_quantity_infants.text.toString() + " Infants "
+            btn_class.text = travelClass
             dialogBuilder.dismiss()
         }
         dialogView.button_dialog_cancel.setOnClickListener {
@@ -348,6 +349,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                     position: Int
                 ) {
                     travelClassCode = dataList[position].code
+                    travelClass = dataList[position].itemsName
                 }
             })
 
