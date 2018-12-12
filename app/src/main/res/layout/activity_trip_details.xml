@@ -31,9 +31,7 @@
                     android:layout_weight=".1"
                     android:layout_gravity="bottom"
                     android:gravity="bottom"
-                    android:layout_marginLeft="@dimen/margin_16dp"
-                    android:layout_marginBottom="@dimen/margin_16dp"
-                    android:layout_marginRight="@dimen/margin_16dp"
+                    android:layout_margin="@dimen/margin_16dp"
                     android:orientation="vertical">
                 <LinearLayout
                         android:layout_width="match_parent"

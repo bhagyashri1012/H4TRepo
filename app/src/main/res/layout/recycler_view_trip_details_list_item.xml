@@ -3,11 +3,13 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_margin="@dimen/activity_vertical_margin">
+              android:layout_marginRight="@dimen/activity_vertical_margin"
+              android:layout_marginLeft="@dimen/activity_vertical_margin"
+              android:layout_marginTop="@dimen/activity_vertical_margin">
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_16dp"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_half"
             android:orientation="horizontal"
     >
 
@@ -49,14 +51,13 @@
             >
 
                 <TextView android:id="@+id/tv_destination"
-                          style="@style/CustomLargeTextView"
+                          style="@style/CustomMediumTextView"
                           android:text="BOM-PNQ "
                           android:maxLines="2"
                 />
                 <TextView android:id="@+id/tv_airline"
-                          style="@style/CustomRegularTextView"
+                          style="@style/CustomSmallTextView"
                           android:text="Spice jet"
-                          android:textColor="@color/cool_grey"
                           android:maxLines="2"
                 />
             </LinearLayout>
@@ -70,7 +71,7 @@
             >
 
                 <TextView android:id="@+id/tv_time"
-                          style="@style/CustomRegularTextView"
+                          style="@style/CustomSmallTextView"
                           android:text="2.14am - 4.25am"
                           android:textAlignment="viewEnd"
                           android:layout_marginBottom="@dimen/margin_4dp"
@@ -78,7 +79,7 @@
                           android:layout_gravity="end"/>
                 <TextView
                         android:id="@+id/tv_duration"
-                        style="@style/CustomRegularTextView"
+                        style="@style/CustomSmallTextView"
                         android:gravity="end"
                         android:layout_width="match_parent"
                         android:textAlignment="viewEnd"
@@ -90,19 +91,68 @@
         </LinearLayout>
         <LinearLayout android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:layout_marginBottom="@dimen/padding_8dp"
-                      android:background="@drawable/grey_border"
+                      android:orientation="horizontal"
         >
-            <TextView
-                    style="@style/CustomRegularTextView"
-                    android:text="2.14am - 4.25am"
-                    android:layout_margin="@dimen/padding_8dp"
-                    android:gravity="center_vertical"
+            <LinearLayout android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:padding="@dimen/margin_4dp"
+                          android:gravity="center_vertical"
+                          android:background="@drawable/grey_border"
+            >
+                <TextView
+                        style="@style/CustomSmallTextView"
+                        android:text="2hr 10m"
+                        android:layout_marginTop="@dimen/margin_4dp"
+                        android:layout_marginBottom="@dimen/margin_4dp"
+                        android:gravity="center_vertical"
+                />
+
+            </LinearLayout>
+            <View style="@style/Divider"
+                  android:layout_gravity="center_vertical"
+                  android:layout_weight="1"
+                  android:background="@color/slate_grey"
             />
+            <LinearLayout android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
+                          android:padding="@dimen/margin_4dp"
+                          android:gravity="center_vertical"
+                          android:background="@drawable/grey_border"
+            >
+                <TextView
+                        style="@style/CustomSmallTextView"
+                        android:text="HYD 3h 5m"
+                        android:layout_marginTop="@dimen/margin_4dp"
+                        android:layout_marginBottom="@dimen/margin_4dp"
+                        android:gravity="center_vertical"
+                />
+
+            </LinearLayout>
+            <View style="@style/Divider"
+                  android:layout_gravity="center_vertical"
+                  android:layout_weight="1"
+                  android:background="@color/slate_grey"
+            />
+            <LinearLayout android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
+                          android:gravity="center_vertical"
+                          android:padding="@dimen/margin_4dp"
+                          android:background="@drawable/grey_border"
+            >
+                <TextView
+                        style="@style/CustomSmallTextView"
+                        android:text="1hr 30m"
+                        android:layout_marginTop="@dimen/margin_4dp"
+                        android:layout_marginBottom="@dimen/margin_4dp"
+                        android:gravity="center_vertical"
+                />
+
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_8dp"
                 android:orientation="horizontal"
         >
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content">

@@ -13,6 +13,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.presenters.FlightPresenter
 import com.usit.hub4tickets.domain.presentation.presenters.FlightPresenter.MainView.ViewState.*
@@ -58,7 +59,18 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         listener = null
     )
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        init()
+        setDataAndListeners(view)
+    }
+
     override fun doRetrieveModel(): FlightViewModel = this.model
+
     override fun showState(viewState: FlightPresenter.MainView.ViewState) {
         when (viewState) {
             IDLE -> Utility.showProgress(false, context)
@@ -91,49 +103,257 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         }
     }
 
-    private fun setDataToRecyclerViewAdapter(responseData: List<FlightViewModel.FlightListResponse.ResponseData>?) {
-        dataListAll?.clear()
-        if (responseData != null) {
-            dataListAll?.addAll(responseData)
-        }
-        adapter = RecyclerViewAdapter(dataListAll!!, this)
-        recyclerView!!.adapter = adapter
+    override fun onFlightRowClick(responseData: FlightViewModel.FlightListResponse.ResponseData) {
+        enterNextFragment(responseData)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment, container, false)
-    }
+    override fun onResume() {
+        super.onResume()
+        edt_from.addTextChangedListener(object : TextWatcherExtended() {
+            override fun afterTextChanged(s: Editable, backSpace: Boolean) {
+                if (!backSpace) {
+                    if (s.length > 2)
+                        if (!isItemClicked && isVisible) {
+                            callAPIAirportData(Constant.Path.FROM, s.toString())
+                        }
+                } else {
+                    if (s.isEmpty())
+                        isItemClicked = false
+                }
+            }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        init()
-        tv_departure.text = Utility.getCurrentDateNow()
-        tv_return.text = Utility.getCurrentDateAfter()
-        recyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
-        val layoutManager = LinearLayoutManager(context)
-        recyclerView!!.layoutManager = layoutManager as RecyclerView.LayoutManager?
-        btn_sort.setOnClickListener {
-            sortBy()
-            if (null != sortByCode) {
-                when (sortByCode) {
-                    "price" -> {
-                        val sortedList = dataListAll?.sortedWith(
-                            compareBy(
-                                FlightViewModel.FlightListResponse.ResponseData::price,
-                                FlightViewModel.FlightListResponse.ResponseData::price
-                            )
-                        )
-                        adapter?.notifyDataSetChanged()
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        edt_to.addTextChangedListener(
+            object : TextWatcherExtended() {
+                override fun afterTextChanged(s: Editable, backSpace: Boolean) {
+                    if (!backSpace) {
+                        if (s.length > 2) {
+                            if (!isItemClickedTo && isVisible) {
+                                callAPIAirportData(Constant.Path.TO, s.toString())
+                            }
+                        }
+                    } else {
+                        if (s.isEmpty())
+                            isItemClickedTo = false
                     }
+                }
+
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                }
+            })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            FROM_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    isItemClicked = true
+                    edt_from.setText(
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
+                    )
+                    fromCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
+                }
+            }
+            TO_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    isItemClickedTo = true
+                    edt_to.setText(
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
+                    )
+                    toCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
                 }
             }
         }
-        tv_departure.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_departure, 12) }
-        tv_return.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_return, 12) }
-        btn_class.setOnClickListener { selectTravelClass() }
-        im_btn_search.setOnClickListener {
-            attemptSearch()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        edt_from.error = null//removes error
+        edt_to.error = null
+    }
+
+    private fun callAPIAirportData(flag: String?, toString: String) {
+        presenter.callAPIAirportData(flag, toString)
+    }
+
+    private fun enterNextFragment(responseData: FlightViewModel.FlightListResponse.ResponseData) {
+        val intent = Intent(activity?.baseContext, TripDetailsActivity::class.java)
+        intent.putExtra(Constant.Path.FLIGHT_DETAILS, responseData)
+        startActivity(intent)
+    }
+
+    private fun openSearchActivityFlightReturn(
+        arrayListAirPortData: ArrayList<FlightViewModel.AirPortDataResponse.ResponseData>,
+        title: String,
+        selectionRequest: Int,
+        flag: String
+    ) {
+        if (arrayListAirPortData.size > 0) {
+            val intent = Intent(context, CommonSearchActivity::class.java)
+            intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
+            intent.putParcelableArrayListExtra(Constant.Path.AIRPORT_FROM_LIST, arrayListAirPortData)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivityForResult(intent, selectionRequest)
+        } else {
+            if (flag == Constant.Path.TO)
+                edt_to.setText("")
+            else if (flag == Constant.Path.FROM)
+                edt_from.setText("")
         }
+    }
+
+    private fun attemptSearch() {
+        // Reset errors.
+        edt_from.error = null
+        edt_to.error = null
+        val edtFrom = edt_from.text.toString()
+        val edtTo = edt_to.text.toString()
+        val departureDate = tv_departure.text.toString()
+        val returnDate = tv_return.text.toString()
+        var cancel = false
+        var focusView: View? = null
+        if (TextUtils.isEmpty(edtFrom)) {
+            edt_from.error = getString(R.string.error_field_required_from_airport)
+            focusView = edt_from
+            cancel = true
+        } else if (TextUtils.isEmpty(edtTo)) {
+            edt_to.error = getString(R.string.error_field_required_to_airport)
+            focusView = edt_to
+            cancel = true
+        } else if (TextUtils.isEmpty(departureDate)) {
+            CustomDialogPresenter.showDialog(
+                context,
+                "",
+                getString(R.string.error_field_required_departure),
+                context!!.resources.getString(
+                    R.string.ok
+                ),
+                null,
+                null
+            )
+            focusView = tv_departure
+            cancel = true
+        } else if (TextUtils.isEmpty(returnDate)) {
+            CustomDialogPresenter.showDialog(
+                context,
+                "",
+                getString(R.string.error_field_required_return),
+                context!!.resources.getString(
+                    R.string.ok
+                ),
+                null,
+                null
+            )
+            focusView = tv_return
+            cancel = true
+        }
+        if (cancel) {
+            focusView?.requestFocus()
+        } else {
+            Utility.showProgress(true, context)
+            presenter.callFlightDetails(
+                adults!!,
+                travelClassCode.toString(),//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
+                childrens!!,
+                tv_departure.text.toString(),
+                getString(R.string.flight_return),
+                fromCode.toString(),
+                toCode.toString(),
+                infants!!,
+                "in-EN",
+                tv_return.text.toString()
+            )
+        }
+    }
+
+    private fun sortBy() {
+        val dialogBuilder = AlertDialog.Builder(this.context!!).create()
+        val inflater = this.layoutInflater
+        val dialogView = inflater.inflate(R.layout.sort_by_dialog, null)
+        dialogView.tv_dialog_header.text = getString(R.string.sort_by)
+        val layoutManager = LinearLayoutManager(context)
+        dialogView.selection_list?.layoutManager = layoutManager
+        val adapter = SignleSelectionAdapter(
+            this.context!!,
+            dataListSortBy!!,
+            object : SignleSelectionAdapter.OnClickListener {
+                override fun onListItemClick(
+                    dataList: ArrayList<CommonSelectorPojo>,
+                    position: Int
+                ) {
+                    sortByCode = dataList[position].code
+                    dialogBuilder.dismiss()
+                }
+            })
+        dialogView.selection_list.adapter = adapter
+        dialogBuilder.setView(dialogView)
+        dialogBuilder.setCanceledOnTouchOutside(true)
+        dialogBuilder.show()
+
+    }
+
+    private var adults: String? = "1"
+    private var childrens: String? = "0"
+    private var infants: String? = "0"
+    private fun selectTravelClass() {
+        val dialogBuilder = AlertDialog.Builder(this.context!!).create()
+        val inflater = this.layoutInflater
+        val dialogView = inflater.inflate(R.layout.sort_by_dialog, null)
+        dialogView.ll_passenger_info.visibility = View.VISIBLE
+        dialogView.ll_apply.visibility = View.VISIBLE
+        dialogView.tv_dialog_header.text = getString(R.string.passenger_information)
+        dialogView.tv_dialog_header_rcv.text = getString(R.string.cabin_class)
+        dialogView.imv_minus_adult.setOnClickListener {
+            Utility.onMinusClick(dialogView.tv_quantity_adult, true)
+        }
+        dialogView.imv_plus_adult.setOnClickListener {
+            Utility.onAddClick(dialogView.tv_quantity_adult, true)
+        }
+        dialogView.imv_minus_children.setOnClickListener {
+            Utility.onMinusClick(dialogView.tv_quantity_children, false)
+        }
+        dialogView.imv_plus_children.setOnClickListener {
+            Utility.onAddClick(dialogView.tv_quantity_children, false)
+        }
+        dialogView.imv_minus_infants.setOnClickListener {
+            Utility.onMinusClick(dialogView.tv_quantity_infants, false)
+        }
+        dialogView.imv_plus_infants.setOnClickListener {
+            Utility.onAddClick(dialogView.tv_quantity_infants, false)
+        }
+        dialogView.button_dialog_apply.setOnClickListener {
+            adults = dialogView.tv_quantity_adult.text.toString()
+            childrens = dialogView.tv_quantity_children.text.toString()
+            infants = dialogView.tv_quantity_infants.text.toString()
+            btn_passengers.text = dialogView.tv_quantity_adult.text.toString() + " Adult " +
+                    dialogView.tv_quantity_children.text.toString() + " Children " +
+                    dialogView.tv_quantity_infants.text.toString() + " Infants "
+            dialogBuilder.dismiss()
+        }
+        dialogView.button_dialog_cancel.setOnClickListener {
+            dialogBuilder.dismiss()
+        }
+        val layoutManager = LinearLayoutManager(context)
+        dialogView.selection_list?.layoutManager = layoutManager
+        val adapter = SignleSelectionAdapter(
+            this.context!!,
+            dataListTravelClass!!,
+            object : SignleSelectionAdapter.OnClickListener {
+                override fun onListItemClick(
+                    dataList: ArrayList<CommonSelectorPojo>,
+                    position: Int
+                ) {
+                    travelClassCode = dataList[position].code
+                }
+            })
+
+        dialogView.selection_list.adapter = adapter
+        dialogBuilder.setView(dialogView)
+        dialogBuilder.show()
     }
 
     private fun init() {
@@ -223,6 +443,46 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         )
     }
 
+    private fun setDataAndListeners(v: View) {
+        tv_departure.text = Utility.getCurrentDateNow()
+        tv_return.text = Utility.getCurrentDateAfter()
+        recyclerView = v?.findViewById(R.id.recycler_view) as RecyclerView
+        val layoutManager = LinearLayoutManager(context)
+        recyclerView!!.layoutManager = layoutManager as RecyclerView.LayoutManager?
+        btn_sort.setOnClickListener {
+            sortBy()
+            if (null != sortByCode) {
+                when (sortByCode) {
+                    "price" -> {
+                        val sortedList = dataListAll?.sortedWith(
+                            compareBy(
+                                FlightViewModel.FlightListResponse.ResponseData::price,
+                                FlightViewModel.FlightListResponse.ResponseData::price
+                            )
+                        )
+                        adapter?.notifyDataSetChanged()
+                    }
+                }
+            }
+        }
+        tv_departure.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_departure, 12) }
+        tv_return.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_return, 12) }
+        btn_class.setOnClickListener { selectTravelClass() }
+        btn_passengers.setOnClickListener { selectTravelClass() }
+        im_btn_search.setOnClickListener {
+            attemptSearch()
+        }
+    }
+
+    private fun setDataToRecyclerViewAdapter(responseData: List<FlightViewModel.FlightListResponse.ResponseData>?) {
+        dataListAll?.clear()
+        if (responseData != null) {
+            dataListAll?.addAll(responseData)
+        }
+        adapter = RecyclerViewAdapter(dataListAll!!, this)
+        recyclerView!!.adapter = adapter
+    }
+
     abstract inner class TextWatcherExtended : TextWatcher {
         private var lastLength: Int = 0
         abstract fun afterTextChanged(s: Editable, backSpace: Boolean)
@@ -233,222 +493,5 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         override fun afterTextChanged(s: Editable) {
             afterTextChanged(s, lastLength > s.length)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        edt_from.addTextChangedListener(object : TextWatcherExtended() {
-            override fun afterTextChanged(s: Editable, backSpace: Boolean) {
-                if (!backSpace) {
-                    if (s.length > 2)
-                        if (!isItemClicked && isVisible) {
-                            callAPIAirportData(Constant.Path.FROM, s.toString())
-                        }
-                } else {
-                    if (s.isEmpty())
-                        isItemClicked = false
-                }
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
-        })
-
-        edt_to.addTextChangedListener(
-            object : TextWatcherExtended() {
-                override fun afterTextChanged(s: Editable, backSpace: Boolean) {
-                    if (!backSpace) {
-                        if (s.length > 2) {
-                            if (!isItemClickedTo && isVisible) {
-                                callAPIAirportData(Constant.Path.TO, s.toString())
-                            }
-                        }
-                    } else {
-                        if (s.isEmpty())
-                            isItemClickedTo = false
-                    }
-                }
-
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                }
-            })
-    }
-
-    private fun callAPIAirportData(flag: String?, toString: String) {
-        presenter.callAPIAirportData(flag, toString)
-    }
-
-    override fun onFlightRowClick(responseData: FlightViewModel.FlightListResponse.ResponseData) {
-        enterNextFragment(responseData)
-    }
-
-    private fun selectTravelClass() {
-        val dialogBuilder = AlertDialog.Builder(this.context!!).create()
-        val inflater = this.layoutInflater
-        val dialogView = inflater.inflate(R.layout.sort_by_dialog, null)
-        dialogView.tv_dialog_header.text = getString(R.string.cabin_class)
-        val layoutManager = LinearLayoutManager(context)
-        dialogView.selection_list?.layoutManager = layoutManager
-        val adapter = SignleSelectionAdapter(
-            this.context!!,
-            dataListTravelClass!!,
-            object : SignleSelectionAdapter.OnClickListener {
-                override fun onListItemClick(
-                    dataList: ArrayList<CommonSelectorPojo>,
-                    position: Int
-                ) {
-                    travelClassCode = dataList[position].code
-                    dialogBuilder.dismiss()
-                }
-            })
-        dialogView.selection_list.adapter = adapter
-        dialogBuilder.setView(dialogView)
-        dialogBuilder.setCanceledOnTouchOutside(false)
-        dialogBuilder.show()
-    }
-
-    private fun sortBy() {
-        val dialogBuilder = AlertDialog.Builder(this.context!!).create()
-        val inflater = this.layoutInflater
-        val dialogView = inflater.inflate(R.layout.sort_by_dialog, null)
-        dialogView.tv_dialog_header.text = getString(R.string.sort_by)
-        val layoutManager = LinearLayoutManager(context)
-        dialogView.selection_list?.layoutManager = layoutManager
-        val adapter = SignleSelectionAdapter(
-            this.context!!,
-            dataListSortBy!!,
-            object : SignleSelectionAdapter.OnClickListener {
-                override fun onListItemClick(
-                    dataList: ArrayList<CommonSelectorPojo>,
-                    position: Int
-                ) {
-                    sortByCode = dataList[position].code
-                    dialogBuilder.dismiss()
-                }
-            })
-        dialogView.selection_list.adapter = adapter
-        dialogBuilder.setView(dialogView)
-        dialogBuilder.setCanceledOnTouchOutside(false)
-        dialogBuilder.show()
-    }
-
-    private fun enterNextFragment(responseData: FlightViewModel.FlightListResponse.ResponseData) {
-        val intent = Intent(activity?.baseContext, TripDetailsActivity::class.java)
-        intent.putExtra(Constant.Path.FLIGHT_DETAILS, responseData)
-        startActivity(intent)
-    }
-
-    private fun openSearchActivityFlightReturn(
-        arrayListAirPortData: ArrayList<FlightViewModel.AirPortDataResponse.ResponseData>,
-        title: String,
-        selectionRequest: Int,
-        flag: String
-    ) {
-        if (arrayListAirPortData.size > 0) {
-            val intent = Intent(context, CommonSearchActivity::class.java)
-            intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
-            intent.putParcelableArrayListExtra(Constant.Path.AIRPORT_FROM_LIST, arrayListAirPortData)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivityForResult(intent, selectionRequest)
-        } else {
-            if (flag == Constant.Path.TO)
-                edt_to.setText("")
-            else if (flag == Constant.Path.FROM)
-                edt_from.setText("")
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            FROM_SELECTION_REQUEST -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    isItemClicked = true
-                    edt_from.setText(
-                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
-                    )
-                    fromCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
-                }
-            }
-            TO_SELECTION_REQUEST -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    isItemClickedTo = true
-                    edt_to.setText(
-                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
-                    )
-                    toCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
-                }
-            }
-        }
-    }
-
-    private fun attemptSearch() {
-        // Reset errors.
-        edt_from.error = null
-        edt_to.error = null
-        val edtFrom = edt_from.text.toString()
-        val edtTo = edt_to.text.toString()
-        val departureDate = tv_departure.text.toString()
-        val returnDate = tv_return.text.toString()
-        var cancel = false
-        var focusView: View? = null
-        if (TextUtils.isEmpty(edtFrom)) {
-            edt_from.error = getString(R.string.error_field_required_from_airport)
-            focusView = edt_from
-            cancel = true
-        } else if (TextUtils.isEmpty(edtTo)) {
-            edt_to.error = getString(R.string.error_field_required_to_airport)
-            focusView = edt_to
-            cancel = true
-        } else if (TextUtils.isEmpty(departureDate)) {
-            CustomDialogPresenter.showDialog(
-                context,
-                "",
-                getString(R.string.error_field_required_departure),
-                context!!.resources.getString(
-                    R.string.ok
-                ),
-                null,
-                null
-            )
-            focusView = tv_departure
-            cancel = true
-        } else if (TextUtils.isEmpty(returnDate)) {
-            CustomDialogPresenter.showDialog(
-                context,
-                "",
-                getString(R.string.error_field_required_return),
-                context!!.resources.getString(
-                    R.string.ok
-                ),
-                null,
-                null
-            )
-            focusView = tv_return
-            cancel = true
-        }
-        if (cancel) {
-            focusView?.requestFocus()
-        } else {
-            Utility.showProgress(true, context)
-            presenter.callFlightDetails(
-                "1",
-                "ECONOMY",//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
-                "1",
-                tv_departure.text.toString(),
-                getString(R.string.flight_return),
-                fromCode.toString(),
-                toCode.toString(),
-                "0",
-                "in-EN",
-                tv_return.text.toString()
-            )
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        edt_from.error = null//removes error
-        edt_to.error = null
     }
 }

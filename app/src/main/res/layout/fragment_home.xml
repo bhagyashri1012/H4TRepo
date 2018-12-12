@@ -28,8 +28,8 @@
                         app:srcCompat="@drawable/ic_settings"
                         android:layout_alignParentRight="true"/>
 
-                <ImageView android:layout_width="140dp"
-                           android:layout_height="140dp"
+                <ImageView android:layout_width="150dp"
+                           android:layout_height="120dp"
                            android:layout_centerInParent="true"
                            android:layout_below="@+id/imv_settings"
                            android:src="@drawable/splash"/>
@@ -50,7 +50,7 @@
                         <ImageView
                                 android:id="@+id/imv_flight"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="@dimen/icon_height_img"
                                 app:srcCompat="@drawable/flight"
                                 android:layout_alignParentRight="true"/>
                         <TextView
@@ -68,7 +68,7 @@
                         <ImageView
                                 android:id="@+id/imv_hotels"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="@dimen/icon_height_img"
                                 app:srcCompat="@drawable/hotel"
                                 android:layout_alignParentRight="true"/>
                         <TextView
@@ -88,7 +88,7 @@
                         <ImageView
                                 android:id="@+id/imv_sports"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="@dimen/icon_height_img"
                                 app:srcCompat="@drawable/sport"
                                 android:layout_alignParentRight="true"
                         />
@@ -106,7 +106,7 @@
                         <ImageView
                                 android:id="@+id/imv_events"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="@dimen/icon_height_img"
                                 app:srcCompat="@drawable/event"
                                 android:layout_alignParentRight="true"
                         />
@@ -131,6 +131,7 @@
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:animateLayoutChanges="false"
                     android:nestedScrollingEnabled="false"
                     android:layout_gravity="center_vertical"
                     android:layout_marginBottom="60dp"

@@ -56,6 +56,18 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         listener = null
     )
     private val dataListAll: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? = ArrayList()
+
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_one_way, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        init()
+        setDataAndListeners(view)
+    }
+
     override fun doRetrieveModel(): FlightViewModel = this.model
     override fun showState(viewState: FlightPresenter.MainView.ViewState) {
         when (viewState) {
@@ -88,41 +100,74 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_one_way, container, false)
+    override fun onFlightRowClick(responseData: FlightViewModel.FlightListResponse.ResponseData) {
+        enterNextFragment(responseData)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        init()
-        recyclerView = view.findViewById(R.id.recycler_view_one_way) as RecyclerView
-        val layoutManager = LinearLayoutManager(context)
-        recyclerView!!.layoutManager = layoutManager as RecyclerView.LayoutManager?
-        btn_sort.setOnClickListener {
-            sortBy()
-            if (null != sortByCode) {
-                when (sortByCode) {
-                    "price" -> {
-                        val sortedList = dataListAll?.sortedWith(
-                            compareBy(
-                                FlightViewModel.FlightListResponse.ResponseData::price,
-                                FlightViewModel.FlightListResponse.ResponseData::price
-                            )
-                        )
-                        adapter?.notifyDataSetChanged()
-                    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            FROM_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    isItemClicked = true
+                    edt_from.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME))
+                    fromCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
+                }
+            }
+            TO_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    isItemClickedTo = true
+                    edt_to.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME))
+                    toCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
                 }
             }
         }
-        tv_departure.text = Utility.getCurrentDateNow()
-        tv_departure.setOnClickListener { Utility.dateDialog(c, activity, tv_departure) }
-        tv_return.visibility = View.GONE
-        btn_class.setOnClickListener {
-            selectTravelClass()
-        }
-        im_btn_search.setOnClickListener {
-            attemptSearch()
-        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        edt_from.addTextChangedListener(object : TextWatcherExtended() {
+            override fun afterTextChanged(s: Editable, backSpace: Boolean) {
+                if (!backSpace) {
+                    if (s.length > 2)
+                        if (!isItemClicked && isVisible) {
+                            callAPIAirportData(Constant.Path.FROM, s.toString())
+                        }
+                } else {
+                    if (s.isEmpty()) {
+                        isItemClicked = false
+                    }
+                }
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            }
+        })
+
+        edt_to.addTextChangedListener(
+            object : TextWatcherExtended() {
+                override fun afterTextChanged(s: Editable, backSpace: Boolean) {
+                    if (!backSpace) {
+                        if (s.length > 2) {
+                            if (!isItemClickedTo && isVisible) {
+                                callAPIAirportData(Constant.Path.TO, s.toString())
+                            }
+                        }
+                    } else {
+                        if (s.isEmpty())
+                            isItemClickedTo = false
+                    }
+                }
+
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                }
+            })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        edt_from.error = null//removes error
+        edt_to.error = null
     }
 
     private fun init() {
@@ -212,9 +257,37 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         )
     }
 
-    override fun onFlightRowClick(responseData: FlightViewModel.FlightListResponse.ResponseData) {
-        enterNextFragment(responseData)
+    private fun setDataAndListeners(v: View) {
+        recyclerView = v.findViewById(R.id.recycler_view_one_way) as RecyclerView
+        val layoutManager = LinearLayoutManager(context)
+        recyclerView!!.layoutManager = layoutManager as RecyclerView.LayoutManager?
+        btn_sort.setOnClickListener {
+            sortBy()
+            if (null != sortByCode) {
+                when (sortByCode) {
+                    "price" -> {
+                        val sortedList = dataListAll?.sortedWith(
+                            compareBy(
+                                FlightViewModel.FlightListResponse.ResponseData::price,
+                                FlightViewModel.FlightListResponse.ResponseData::price
+                            )
+                        )
+                        adapter?.notifyDataSetChanged()
+                    }
+                }
+            }
+        }
+        tv_departure.text = Utility.getCurrentDateNow()
+        tv_departure.setOnClickListener { Utility.dateDialog(c, activity, tv_departure) }
+        tv_return.visibility = View.GONE
+        btn_class.setOnClickListener { selectTravelClass() }
+        btn_passengers.setOnClickListener { selectTravelClass() }
+        im_btn_search.setOnClickListener {
+            attemptSearch()
+        }
+
     }
+
 
     private fun setDataToRecyclerViewAdapter(responseData: List<FlightViewModel.FlightListResponse.ResponseData>?) {
         if (responseData != null) {
@@ -230,11 +303,47 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         startActivity(intent)
     }
 
+    private var adults: String? = "1"
+    private var childrens: String? = "0"
+    private var infants: String? = "0"
     private fun selectTravelClass() {
         val dialogBuilder = AlertDialog.Builder(this.context!!).create()
         val inflater = this.layoutInflater
         val dialogView = inflater.inflate(R.layout.sort_by_dialog, null)
-        dialogView.tv_dialog_header.text = getString(R.string.cabin_class)
+        dialogView.ll_passenger_info.visibility = View.VISIBLE
+        dialogView.ll_apply.visibility = View.VISIBLE
+        dialogView.tv_dialog_header.text = getString(R.string.passenger_information)
+        dialogView.tv_dialog_header_rcv.text = getString(R.string.cabin_class)
+        dialogView.imv_minus_adult.setOnClickListener {
+            Utility.onMinusClick(dialogView.tv_quantity_adult, true)
+        }
+        dialogView.imv_plus_adult.setOnClickListener {
+            Utility.onAddClick(dialogView.tv_quantity_adult, true)
+        }
+        dialogView.imv_minus_children.setOnClickListener {
+            Utility.onMinusClick(dialogView.tv_quantity_children, false)
+        }
+        dialogView.imv_plus_children.setOnClickListener {
+            Utility.onAddClick(dialogView.tv_quantity_children, false)
+        }
+        dialogView.imv_minus_infants.setOnClickListener {
+            Utility.onMinusClick(dialogView.tv_quantity_infants, false)
+        }
+        dialogView.imv_plus_infants.setOnClickListener {
+            Utility.onAddClick(dialogView.tv_quantity_infants, false)
+        }
+        dialogView.button_dialog_apply.setOnClickListener {
+            adults = dialogView.tv_quantity_adult.text.toString()
+            childrens = dialogView.tv_quantity_children.text.toString()
+            infants = dialogView.tv_quantity_infants.text.toString()
+            btn_passengers.text = dialogView.tv_quantity_adult.text.toString() + " Adult " +
+                    dialogView.tv_quantity_children.text.toString() + " Children " +
+                    dialogView.tv_quantity_infants.text.toString() + " Infants "
+            dialogBuilder.dismiss()
+        }
+        dialogView.button_dialog_cancel.setOnClickListener {
+            dialogBuilder.dismiss()
+        }
         val layoutManager = LinearLayoutManager(context)
         dialogView.selection_list?.layoutManager = layoutManager
         val adapter = SignleSelectionAdapter(
@@ -246,12 +355,11 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
                     position: Int
                 ) {
                     travelClassCode = dataList[position].code
-                    dialogBuilder.dismiss()
                 }
             })
+
         dialogView.selection_list.adapter = adapter
         dialogBuilder.setView(dialogView)
-        dialogBuilder.setCanceledOnTouchOutside(false)
         dialogBuilder.show()
     }
 
@@ -278,7 +386,6 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
             })
         dialogView.selection_list.adapter = adapter
         dialogBuilder.setView(dialogView)
-        dialogBuilder.setCanceledOnTouchOutside(false)
         dialogBuilder.show()
     }
 
@@ -296,25 +403,6 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            FROM_SELECTION_REQUEST -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    isItemClicked = true
-                    edt_from.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME))
-                    fromCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
-                }
-            }
-            TO_SELECTION_REQUEST -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    isItemClickedTo = true
-                    edt_to.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME))
-                    toCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
-                }
-            }
-        }
-    }
 
     abstract inner class TextWatcherExtended : TextWatcher {
         private var lastLength: Int = 0
@@ -328,45 +416,6 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        edt_from.addTextChangedListener(object : TextWatcherExtended() {
-            override fun afterTextChanged(s: Editable, backSpace: Boolean) {
-                if (!backSpace) {
-                    if (s.length > 2)
-                        if (!isItemClicked && isVisible) {
-                            callAPIAirportData(Constant.Path.FROM, s.toString())
-                        }
-                } else {
-                    if (s.isEmpty()) {
-                        isItemClicked = false
-                    }
-                }
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
-        })
-
-        edt_to.addTextChangedListener(
-            object : TextWatcherExtended() {
-                override fun afterTextChanged(s: Editable, backSpace: Boolean) {
-                    if (!backSpace) {
-                        if (s.length > 2) {
-                            if (!isItemClickedTo && isVisible) {
-                                callAPIAirportData(Constant.Path.TO, s.toString())
-                            }
-                        }
-                    } else {
-                        if (s.isEmpty())
-                            isItemClickedTo = false
-                    }
-                }
-
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                }
-            })
-    }
 
     private fun callAPIAirportData(flag: String?, toString: String) {
         presenter.callAPIAirportData(flag, toString)
@@ -409,23 +458,18 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         } else {
             Utility.showProgress(true, context)
             presenter.callFlightDetails(
-                "1",
-                "ECONOMY",//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
-                "1",
+                adults!!,
+                travelClassCode!!,//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
+                childrens!!,
                 tv_departure.text.toString(),
                 getString(R.string.oneway),
                 fromCode.toString(),
                 toCode.toString(),
-                "0",
+                infants!!,
                 "in-EN",
                 ""
             )
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        edt_from.error = null//removes error
-        edt_to.error = null
-    }
 }

@@ -160,10 +160,8 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
                     Pref.setValue(context, PrefConstants.IS_LOGIN, false)
                     Pref.setValue(context, PrefConstants.USER_ID, "0")
                     Pref.setValue(context, PrefConstants.EMAIL_ID, "")
-                    val intent = Intent(context, LoginActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                    val ft = fragmentManager!!.beginTransaction()
+                    ft.detach(this@MyAccountFragment).attach(this@MyAccountFragment).commit()
                 }
 
                 override fun onNegativeButtonClicked() {

@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
             android:name=".MainApplication"
@@ -91,6 +91,13 @@
                 android:theme="@style/NoActionBarAppTheme"
                 android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
+
+        <!-- Service to asynchronously fetch a location address using a Geocoder. Setting the
+       android:exported attribute to "false" stops other apps from starting this
+       service, even when using an explicit intent. -->
+        <service
+                android:name=".dashboard.ui.FetchAddressIntentService"
+                android:exported="false"/>
     </application>
 
 </manifest>

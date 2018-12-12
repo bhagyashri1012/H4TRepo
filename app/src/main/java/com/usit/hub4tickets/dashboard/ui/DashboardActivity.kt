@@ -1,25 +1,25 @@
 package com.usit.hub4tickets.dashboard.ui
 
 import android.Manifest
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
-import android.provider.Settings
+import android.os.Handler
+import android.os.ResultReceiver
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.widget.Toast
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.OnSuccessListener
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.presenters.DashboardPresenter
 import com.usit.hub4tickets.domain.presentation.screens.main.DashboardPresenterImpl
@@ -34,17 +34,33 @@ import kotlinx.android.synthetic.main.activity_dashboard.*
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-class DashboardActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+class DashboardActivity : AppCompatActivity() {
     private lateinit var presenter: DashboardPresenter
-    private val TAG = "DashboardActivity"
-    private var mGoogleApiClient: GoogleApiClient? = null
-    private var mLocationManager: LocationManager? = null
-    lateinit var mLocation: Location
-    private var mLocationRequest: LocationRequest? = null
-    private val UPDATE_INTERVAL = (2 * 1000).toLong()  /* 10 secs */
-    private val FASTEST_INTERVAL: Long = 2000 /* 2 sec */
-    lateinit var locationManager: LocationManager
+    private val TAG = DashboardActivity::class.java.simpleName
+    private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
+    private val ADDRESS_REQUESTED_KEY = "address-request-pending"
+    private val LOCATION_ADDRESS_KEY = "location-address"
+    /**
+     * Provides access to the Fused Location Provider API.
+     */
+    private var fusedLocationClient: FusedLocationProviderClient? = null
+    /**
+     * Represents a geographical location.
+     */
+    private var lastLocation: Location? = null
+    /**
+     * Tracks whether the user has requested an address. Becomes true when the user requests an
+     * address and false when the address (or an error message) is delivered.
+     */
+    private var addressRequested = false
+    /**
+     * The formatted location address.
+     */
+    private var addressOutput = ""
+    /**
+     * Receiver registered with this activity to get the response from FetchAddressIntentService.
+     */
+    private lateinit var resultReceiver: AddressResultReceiver
     private var selectedFragment: Fragment? = null
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -64,73 +80,10 @@ class DashboardActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         return@OnNavigationItemSelectedListener true
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient!!.connect();
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        if (mGoogleApiClient!!.isConnected()) {
-            mGoogleApiClient!!.disconnect()
-        }
-    }
-
-    override fun onConnectionSuspended(p0: Int) {
-        Log.i(TAG, "Connection Suspended")
-        mGoogleApiClient!!.connect()
-    }
-
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {
-        Log.i(TAG, "Connection failed. Error: " + connectionResult.errorCode)
-    }
-
-    override fun onLocationChanged(location: Location) {
-        var msg = "Updated Location: Latitude " + location.longitude.toString() + location.longitude
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onConnected(p0: Bundle?) {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-
-            return
-        }
-
-        startLocationUpdates()
-
-        var fusedLocationProviderClient:
-                FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        fusedLocationProviderClient.lastLocation
-            .addOnSuccessListener(this) { location ->
-                // Got last known location. In some rare situations this can be null.
-                if (location != null) {
-                    // Logic to handle location object
-                    mLocation = location
-                    Log.e("loaction", mLocation.toString())
-                    Log.e("loaction", Utility.getAddress(this, location.latitude, location.longitude).split("/")[0])
-                    presenter.callAPISetLocation(
-                        Pref.getValue(this, PrefConstants.USER_ID, "")!!,
-                        Utility.getAddress(this, location.latitude, location.longitude).split("/")[0],
-                        Utility.getAddress(this, location.latitude, location.longitude).split("/")[1]
-                    )
-                }
-            }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
-
-        init()
         if (intent.extras != null) {
             when (intent.extras.get("SCREEN_NAME")) {
                 "home" -> loadFragment(HomeFragment.newInstance())
@@ -140,73 +93,74 @@ class DashboardActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             }
         } else
             loadFragment(HomeFragment.newInstance())
-
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        if (Pref.getValue(this, PrefConstants.IS_LOGIN, false)) {
+        init()
+        // Set defaults, then update using values stored in the Bundle.
+        addressRequested = false
+        addressOutput = ""
+        updateValuesFromBundle(savedInstanceState)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        updateUIWidgets()
+    }
+
+    public override fun onStart() {
+        super.onStart()
+        if (!checkPermissions()) {
+            requestPermissions()
         } else {
-            mGoogleApiClient = GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build()
+            getAddress()
+        }
+    }
 
-            mLocationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    /**
+     * Updates fields based on data stored in the bundle.
+     */
+    private fun updateValuesFromBundle(savedInstanceState: Bundle?) {
+        savedInstanceState ?: return
 
-            checkLocation()
+        ADDRESS_REQUESTED_KEY.let {
+            // Check savedInstanceState to see if the address was previously requested.
+            if (savedInstanceState.keySet().contains(it)) {
+                addressRequested = savedInstanceState.getBoolean(it)
+            }
         }
 
+        LOCATION_ADDRESS_KEY.let {
+            // Check savedInstanceState to see if the location address string was previously found
+            // and stored in the Bundle. If it was found, display the address string in the UI.
+            if (savedInstanceState.keySet().contains(it)) {
+                addressOutput = savedInstanceState.getString(it)
+
+            }
+        }
+    }
+
+    private fun updateUIWidgets() {
+        if (addressRequested) {
+            fetchAddressButtonHandler()
+
+        } else {
+
+        }
+    }
+
+    /**
+     * Runs when user clicks the Fetch Address button.
+     */
+    fun fetchAddressButtonHandler() {
+        if (lastLocation != null) {
+            startIntentService()
+            return
+        }
+        // If we have not yet retrieved the user location, we process the user's request by setting
+        // addressRequested to true. As far as the user is concerned, pressing the Fetch Address
+        // button immediately kicks off the process of getting the address.
+        addressRequested = true
+        updateUIWidgets()
     }
 
     private fun init() {
         this.presenter = DashboardPresenterImpl(context = this@DashboardActivity, mView = null)
-    }
-
-    private fun checkLocation(): Boolean {
-        if (!isLocationEnabled())
-            showAlert()
-        return isLocationEnabled()
-    }
-
-    private fun isLocationEnabled(): Boolean {
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
-    }
-
-    private fun showAlert() {
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle("Enable Location")
-            .setMessage("Your Locations Settings is set to 'Off'.\nPlease Enable Location to " + "use this app")
-            .setPositiveButton("Location Settings") { paramDialogInterface, paramInt ->
-                val myIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                startActivity(myIntent)
-            }
-            .setNegativeButton("Cancel") { paramDialogInterface, paramInt -> }
-        dialog.show()
-    }
-
-    private fun startLocationUpdates() {
-        // Create the location request
-        mLocationRequest = LocationRequest.create()
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(UPDATE_INTERVAL)
-            .setFastestInterval(FASTEST_INTERVAL);
-        // Request location updates
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return;
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-            mGoogleApiClient,
-            mLocationRequest, this
-        )
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -247,4 +201,163 @@ class DashboardActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             }
         }
     }
+
+    /**
+     * Creates an intent, adds location data to it as an extra, and starts the intent service for
+     * fetching an address.
+     */
+    private fun startIntentService() {
+        // Create an intent for passing to the intent service responsible for fetching the address.
+        val intent = Intent(this, FetchAddressIntentService::class.java).apply {
+            // Pass the result receiver as an extra to the service.
+            putExtra(Constants.RECEIVER, resultReceiver)
+            // Pass the location data as an extra to the service.
+            putExtra(Constants.LOCATION_DATA_EXTRA, lastLocation)
+        }
+        // Start the service. If the service isn't already running, it is instantiated and started
+        // (creating a process for it if needed); if it is running then it remains running. The
+        // service kills itself automatically once all intents are processed.
+        startService(intent)
+    }
+
+    /**
+     * Gets the address for the last known location.
+     */
+    @SuppressLint("MissingPermission")
+    private fun getAddress() {
+        fusedLocationClient?.lastLocation?.addOnSuccessListener(this, OnSuccessListener { location ->
+            if (location == null) {
+                Log.w(TAG, "onSuccess:null")
+                return@OnSuccessListener
+            }
+            lastLocation = location
+            presenter.callAPISetLocation(
+                Pref.getValue(this, PrefConstants.USER_ID, "")!!,
+                Utility.getAddress(this, location.latitude, location.longitude).split("/")[0],
+                Utility.getAddress(this, location.latitude, location.longitude).split("/")[1]
+            )
+            // Determine whether a Geocoder is available.
+            if (!Geocoder.isPresent()) {
+                Snackbar.make(
+                    findViewById<View>(android.R.id.content),
+                    R.string.no_geocoder_available, Snackbar.LENGTH_LONG
+                ).show()
+                return@OnSuccessListener
+            }
+            // If the user pressed the fetch address button before we had the location,
+            // this will be set to true indicating that we should kick off the intent
+            // service after fetching the location.
+            if (addressRequested) startIntentService()
+        })?.addOnFailureListener(this) { e -> Log.w(TAG, "getLastLocation:onFailure", e) }
+    }
+
+    public override fun onSaveInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState ?: return
+        with(savedInstanceState) {
+            // Save whether the address has been requested.
+            putBoolean(ADDRESS_REQUESTED_KEY, addressRequested)
+            // Save the address string.
+            putString(LOCATION_ADDRESS_KEY, addressOutput)
+        }
+        super.onSaveInstanceState(savedInstanceState)
+    }
+
+    /**
+     * Receiver for data sent from FetchAddressIntentService.
+     */
+    private inner class AddressResultReceiver internal constructor(
+        handler: Handler
+    ) : ResultReceiver(handler) {
+        /**
+         * Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
+         */
+        override fun onReceiveResult(resultCode: Int, resultData: Bundle) {
+            // Display the address string or an error message sent from the intent service.
+            addressOutput = resultData.getString(Constants.RESULT_DATA_KEY)
+            // Show a toast message if an address was found.
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                Toast.makeText(this@DashboardActivity, R.string.address_found, Toast.LENGTH_SHORT).show()
+            }
+            // Reset. Enable the Fetch Address button and stop showing the progress bar.
+            addressRequested = false
+            updateUIWidgets()
+        }
+    }
+
+    /**
+     * Return the current state of the permissions needed.
+     */
+    private fun checkPermissions(): Boolean {
+        val permissionState = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        return permissionState == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestPermissions() {
+        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        // Provide an additional rationale to the user. This would happen if the user denied the
+        // request previously, but didn't check the "Don't ask again" checkbox.
+        if (shouldProvideRationale) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.")
+            ActivityCompat.requestPermissions(
+                this@DashboardActivity,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_PERMISSIONS_REQUEST_CODE
+            )
+        } else {
+            Log.i(TAG, "Requesting permission")
+            // Request permission. It's possible this can be auto answered if device policy
+            // sets the permission in a given state or the user denied the permission
+            // previously and checked "Never ask again".
+
+        }
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        Log.i(TAG, "onRequestPermissionResult")
+        if (requestCode != REQUEST_PERMISSIONS_REQUEST_CODE) return
+        when {
+            grantResults.isEmpty() ->
+                // If user interaction was interrupted, the permission request is cancelled and you
+                // receive empty arrays.
+                Log.i(TAG, "User interaction was cancelled.")
+            grantResults[0] == PackageManager.PERMISSION_GRANTED -> // Permission granted.
+                getAddress()
+            else ->
+                Log.i(TAG, "User interaction was Permission denied.")
+            // Permission denied.
+            // Notify the user via a SnackBar that they have rejected a core permission for the
+            // app, which makes the Activity useless. In a real app, core permissions would
+            // typically be best requested during a welcome-screen flow.
+            // Additionally, it is important to remember that a permission might have been
+            // rejected without asking the user for permission (device policy or "Never ask
+            // again" prompts). Therefore, a user interface affordance is typically implemented
+            // when permissions are denied. Otherwise, your app could appear unresponsive to
+            // touches or interactions which have required permissions.
+            /* showSnackbar(R.string.permission_denied_explanation, R.string.settings,
+                 View.OnClickListener {
+                     // Build intent that displays the App settings screen.
+                     val intent = Intent().apply {
+                         action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                         data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
+                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                     }
+                     startActivity(intent)
+                 })*/
+        }
+    }
+
+
 }

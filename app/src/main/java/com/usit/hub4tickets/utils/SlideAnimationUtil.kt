@@ -21,7 +21,7 @@ object SlideAnimationUtil {
      * @param view
      */
     fun slideInFromLeft(context: Context, view: View) {
-        runSimpleAnimation(context, view, R.anim.slide_from_left)
+        runSimpleAnimation(context, view, R.anim.enter_from_right)
     }
 
     /**
@@ -41,7 +41,7 @@ object SlideAnimationUtil {
      * @param view
      */
     fun slideInFromRight(context: Context, view: View) {
-        runSimpleAnimation(context, view, R.anim.slide_from_right)
+        runSimpleAnimation(context, view, R.anim.enter_from_left)
     }
 
     /**

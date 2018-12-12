@@ -106,14 +106,15 @@ class DashboardViewModel(var context: Context?) {
         val status: String?
     ) : Parcelable {
         data class CurrencyData(
-            @SerializedName("code")
-            val code: String,
-            @SerializedName("currencyId")
-            val currencyId: String,
-            @SerializedName("name")
-            val name: String,
-            @SerializedName("symbol")
-            val symbol: String
+            @Nullable
+            @SerializedName("countryCode")
+            val countryCode: String?,
+            @Nullable
+            @SerializedName("currencyCode")
+            val currencyCode: String?,
+            @Nullable
+            @SerializedName("currencyName")
+            val currencyName: String?
         ) : Parcelable {
             companion object {
                 @JvmField
@@ -126,17 +127,15 @@ class DashboardViewModel(var context: Context?) {
             constructor(source: Parcel) : this(
                 source.readString(),
                 source.readString(),
-                source.readString(),
                 source.readString()
             )
 
             override fun describeContents() = 0
 
             override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-                writeString(code)
-                writeString(currencyId)
-                writeString(name)
-                writeString(symbol)
+                writeString(countryCode)
+                writeString(currencyCode)
+                writeString(currencyName)
             }
         }
 
@@ -150,7 +149,7 @@ class DashboardViewModel(var context: Context?) {
 
         constructor(source: Parcel) : this(
             source.readString(),
-            ArrayList<CurrencyData>().apply { source.readList(this, CurrencyData::class.java.classLoader) },
+            source.createTypedArrayList(CurrencyData.CREATOR),
             source.readString()
         )
 
@@ -158,7 +157,7 @@ class DashboardViewModel(var context: Context?) {
 
         override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
             writeString(message)
-            writeList(currencyData)
+            writeTypedList(currencyData)
             writeString(status)
         }
     }

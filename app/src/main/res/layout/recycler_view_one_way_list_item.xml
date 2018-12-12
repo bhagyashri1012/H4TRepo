@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_margin="@dimen/activity_vertical_margin"
+              android:layout_margin="@dimen/activity_vertical_margin_half"
 >
     <LinearLayout
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                         android:src="@mipmap/ic_launcher"
                         android:layout_marginBottom="@dimen/padding_8dp"
                 />
-                <TextView style="@style/CustomRegularTextView"
+                <TextView style="@style/CustomSmallTextView"
                           android:text="IndiGo"
                           android:layout_gravity="center_horizontal"
                           android:layout_marginBottom="@dimen/margin_4dp"
@@ -57,7 +57,7 @@
                       android:layout_marginBottom="@dimen/margin_16dp"
                       android:maxLines="2"
             />
-            <TextView style="@style/CustomRegularTextView"
+            <TextView style="@style/CustomSmallTextView"
                       android:text="10.30Am"
                       android:textColor="@color/cool_grey"
                       android:maxLines="2"
@@ -78,7 +78,7 @@
                         android:src="@mipmap/ic_launcher"
                         android:layout_marginBottom="@dimen/padding_8dp"
                 />
-                <TextView style="@style/CustomRegularTextView"
+                <TextView style="@style/CustomSmallTextView"
                           android:text="IndiGo"
                           android:layout_gravity="center_horizontal"
                           android:layout_marginBottom="@dimen/margin_4dp"
@@ -107,7 +107,7 @@
                       android:layout_marginBottom="@dimen/margin_16dp"
                       android:maxLines="2"
             />
-            <TextView style="@style/CustomRegularTextView"
+            <TextView style="@style/CustomSmallTextView"
                       android:text="10.30Am"
                       android:textColor="@color/cool_grey"
                       android:maxLines="2"
@@ -137,6 +137,5 @@
             android:id="@+id/separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="@dimen/activity_vertical_margin_half"
             android:background="@color/cool_grey"/>
 </LinearLayout>

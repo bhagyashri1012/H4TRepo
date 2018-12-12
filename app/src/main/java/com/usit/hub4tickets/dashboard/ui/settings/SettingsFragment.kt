@@ -37,7 +37,11 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
         when (viewState) {
             DashboardPresenter.MainView.ViewState.IDLE -> Utility.showProgress(false, context)
             DashboardPresenter.MainView.ViewState.LOADING -> Utility.showProgress(true, context)
-            DashboardPresenter.MainView.ViewState.SAVE_SUCCESS -> Utility.showProgress(false, context)
+            DashboardPresenter.MainView.ViewState.SAVE_SUCCESS -> {
+                Utility.showProgress(false, context)
+                activity?.supportFragmentManager?.beginTransaction()?.remove(this)
+                    ?.setCustomAnimations(R.anim.enter_from_left, R.anim.slide_to_right)?.hide(this)?.commit()
+            }
             DashboardPresenter.MainView.ViewState.SUCCESS -> setData(
                 model.settingsDomain.responseData?.countryName,
                 model.settingsDomain.responseData?.languageName,
@@ -70,7 +74,7 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
             DashboardPresenter.MainView.ViewState.ERROR
             -> {
                 presenter.presentState(DashboardPresenter.MainView.ViewState.IDLE)
-                Utility.showCustomDialog(context, doRetrieveModel().errorMessage,"", null)
+                Utility.showCustomDialog(context, doRetrieveModel().errorMessage, "", null)
             }
         }
     }
@@ -87,9 +91,9 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
         init()
         presenter.callAPIGetSettingsData(Pref.getValue(context, PrefConstants.USER_ID, "0").toString())
         setData(
-            Pref.getValue(context, PrefConstants.COUNTRY, "India"),
-            Pref.getValue(context, PrefConstants.LANGUAGE, "English"),
-            Pref.getValue(context, PrefConstants.CURRENCY, "Indian Rupees")
+            Pref.getValue(context, PrefConstants.COUNTRY, ""),
+            Pref.getValue(context, PrefConstants.LANGUAGE, ""),
+            Pref.getValue(context, PrefConstants.CURRENCY, "")
         )
     }
 
@@ -108,7 +112,8 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
         super.onViewCreated(view, savedInstanceState)
 
         cancel_button.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit();
+            activity?.supportFragmentManager?.beginTransaction()?.remove(this)
+                ?.setCustomAnimations(R.anim.enter_from_left, R.anim.slide_to_right)?.hide(this)?.commit()
         }
         ll_settings_country.setOnClickListener {
             presenter.callAPIGetCountry()

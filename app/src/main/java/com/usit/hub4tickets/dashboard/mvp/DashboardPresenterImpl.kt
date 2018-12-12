@@ -30,7 +30,6 @@ class DashboardPresenterImpl(
 
     override fun callAPIGetSettingsData(userId: String) {
         if (MainApplication.getInstance.isConnected()) {
-            presentState(LOADING)
             dashboardBaseInteractor.callAPIGetSettingsData(
                 Utility.getDeviceId(context = mContext),
                 userId

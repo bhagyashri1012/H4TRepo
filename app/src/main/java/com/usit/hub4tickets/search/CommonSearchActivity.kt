@@ -124,9 +124,9 @@ class CommonSearchActivity : BaseActivity() {
             for (i in arrayListCommonSelectorCurrencyInitial!!.indices) {
                 arrayListCommonSelector.add(
                     i, CommonSelectorPojo(
-                        arrayListCommonSelectorCurrencyInitial[i].currencyId,
-                        arrayListCommonSelectorCurrencyInitial[i].name,
-                        arrayListCommonSelectorCurrencyInitial[i].code
+                        arrayListCommonSelectorCurrencyInitial[i].countryCode,
+                        arrayListCommonSelectorCurrencyInitial[i].currencyName,
+                        arrayListCommonSelectorCurrencyInitial[i].countryCode
                     )
                 )
             }

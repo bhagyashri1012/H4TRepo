@@ -136,4 +136,11 @@
         <item name="tabPaddingStart">8dp</item>
         <item name="tabPaddingEnd">8dp</item>
     </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:textColor">@color/white_grey</item>
+        <item name="android:background">@color/white_grey</item>
+    </style>
 </resources>

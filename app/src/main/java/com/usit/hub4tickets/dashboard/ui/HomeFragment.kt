@@ -65,6 +65,7 @@ class HomeFragment : Fragment() {
         imv_settings.setOnClickListener {
 
             val transaction = fragmentManager?.beginTransaction()
+            transaction?.setCustomAnimations(R.anim.enter_from_right, R.anim.slide_to_left)
             transaction?.replace(R.id.frame_layout_settings, SettingsFragment.newInstance()!!)
             transaction?.commit()
         }
@@ -99,4 +100,6 @@ class HomeFragment : Fragment() {
                 }
             }
     }
+
+
 }

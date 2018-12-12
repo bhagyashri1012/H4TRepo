@@ -768,4 +768,42 @@ object Utility {
         Log.e("loc addrs", countryCode + " " + language)
         return countryCode + " / " + language
     }
+
+
+    fun onMinusClick(textView: TextView, adults: Boolean) {
+        if (adults) {
+            if (Integer.parseInt(textView?.text.toString()) != 0 && Integer.parseInt(textView?.text.toString()) in 1..9) {
+                if (Integer.parseInt(textView?.text.toString()) in 2..9)
+                    textView.text = Integer.parseInt(textView?.text.toString()).minus(1).toString()
+                else
+                    textView?.text = "1"
+            } else {
+                textView?.text = "1"
+            }
+        } else {
+            if (Integer.parseInt(textView?.text.toString()) in 1..9)
+                textView.text = Integer.parseInt(textView?.text.toString()).minus(1).toString()
+            else
+                textView?.text = "0"
+        }
+    }
+
+
+    fun onAddClick(textView: TextView, adults: Boolean) {
+        if (adults) {
+            if (Integer.parseInt(textView?.text.toString()) != 0 && Integer.parseInt(textView?.text.toString()) in 1..9) {
+                if (Integer.parseInt(textView?.text.toString()) in 1..9)
+                    textView.text = Integer.parseInt(textView?.text.toString()).plus(1).toString()
+                else
+                    textView?.text = "1"
+            } else {
+                textView?.text = "1"
+            }
+        } else {
+            if (Integer.parseInt(textView?.text.toString()) in 0..9)
+                textView.text = Integer.parseInt(textView?.text.toString()).plus(1).toString()
+            else
+                textView?.text = "0"
+        }
+    }
 }

@@ -93,7 +93,11 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
         sign_in_button.setOnClickListener { attemptLogin() }
         sign_up_button.setOnClickListener { attemptSignUp() }
         forgot_pass_button.setOnClickListener { forgotPassword() }
-        tv_skip.setOnClickListener { redirectToDashboard() }
+        tv_skip.setOnClickListener {
+            Pref.setValue(this, PrefConstants.IS_LOGIN, false)
+            Pref.setValue(this, PrefConstants.IS_FIRST_TIME, true)
+            redirectToDashboard()
+        }
     }
 
     private fun attemptLogin() {
@@ -143,7 +147,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
     }
 
     override fun onBackPressed() {
-        if (!Pref.getValue(this, PrefConstants.IS_LOGIN,false)) {
+        if (!Pref.getValue(this, PrefConstants.IS_LOGIN, false)) {
             CustomDialogPresenter.showDialog(
                 this!!,
                 resources!!.getString(R.string.alert_exit),
@@ -161,11 +165,8 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
 
                     }
                 })
-        }else
-        {
+        } else {
             super.onBackPressed()
         }
     }
-
-
 }
