@@ -33,7 +33,6 @@ class APICallManager {
         // enable logging
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
-
         val client = OkHttpClient.Builder()
             .addInterceptor(interceptor)
             .build()
@@ -137,8 +136,8 @@ class APICallManager {
             return service.getCities(stateData)
         }
 
-        fun getSettingsData(userId: String, device_id: String): Flowable<DashboardViewModel.SettingsResponse> {
-            val settingsData = SettingsData(userId, device_id)
+        fun getSettingsData(userId: String, device_id: String,location: String, lang: String): Flowable<DashboardViewModel.SettingsResponse> {
+            val settingsData = SettingsData(userId, device_id,location,lang)
             return service.settingsData(settingsData)
         }
 

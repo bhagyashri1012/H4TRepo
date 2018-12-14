@@ -6,9 +6,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.ResultReceiver
+import android.provider.Settings
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
@@ -20,6 +22,7 @@ import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnSuccessListener
+import com.usit.hub4tickets.BuildConfig
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.presenters.DashboardPresenter
 import com.usit.hub4tickets.domain.presentation.screens.main.DashboardPresenterImpl
@@ -80,7 +83,6 @@ class DashboardActivity : AppCompatActivity() {
         return@OnNavigationItemSelectedListener true
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
@@ -130,7 +132,6 @@ class DashboardActivity : AppCompatActivity() {
             // and stored in the Bundle. If it was found, display the address string in the UI.
             if (savedInstanceState.keySet().contains(it)) {
                 addressOutput = savedInstanceState.getString(it)
-
             }
         }
     }
@@ -138,7 +139,6 @@ class DashboardActivity : AppCompatActivity() {
     private fun updateUIWidgets() {
         if (addressRequested) {
             fetchAddressButtonHandler()
-
         } else {
 
         }
@@ -147,7 +147,7 @@ class DashboardActivity : AppCompatActivity() {
     /**
      * Runs when user clicks the Fetch Address button.
      */
-    fun fetchAddressButtonHandler() {
+    private fun fetchAddressButtonHandler() {
         if (lastLocation != null) {
             startIntentService()
             return
@@ -231,11 +231,21 @@ class DashboardActivity : AppCompatActivity() {
                 return@OnSuccessListener
             }
             lastLocation = location
-            presenter.callAPISetLocation(
-                Pref.getValue(this, PrefConstants.USER_ID, "")!!,
-                Utility.getAddress(this, location.latitude, location.longitude).split("/")[0],
-                Utility.getAddress(this, location.latitude, location.longitude).split("/")[1]
+            Pref.setValue(
+                this,
+                PrefConstants.DEFAULT_LOCATION,
+                Utility.getAddress(this, location.latitude, location.longitude).split("/")[0].replace("\\s".toRegex(), "")
             )
+            Pref.setValue(
+                this,
+                PrefConstants.DEFAULT_LANGUAGE,
+                Utility.getAddress(this, location.latitude, location.longitude).split("/")[1].replace("\\s".toRegex(), "")
+            )
+            /* presenter.callAPISetLocation(
+                 Pref.getValue(this, PrefConstants.USER_ID, "")!!,
+                 Utility.getAddress(this, location.latitude, location.longitude).split("/")[0],
+                 Utility.getAddress(this, location.latitude, location.longitude).split("/")[1]
+             )*/
             // Determine whether a Geocoder is available.
             if (!Geocoder.isPresent()) {
                 Snackbar.make(
@@ -285,6 +295,25 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     /**
+     * Shows a [Snackbar].
+     * @param mainTextStringId The id for the string resource for the Snackbar text.
+     * @param actionStringId   The text of the action item.
+     * @param listener         The listener associated with the Snackbar action.
+     */
+    private fun showSnackbar(
+        mainTextStringId: Int,
+        actionStringId: Int,
+        listener: View.OnClickListener
+    ) {
+        Snackbar.make(
+            findViewById(android.R.id.content), getString(mainTextStringId),
+            Snackbar.LENGTH_INDEFINITE
+        )
+            .setAction(getString(actionStringId), listener)
+            .show()
+    }
+
+    /**
      * Return the current state of the permissions needed.
      */
     private fun checkPermissions(): Boolean {
@@ -304,17 +333,27 @@ class DashboardActivity : AppCompatActivity() {
         // request previously, but didn't check the "Don't ask again" checkbox.
         if (shouldProvideRationale) {
             Log.i(TAG, "Displaying permission rationale to provide additional context.")
-            ActivityCompat.requestPermissions(
-                this@DashboardActivity,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_PERMISSIONS_REQUEST_CODE
-            )
+
+            showSnackbar(R.string.permission_rationale, android.R.string.ok,
+                View.OnClickListener {
+                    // Request permission
+                    ActivityCompat.requestPermissions(
+                        this@DashboardActivity,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        REQUEST_PERMISSIONS_REQUEST_CODE
+                    )
+                })
+
         } else {
             Log.i(TAG, "Requesting permission")
             // Request permission. It's possible this can be auto answered if device policy
             // sets the permission in a given state or the user denied the permission
             // previously and checked "Never ask again".
-
+            ActivityCompat.requestPermissions(
+                this@DashboardActivity,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_PERMISSIONS_REQUEST_CODE
+            )
         }
     }
 
@@ -335,29 +374,25 @@ class DashboardActivity : AppCompatActivity() {
                 Log.i(TAG, "User interaction was cancelled.")
             grantResults[0] == PackageManager.PERMISSION_GRANTED -> // Permission granted.
                 getAddress()
-            else ->
-                Log.i(TAG, "User interaction was Permission denied.")
-            // Permission denied.
-            // Notify the user via a SnackBar that they have rejected a core permission for the
-            // app, which makes the Activity useless. In a real app, core permissions would
-            // typically be best requested during a welcome-screen flow.
-            // Additionally, it is important to remember that a permission might have been
-            // rejected without asking the user for permission (device policy or "Never ask
-            // again" prompts). Therefore, a user interface affordance is typically implemented
-            // when permissions are denied. Otherwise, your app could appear unresponsive to
-            // touches or interactions which have required permissions.
-            /* showSnackbar(R.string.permission_denied_explanation, R.string.settings,
-                 View.OnClickListener {
-                     // Build intent that displays the App settings screen.
-                     val intent = Intent().apply {
-                         action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                         data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
-                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                     }
-                     startActivity(intent)
-                 })*/
+            else -> // Permission denied.
+                // Notify the user via a SnackBar that they have rejected a core permission for the
+                // app, which makes the Activity useless. In a real app, core permissions would
+                // typically be best requested during a welcome-screen flow.
+                // Additionally, it is important to remember that a permission might have been
+                // rejected without asking the user for permission (device policy or "Never ask
+                // again" prompts). Therefore, a user interface affordance is typically implemented
+                // when permissions are denied. Otherwise, your app could appear unresponsive to
+                // touches or interactions which have required permissions.
+                showSnackbar(R.string.permission_denied_explanation, R.string.settings,
+                    View.OnClickListener {
+                        // Build intent that displays the App settings screen.
+                        val intent = Intent().apply {
+                            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        }
+                        startActivity(intent)
+                    })
         }
     }
-
-
 }

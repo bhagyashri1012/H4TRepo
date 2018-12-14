@@ -11,6 +11,8 @@ import com.usit.hub4tickets.domain.presentation.presenters.DashboardPresenter
 import com.usit.hub4tickets.domain.presentation.presenters.DashboardPresenter.MainView.ViewState.*
 import com.usit.hub4tickets.login.DashboardBaseInteractor
 import com.usit.hub4tickets.utils.Enums
+import com.usit.hub4tickets.utils.Pref
+import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
 import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 
@@ -32,7 +34,9 @@ class DashboardPresenterImpl(
         if (MainApplication.getInstance.isConnected()) {
             dashboardBaseInteractor.callAPIGetSettingsData(
                 Utility.getDeviceId(context = mContext),
-                userId
+                userId,
+                Pref.getValue(mContext, PrefConstants.DEFAULT_LOCATION, "")!!,
+                Pref.getValue(mContext, PrefConstants.DEFAULT_LANGUAGE, "")!!
             )
         } else {
             mView?.doRetrieveModel()?.errorMessage =
@@ -106,16 +110,6 @@ class DashboardPresenterImpl(
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
             dashboardBaseInteractor.callAPIGetLanguage()
-        } else {
-            mView?.doRetrieveModel()?.errorMessage =
-                    mView?.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
-            presentState(ERROR)
-        }
-    }
-    override fun callAPISetLocation(userId: String, locationCode: String, langId: String) {
-        if (MainApplication.getInstance.isConnected()) {
-            presentState(LOADING)
-            dashboardBaseInteractor.callAPISetLocation(userId,Utility.getDeviceId(context = mContext),locationCode,langId)
         } else {
             mView?.doRetrieveModel()?.errorMessage =
                     mView?.doRetrieveModel()?.context?.getString(R.string.message_no_internet)

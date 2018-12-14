@@ -53,5 +53,4 @@ interface DashboardPresenter : BasePresenter {
     fun callAPIGetCity(stateId: String)
     fun callAPIGetCurrency()
     fun callAPIGetLanguage()
-    fun callAPISetLocation(userId: String, location: String, language: String)
 }

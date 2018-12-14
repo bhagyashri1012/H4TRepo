@@ -31,7 +31,7 @@ class ErrorResponse() {
                     ErrorResponse(e.message).message
                 }
             }
-            return ErrorResponse("Unknown Error").message
+            return ErrorResponse("Please try again!").message
         }
     }
 }

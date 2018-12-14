@@ -39,14 +39,12 @@ class DashboardViewModel(var context: Context?) {
         val responseData: ResponseData?,
         @SerializedName("status")
         val status: String?
-    ) {
+    ) : Parcelable {
         data class ResponseData(
             @SerializedName("countryId")
             val countryId: Int,
             @SerializedName("countryName")
             val countryName: String,
-            @SerializedName("currencyId")
-            val currencyId: Int,
             @SerializedName("currencyName")
             val currencyName: String,
             @SerializedName("deviceId")
@@ -55,6 +53,8 @@ class DashboardViewModel(var context: Context?) {
             val languageId: Int,
             @SerializedName("languageName")
             val languageName: String,
+            @SerializedName("latestCurrencyId")
+            val latestCurrencyId: String,
             @SerializedName("userDetailsId")
             val userDetailsId: Int,
             @SerializedName("userId")
@@ -71,10 +71,10 @@ class DashboardViewModel(var context: Context?) {
             constructor(source: Parcel) : this(
                 source.readInt(),
                 source.readString(),
-                source.readInt(),
                 source.readString(),
                 source.readString(),
                 source.readInt(),
+                source.readString(),
                 source.readString(),
                 source.readInt(),
                 source.readInt()
@@ -85,16 +85,39 @@ class DashboardViewModel(var context: Context?) {
             override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
                 writeInt(countryId)
                 writeString(countryName)
-                writeInt(currencyId)
                 writeString(currencyName)
                 writeString(deviceId)
                 writeInt(languageId)
                 writeString(languageName)
+                writeString(latestCurrencyId)
                 writeInt(userDetailsId)
                 writeInt(userId)
             }
         }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<SettingsResponse> = object : Parcelable.Creator<SettingsResponse> {
+                override fun createFromParcel(source: Parcel): SettingsResponse = SettingsResponse(source)
+                override fun newArray(size: Int): Array<SettingsResponse?> = arrayOfNulls(size)
+            }
+        }
+
+        constructor(source: Parcel) : this(
+            source.readString(),
+            source.readParcelable<ResponseData>(ResponseData::class.java.classLoader),
+            source.readString()
+        )
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+            writeString(message)
+            writeParcelable(responseData, 0)
+            writeString(status)
+        }
     }
+
 
     data class CurrencyResponse(
         @Nullable
@@ -447,6 +470,8 @@ class DashboardViewModel(var context: Context?) {
             writeString(status)
         }
     }
+
+
 }
 
 

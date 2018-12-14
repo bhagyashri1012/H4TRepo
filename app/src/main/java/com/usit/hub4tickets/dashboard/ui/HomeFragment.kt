@@ -56,12 +56,13 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val firstAdapter = HorizontalAdapter(hotDealsImagesArray)
-        val firstRecyclerView = view.findViewById(R.id.recycler_view) as MultiSnapRecyclerView
-        val firstManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        firstRecyclerView.layoutManager = firstManager
-        firstRecyclerView.adapter = firstAdapter
-
+        if (!isResumed) {
+            val firstAdapter = HorizontalAdapter(hotDealsImagesArray)
+            val firstRecyclerView = view.findViewById(R.id.recycler_view) as MultiSnapRecyclerView
+            val firstManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            firstRecyclerView.layoutManager = firstManager
+            firstRecyclerView.adapter = firstAdapter
+        }
         imv_settings.setOnClickListener {
 
             val transaction = fragmentManager?.beginTransaction()

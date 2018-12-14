@@ -619,7 +619,7 @@ object Utility {
             context?.contentResolver,
             Settings.Secure.ANDROID_ID
         )
-        return deviceId
+        return "1234567890123456"
     }
 
     fun dateDialog(
@@ -644,7 +644,7 @@ object Utility {
         c: Calendar?,
         activity: Activity?,
         textView: TextView,
-        maxDate: Int
+        minDateNumber: Int
     ) {
         val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.US)
         var day = c!!.get(Calendar.DAY_OF_MONTH)
@@ -656,7 +656,9 @@ object Utility {
             textView.text = dateFormatter.format(newDate.time)
         }
         val dpDialog = DatePickerDialog(activity!!, listener, year, month, day)
-        dpDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+        val minDate = Calendar.getInstance()
+        minDate.add(Calendar.DAY_OF_YEAR, minDateNumber)
+        dpDialog.datePicker.minDate = minDate.timeInMillis
         val maxDate = Calendar.getInstance()
         maxDate.add(Calendar.YEAR, 1)
         dpDialog.datePicker.maxDate = maxDate.timeInMillis

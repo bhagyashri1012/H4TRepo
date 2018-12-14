@@ -45,7 +45,10 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
             DashboardPresenter.MainView.ViewState.SUCCESS -> setData(
                 model.settingsDomain.responseData?.countryName,
                 model.settingsDomain.responseData?.languageName,
-                model.settingsDomain.responseData?.currencyName
+                model.settingsDomain.responseData?.currencyName,
+                model.settingsDomain.responseData?.countryId.toString(),
+                model.settingsDomain.responseData?.languageId.toString(),
+                model.settingsDomain.responseData?.latestCurrencyId.toString()
             )
             DashboardPresenter.MainView.ViewState.COUNTRY_SUCCESS -> {
                 Utility.showProgress(false, context)
@@ -93,11 +96,36 @@ class SettingsFragment : Fragment(), DashboardPresenter.MainView {
         setData(
             Pref.getValue(context, PrefConstants.COUNTRY, ""),
             Pref.getValue(context, PrefConstants.LANGUAGE, ""),
-            Pref.getValue(context, PrefConstants.CURRENCY, "")
+            Pref.getValue(context, PrefConstants.CURRENCY, ""),
+            Pref.getValue(context, PrefConstants.COUNTRY_ID, ""),
+            Pref.getValue(context, PrefConstants.LANGUAGE_ID, ""),
+            Pref.getValue(context, PrefConstants.CURRENCY_ID, "")
         )
     }
 
-    private fun setData(countryName: String?, languageName: String?, currencyName: String?) {
+    private fun setData(
+        countryName: String?,
+        languageName: String?,
+        currencyName: String?,
+        countryId: String?,
+        languageId: String?,
+        latestCurrencyId: String?
+    ) {
+        Pref.setValue(
+            context,
+            PrefConstants.COUNTRY_ID,
+            countryId!!
+        )
+        Pref.setValue(
+            context,
+            PrefConstants.LANGUAGE_ID,
+            languageId!!
+        )
+        Pref.setValue(
+            context,
+            PrefConstants.CURRENCY_ID,
+            latestCurrencyId!!
+        )
         tv_settings_country_name.text = countryName
         tv_settings_language_name.text = languageName
         tv_settings_currency_name.text = currencyName

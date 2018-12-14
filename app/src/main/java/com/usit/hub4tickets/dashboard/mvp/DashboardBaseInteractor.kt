@@ -15,9 +15,9 @@ import io.reactivex.schedulers.Schedulers
  */
 class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICallListener) :
     BaseInteractor {
-    fun callAPIGetSettingsData(device_id: String, userId: String) {
+    fun callAPIGetSettingsData(device_id: String, userId: String, location: String, lang: String) {
         val route = Enums.APIRoute.GET_SAMPLE
-        val call = APICallManager.getInstance.apiManager.getSettingsData(device_id, userId)
+        val call = APICallManager.getInstance.apiManager.getSettingsData(device_id, userId, location, lang)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
         call.subscribe(

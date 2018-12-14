@@ -467,8 +467,8 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                 }
             }
         }
-        tv_departure.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_departure, 12) }
-        tv_return.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_return, 12) }
+        tv_departure.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_departure, 0) }
+        tv_return.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_return, 1) }
         btn_class.setOnClickListener { selectTravelClass() }
         btn_passengers.setOnClickListener { selectTravelClass() }
         im_btn_search.setOnClickListener {

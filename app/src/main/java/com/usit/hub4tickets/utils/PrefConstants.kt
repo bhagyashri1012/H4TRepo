@@ -25,6 +25,8 @@ interface PrefConstants {
         val PROFILE_COUNTRY_ID = "PROFILE_COUNTRY_ID"
         val STATE_ID = "STATE_ID"
         val CITY_ID = "CITY_ID"
+        val DEFAULT_LOCATION="DEFAULT_LOCATION"
+        val DEFAULT_LANGUAGE="DEFAULT_LANGUAGE"
     }
 
 }

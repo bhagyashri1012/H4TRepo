@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginRight="@dimen/activity_vertical_margin"
@@ -17,12 +17,14 @@
                   style="@style/CustomRegularTextView"
                   android:layout_weight="1"
                   android:text="Pune - Mumbai"
+                  android:textStyle="bold"
                   android:layout_marginBottom="@dimen/margin_4dp"
                   android:maxLines="2"
         />
         <TextView android:id="@+id/trip_date"
                   style="@style/CustomRegularTextView"
                   android:text="Thursday 16 Nov"
+                  android:textStyle="bold"
                   android:maxLines="2"
                   android:layout_weight="1"
                   android:textAlignment="viewEnd"
@@ -32,7 +34,7 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
                   android:background="@drawable/grey_border"
                   android:orientation="vertical"
-                  android:padding="@dimen/activity_vertical_margin">
+                  android:padding="@dimen/activity_vertical_margin_half">
         <LinearLayout
                 android:id="@+id/ll_main"
                 android:layout_width="match_parent"
@@ -51,7 +53,8 @@
             >
 
                 <TextView android:id="@+id/tv_destination"
-                          style="@style/CustomMediumTextView"
+                          style="@style/CustomRegularTextView"
+                          android:layout_marginBottom="@dimen/activity_vertical_margin_half"
                           android:text="BOM-PNQ "
                           android:maxLines="2"
                 />
@@ -71,10 +74,10 @@
             >
 
                 <TextView android:id="@+id/tv_time"
-                          style="@style/CustomSmallTextView"
+                          style="@style/CustomRegularTextView"
                           android:text="2.14am - 4.25am"
                           android:textAlignment="viewEnd"
-                          android:layout_marginBottom="@dimen/margin_4dp"
+                          android:layout_marginBottom="@dimen/activity_vertical_margin_half"
                           android:maxLines="2"
                           android:layout_gravity="end"/>
                 <TextView
@@ -157,19 +160,18 @@
         >
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
                 <ImageView android:layout_width="25dp" android:layout_height="25dp"
-                           android:src="@drawable/flight"/>
+                           app:srcCompat="@drawable/ic_flight"/>
                 <ImageView android:layout_width="25dp" android:layout_height="25dp"
-                           android:src="@drawable/flight"/>
+                           app:srcCompat="@drawable/ic_flight"/>
                 <ImageView android:layout_width="25dp" android:layout_height="25dp"
-                           android:src="@drawable/flight"/>
+                           app:srcCompat="@drawable/ic_flight"/>
                 <ImageView android:layout_width="25dp" android:layout_height="25dp"
-                           android:src="@drawable/flight"/>
+                           app:srcCompat="@drawable/ic_flight"/>
             </LinearLayout>
             <TextView
                     android:text="@string/see_details"
-                    android:layout_gravity="end"
-                    android:textColor="@android:color/holo_blue_light"
-                    android:maxLines="2"
+                    android:layout_gravity="end|bottom"
+                    android:maxLines="1"
                     android:gravity="end|right"
                     android:textAlignment="viewEnd"
                     android:layout_weight="1"

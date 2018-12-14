@@ -28,10 +28,11 @@
                         app:srcCompat="@drawable/ic_settings"
                         android:layout_alignParentRight="true"/>
 
-                <ImageView android:layout_width="150dp"
-                           android:layout_height="120dp"
+                <ImageView android:layout_width="140dp"
+                           android:layout_height="100dp"
                            android:layout_centerInParent="true"
                            android:layout_below="@+id/imv_settings"
+                           android:layout_marginBottom="@dimen/activity_vertical_margin"
                            android:src="@drawable/splash"/>
             </RelativeLayout>
             <RelativeLayout android:layout_width="match_parent"
@@ -51,7 +52,8 @@
                                 android:id="@+id/imv_flight"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/icon_height_img"
-                                app:srcCompat="@drawable/flight"
+                                android:layout_marginBottom="@dimen/padding_8dp"
+                                app:srcCompat="@drawable/ic_flight"
                                 android:layout_alignParentRight="true"/>
                         <TextView
                                 style="@style/CustomRegularTextView"
@@ -69,7 +71,8 @@
                                 android:id="@+id/imv_hotels"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/icon_height_img"
-                                app:srcCompat="@drawable/hotel"
+                                android:layout_marginBottom="@dimen/padding_8dp"
+                                app:srcCompat="@drawable/ic_hotels"
                                 android:layout_alignParentRight="true"/>
                         <TextView
                                 style="@style/CustomRegularTextView"
@@ -89,7 +92,8 @@
                                 android:id="@+id/imv_sports"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/icon_height_img"
-                                app:srcCompat="@drawable/sport"
+                                android:layout_marginBottom="@dimen/padding_8dp"
+                                app:srcCompat="@drawable/ic_sports"
                                 android:layout_alignParentRight="true"
                         />
                         <TextView
@@ -107,7 +111,8 @@
                                 android:id="@+id/imv_events"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/icon_height_img"
-                                app:srcCompat="@drawable/event"
+                                android:layout_marginBottom="@dimen/padding_8dp"
+                                app:srcCompat="@drawable/ic_event"
                                 android:layout_alignParentRight="true"
                         />
                         <TextView

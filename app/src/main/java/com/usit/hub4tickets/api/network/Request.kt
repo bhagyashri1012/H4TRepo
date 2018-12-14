@@ -41,14 +41,16 @@ data class ResetPassword(
 
 data class SettingsData(
     val deviceId: String,
-    var userId: String
+    var userId: String,
+    var location: String,
+    var language: String
 )
 
 data class SaveSettingsData(
     val deviceId: String,
     var userId: String,
     var countryId: String,
-    var currencyId: String,
+    var latestCurrencyId: String,
     var languageId: String
 )
 
