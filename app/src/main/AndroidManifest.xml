@@ -19,6 +19,7 @@
                 android:configChanges="orientation|keyboardHidden|screenSize"
                 android:launchMode="singleTop"
                 android:screenOrientation="portrait"
+                android:noHistory="true"
                 android:theme="@style/NoActionBarAppTheme"/>
         <activity
                 android:name=".SplashActivity"

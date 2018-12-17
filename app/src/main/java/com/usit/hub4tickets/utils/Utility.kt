@@ -39,6 +39,7 @@ import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 
 /**
  * Created by Bhagyashri Burade
@@ -772,18 +773,23 @@ object Utility {
     }
 
 
-    fun onMinusClick(textView: TextView, adults: Boolean) {
+    fun onMinusClick(textView: TextView, adults: Boolean, infants: Boolean) {
         if (adults) {
-            if (Integer.parseInt(textView?.text.toString()) != 0 && Integer.parseInt(textView?.text.toString()) in 1..9) {
-                if (Integer.parseInt(textView?.text.toString()) in 2..9)
+            if (Integer.parseInt(textView?.text.toString()) != 0 && Integer.parseInt(textView?.text.toString()) in 1..7) {
+                if (Integer.parseInt(textView?.text.toString()) in 2..7)
                     textView.text = Integer.parseInt(textView?.text.toString()).minus(1).toString()
                 else
                     textView?.text = "1"
             } else {
                 textView?.text = "1"
             }
+        } else if (infants) {
+            if (Integer.parseInt(textView?.text.toString()) in 1..2)
+                textView.text = Integer.parseInt(textView?.text.toString()).minus(1).toString()
+            else
+                textView?.text = "0"
         } else {
-            if (Integer.parseInt(textView?.text.toString()) in 1..9)
+            if (Integer.parseInt(textView?.text.toString()) in 1..7)
                 textView.text = Integer.parseInt(textView?.text.toString()).minus(1).toString()
             else
                 textView?.text = "0"
@@ -791,21 +797,38 @@ object Utility {
     }
 
 
-    fun onAddClick(textView: TextView, adults: Boolean) {
+    fun onAddClick(textView: TextView, adults: Boolean, infants: Boolean) {
         if (adults) {
-            if (Integer.parseInt(textView?.text.toString()) != 0 && Integer.parseInt(textView?.text.toString()) in 1..9) {
-                if (Integer.parseInt(textView?.text.toString()) in 1..9)
+            if (Integer.parseInt(textView?.text.toString()) != 0 && Integer.parseInt(textView?.text.toString()) in 1..7) {
+                if (Integer.parseInt(textView?.text.toString()) in 1..7)
                     textView.text = Integer.parseInt(textView?.text.toString()).plus(1).toString()
                 else
                     textView?.text = "1"
             } else {
                 textView?.text = "1"
             }
-        } else {
-            if (Integer.parseInt(textView?.text.toString()) in 0..9)
+        } else if (infants) {
+            if (Integer.parseInt(textView?.text.toString()) in 0..2)
                 textView.text = Integer.parseInt(textView?.text.toString()).plus(1).toString()
             else
                 textView?.text = "0"
+        } else {
+            if (Integer.parseInt(textView?.text.toString()) in 0..7)
+                textView.text = Integer.parseInt(textView?.text.toString()).plus(1).toString()
+            else
+                textView?.text = "0"
+        }
+    }
+
+    fun isEmailValid(email: String): Boolean {
+        return try {
+            val pattern =
+                Pattern.compile("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
+            val matcher = pattern.matcher(email)
+            matcher.matches()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
     }
 }

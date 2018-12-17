@@ -1,5 +1,7 @@
 package com.usit.hub4tickets.flight.adapter
 
+import android.content.Context
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
@@ -8,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.flight.model.FlightViewModel
 
+
 class TextItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val textView: TextView = itemView.findViewById(R.id.list_item) as TextView
     fun bind(text: String) {
@@ -15,6 +18,7 @@ class TextItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
 }
+
 class TextItemViewHolderForCommonSearch(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val textView: TextView = itemView.findViewById(R.id.list_item) as TextView
     val textCountryView: TextView = itemView.findViewById(R.id.list_sub_item) as TextView
@@ -24,6 +28,7 @@ class TextItemViewHolderForCommonSearch(itemView: View) : RecyclerView.ViewHolde
     }
 
 }
+
 class TextItemViewForTripDetailsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val tripTitle: TextView = itemView.findViewById(R.id.trip_title) as TextView
     private val tripDate: TextView = itemView.findViewById(R.id.trip_date) as TextView
@@ -31,7 +36,8 @@ class TextItemViewForTripDetailsHolder(itemView: View) : RecyclerView.ViewHolder
     private val tripDestinatn: TextView = itemView.findViewById(R.id.tv_destination) as TextView
     private val tripDuration: TextView = itemView.findViewById(R.id.tv_duration) as TextView
     private val tripAirline: TextView = itemView.findViewById(R.id.tv_airline) as TextView
-    fun bind(tripDetailsResponse: FlightViewModel.TripAllDetails) {
+    private val rvStopDetails: RecyclerView = itemView.findViewById(R.id.recycler_view_stop_details) as RecyclerView
+    fun bind(tripDetailsResponse: FlightViewModel.TripAllDetails, context: Context?) {
         tripTitle.text = tripDetailsResponse?.fromCity + " - " +
                 tripDetailsResponse?.toCity
         tripDate.text = tripDetailsResponse?.startDate
@@ -43,7 +49,34 @@ class TextItemViewForTripDetailsHolder(itemView: View) : RecyclerView.ViewHolder
                     tripDetailsResponse?.airline
             tripDuration.text = tripDetailsResponse?.duration
             tripAirline.text = tripDetailsResponse?.airline
+            val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            rvStopDetails!!.layoutManager = layoutManager
+            if (null != tripDetailsResponse?.stopDetailsInBound) {
+                val adapter = StopDetailsViewAdapter(tripDetailsResponse?.stopDetailsInBound, null)
+                rvStopDetails!!.adapter = adapter
+            }
+            if (null != tripDetailsResponse?.stopDetailsOutBound) {
+                val adapter = StopDetailsViewAdapter(null, tripDetailsResponse?.stopDetailsOutBound)
+                rvStopDetails!!.adapter = adapter
+            }
         }
+    }
+}
+
+class TextItemViewForStopDetailsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private val tvStopDuration: TextView = itemView.findViewById(R.id.tv_stop_duration) as TextView
+    val divider: View = itemView.findViewById(R.id.line) as View
+    fun bindStopDetails(
+        inBoundStopDetail: FlightViewModel.FlightListResponse.ResponseData.InbondFlightDetails.StopDetail?,
+        outBoundStopDetail: FlightViewModel.FlightListResponse.ResponseData.OutbondFlightDetails.StopDetail?
+    ) = if (null != inBoundStopDetail) {
+        tvStopDuration.text = inBoundStopDetail?.startTime
+    } else {
+        tvStopDuration.text = outBoundStopDetail?.startTime
+    }
+
+    fun lineVisiblity(gone: Int) {
+        divider.visibility = gone
     }
 }
 

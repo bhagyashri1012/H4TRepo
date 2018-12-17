@@ -3,7 +3,6 @@ package com.usit.hub4tickets.flight.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -35,7 +34,7 @@ import java.util.*
  * Date: 24/10/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, FlightPresenter.MainView {
+class FragmentOneWay : RootFragment(), RecyclerViewAdapter.OnItemClickListener, FlightPresenter.MainView {
 
     val c = Calendar.getInstance()
     private var isItemClicked: Boolean = false
@@ -50,8 +49,7 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
     private var recyclerView: RecyclerView? = null
     private lateinit var model: FlightViewModel
     private lateinit var presenter: FlightPresenter
-    private var dataListSortBy: ArrayList<CommonSelectorPojo>? = ArrayList()
-    private var dataListTravelClass: ArrayList<CommonSelectorPojo>? = ArrayList()
+
     var adapter: RecyclerViewAdapter? = RecyclerViewAdapter(
         items = emptyList(),
         listener = null
@@ -170,10 +168,13 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         edt_from.error = null//removes error
         edt_to.error = null
     }
-
+    private var dataListSortBy: ArrayList<CommonSelectorPojo>? =null
+    private var dataListTravelClass: ArrayList<CommonSelectorPojo>? =null
     private fun init() {
         this.model = FlightViewModel(context)
         this.presenter = FlightPresenterImpl(this, context)
+        dataListSortBy = ArrayList()
+        dataListTravelClass= ArrayList()
         //sort by
         dataListSortBy?.add(
             CommonSelectorPojo(
@@ -315,23 +316,26 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
         dialogView.ll_apply.visibility = View.VISIBLE
         dialogView.tv_dialog_header.text = getString(R.string.passenger_information)
         dialogView.tv_dialog_header_rcv.text = getString(R.string.cabin_class)
+        dialogView.tv_quantity_adult.text = adults
+        dialogView.tv_quantity_children.text = childrens
+        dialogView.tv_quantity_infants.text = infants
         dialogView.imv_minus_adult.setOnClickListener {
-            Utility.onMinusClick(dialogView.tv_quantity_adult, true)
+            Utility.onMinusClick(dialogView.tv_quantity_adult, true, false)
         }
         dialogView.imv_plus_adult.setOnClickListener {
-            Utility.onAddClick(dialogView.tv_quantity_adult, true)
+            Utility.onAddClick(dialogView.tv_quantity_adult, true, false)
         }
         dialogView.imv_minus_children.setOnClickListener {
-            Utility.onMinusClick(dialogView.tv_quantity_children, false)
+            Utility.onMinusClick(dialogView.tv_quantity_children, false, false)
         }
         dialogView.imv_plus_children.setOnClickListener {
-            Utility.onAddClick(dialogView.tv_quantity_children, false)
+            Utility.onAddClick(dialogView.tv_quantity_children, false, false)
         }
         dialogView.imv_minus_infants.setOnClickListener {
-            Utility.onMinusClick(dialogView.tv_quantity_infants, false)
+            Utility.onMinusClick(dialogView.tv_quantity_infants, false, true)
         }
         dialogView.imv_plus_infants.setOnClickListener {
-            Utility.onAddClick(dialogView.tv_quantity_infants, false)
+            Utility.onAddClick(dialogView.tv_quantity_infants, false, true)
         }
         dialogView.button_dialog_apply.setOnClickListener {
             adults = dialogView.tv_quantity_adult.text.toString()
@@ -340,7 +344,7 @@ class FragmentOneWay : Fragment(), RecyclerViewAdapter.OnItemClickListener, Flig
             btn_passengers.text = dialogView.tv_quantity_adult.text.toString() + " Adult " +
                     dialogView.tv_quantity_children.text.toString() + " Children " +
                     dialogView.tv_quantity_infants.text.toString() + " Infants "
-            btn_class.text=travelClassCode
+            btn_class.text = travelClassCode
             dialogBuilder.dismiss()
         }
         dialogView.button_dialog_cancel.setOnClickListener {

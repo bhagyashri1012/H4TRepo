@@ -51,8 +51,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     private var recyclerView: RecyclerView? = null
     private lateinit var model: FlightViewModel
     private lateinit var presenter: FlightPresenter
-    private var dataListSortBy: ArrayList<CommonSelectorPojo>? = ArrayList()
-    private var dataListTravelClass: ArrayList<CommonSelectorPojo>? = ArrayList()
+
     private val dataListAll: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? = ArrayList()
     var adapter: RecyclerViewAdapter? = RecyclerViewAdapter(
         items = emptyList(),
@@ -67,6 +66,10 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         super.onViewCreated(view, savedInstanceState)
         init()
         setDataAndListeners(view)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
     }
 
     override fun doRetrieveModel(): FlightViewModel = this.model
@@ -97,6 +100,8 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             }
             ERROR
             -> {
+                dataListAll?.clear()
+                adapter?.notifyDataSetChanged()
                 presenter.presentState(IDLE)
                 Utility.showCustomDialog(context, doRetrieveModel().errorMessage.message, "", null)
             }
@@ -307,23 +312,27 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         dialogView.ll_apply.visibility = View.VISIBLE
         dialogView.tv_dialog_header.text = getString(R.string.passenger_information)
         dialogView.tv_dialog_header_rcv.text = getString(R.string.cabin_class)
+        dialogView.tv_quantity_adult.text = adults
+        dialogView.tv_quantity_children.text = childrens
+        dialogView.tv_quantity_infants.text = infants
+
         dialogView.imv_minus_adult.setOnClickListener {
-            Utility.onMinusClick(dialogView.tv_quantity_adult, true)
+            Utility.onMinusClick(dialogView.tv_quantity_adult, true, false)
         }
         dialogView.imv_plus_adult.setOnClickListener {
-            Utility.onAddClick(dialogView.tv_quantity_adult, true)
+            Utility.onAddClick(dialogView.tv_quantity_adult, true, false)
         }
         dialogView.imv_minus_children.setOnClickListener {
-            Utility.onMinusClick(dialogView.tv_quantity_children, false)
+            Utility.onMinusClick(dialogView.tv_quantity_children, false, false)
         }
         dialogView.imv_plus_children.setOnClickListener {
-            Utility.onAddClick(dialogView.tv_quantity_children, false)
+            Utility.onAddClick(dialogView.tv_quantity_children, false, false)
         }
         dialogView.imv_minus_infants.setOnClickListener {
-            Utility.onMinusClick(dialogView.tv_quantity_infants, false)
+            Utility.onMinusClick(dialogView.tv_quantity_infants, false, true)
         }
         dialogView.imv_plus_infants.setOnClickListener {
-            Utility.onAddClick(dialogView.tv_quantity_infants, false)
+            Utility.onAddClick(dialogView.tv_quantity_infants, false, true)
         }
         dialogView.button_dialog_apply.setOnClickListener {
             adults = dialogView.tv_quantity_adult.text.toString()
@@ -358,9 +367,13 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         dialogBuilder.show()
     }
 
+    private var dataListSortBy: java.util.ArrayList<CommonSelectorPojo>? = null
+    private var dataListTravelClass: java.util.ArrayList<CommonSelectorPojo>? = null
     private fun init() {
         this.model = FlightViewModel(context)
         this.presenter = FlightPresenterImpl(this, context)
+        dataListSortBy = java.util.ArrayList()
+        dataListTravelClass = java.util.ArrayList()
         //sort by
         dataListSortBy?.add(
             CommonSelectorPojo(

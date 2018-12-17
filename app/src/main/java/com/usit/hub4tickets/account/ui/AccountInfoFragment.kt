@@ -34,7 +34,13 @@ class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
             ProfilePresenter.MainView.ViewState.ERROR
             -> {
                 presenter.presentState(ProfilePresenter.MainView.ViewState.IDLE)
-                Utility.showCustomDialog(null, doRetrieveProfileModel().errorMessage,"", null)
+                showProgress(false)
+                Utility.showCustomDialog(
+                    context,
+                    doRetrieveProfileModel().errorMessage,
+                    "",
+                    null
+                )
             }
         }
     }

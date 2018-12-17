@@ -19,6 +19,7 @@ import com.usit.hub4tickets.utils.Constant
 import com.usit.hub4tickets.utils.Pref
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
+import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 import kotlinx.android.synthetic.main.activity_personal_info.*
 import kotlinx.android.synthetic.main.common_toolbar.*
 
@@ -75,7 +76,13 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             DashboardPresenter.MainView.ViewState.ERROR
             -> {
                 presenterDashboard.presentState(DashboardPresenter.MainView.ViewState.IDLE)
-                Utility.showCustomDialog(null, doRetrieveModel().errorMessage, "", null)
+                showProgress(false)
+                Utility.showCustomDialog(
+                    this,
+                    doRetrieveProfileModel().errorMessage,
+                    "",
+                    null
+                )
             }
         }
     }
@@ -134,7 +141,19 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             ERROR
             -> {
                 presenter.presentState(IDLE)
-                showDialog(null, doRetrieveProfileModel().errorMessage)
+                showProgress(false)
+                Utility.showCustomDialog(
+                    this,
+                    doRetrieveProfileModel().errorMessage,
+                    "",
+                    object : CustomDialogPresenter.CustomDialogView {
+                        override fun onPositiveButtonClicked() {
+                            presenter.presentState(UPDATE_SUCCESS)
+                        }
+
+                        override fun onNegativeButtonClicked() {
+                        }
+                    })
             }
         }
     }
@@ -185,7 +204,7 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             edt_email.error = getString(R.string.error_field_required)
             focusView = edt_email
             cancel = true
-        } else if (!isEmailValid(emailStr)) {
+        } else if (!Utility.isEmailValid(emailStr)) {
             edt_email.error = getString(R.string.error_invalid_email)
             focusView = edt_email
             cancel = true
@@ -227,9 +246,6 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             Utility.hideProgressBar()
     }
 
-    private fun isEmailValid(email: String): Boolean {
-        return email.contains("@")
-    }
 
     private fun isPhoneNumber(password: String): Boolean {
         return password.length > 8

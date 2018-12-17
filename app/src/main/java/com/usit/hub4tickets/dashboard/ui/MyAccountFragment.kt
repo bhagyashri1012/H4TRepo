@@ -71,7 +71,7 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
             link_login.isClickable = false
         } else {
             link_login.visibility = View.VISIBLE
-            link_login.text = "Login"
+            link_login.text = "Log In"
             link_login.isClickable = true
             rl_my_acc_info.visibility = View.GONE
             link_log_out.visibility = View.GONE

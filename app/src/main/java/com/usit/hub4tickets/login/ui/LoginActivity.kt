@@ -18,6 +18,7 @@ import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
 import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.common_toolbar.*
 
 /**
  * Created by Bhagyashri Burade
@@ -36,6 +37,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
         init()
         setClickListeners()
     }
@@ -93,6 +95,10 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
         sign_in_button.setOnClickListener { attemptLogin() }
         sign_up_button.setOnClickListener { attemptSignUp() }
         forgot_pass_button.setOnClickListener { forgotPassword() }
+        if (Pref.getValue(this@LoginActivity, PrefConstants.IS_FIRST_TIME, false))
+            tv_skip.visibility = View.GONE
+        else
+            tv_skip.visibility = View.VISIBLE
         tv_skip.setOnClickListener {
             Pref.setValue(this, PrefConstants.IS_LOGIN, false)
             Pref.setValue(this, PrefConstants.IS_FIRST_TIME, true)
@@ -112,7 +118,7 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
             edt_email_login.error = getString(R.string.error_field_required_email)
             focusView = edt_email_login
             cancel = true
-        } else if (!isEmailValid(emailStr)) {
+        } else if (!Utility.isEmailValid(emailStr)) {
             edt_email_login.error = getString(R.string.error_invalid_email)
             focusView = edt_email_login
             cancel = true
@@ -138,9 +144,6 @@ class LoginActivity : BaseActivity(), LoginPresenter.MainView {
         }
     }
 
-    private fun isEmailValid(email: String): Boolean {
-        return email.contains("@")
-    }
 
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 2

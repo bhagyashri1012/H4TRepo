@@ -71,7 +71,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
         }
     }
 
-    override fun onAPICallFailed(route: Enums.APIRoute, message: String) {
+    override fun onAPICallFailed(route: Enums.APIRoute, message: String?) {
         Utility.hideProgressBar()
         mView.doRetrieveModel().errorMessage = message
         presentState(ERROR)

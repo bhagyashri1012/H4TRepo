@@ -14,6 +14,8 @@ import com.usit.hub4tickets.domain.presentation.screens.main.LoginPresenterImpl
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
 import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.activity_forgot_password.*
+import kotlinx.android.synthetic.main.activity_signup.*
+import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.forgot_password_dialog.view.*
 import kotlinx.android.synthetic.main.verify_otp_dialog.view.*
 
@@ -27,6 +29,7 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgot_password)
         title = resources.getString(R.string.action_forgot_password)
+        mainToolbar.setNavigationOnClickListener { onBackPressed() }
         init()
         setClickListeners()
     }
@@ -46,7 +49,7 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
             LoginPresenter.MainView.ViewState.CHANGE_PASSWORD_SUCCESS -> redirectToLogin()
             LoginPresenter.MainView.ViewState.ERROR -> {
                 presenter.presentState(LoginPresenter.MainView.ViewState.IDLE)
-                Utility.showCustomDialog(this, doRetrieveModel().errorMessage,"", null)
+                Utility.showCustomDialog(this, doRetrieveModel().errorMessage, "", null)
             }
         }
     }
@@ -63,12 +66,12 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
     private fun init() {
         this.model = LoginViewModel(this)
         this.presenter = LoginPresenterImpl(this, this)
+
     }
 
     private fun setClickListeners() {
         send_otp_button.setOnClickListener {
-            email = edt_email_forgot_password.text.toString()
-            presenter.callSendOtpAPI(Utility.getDeviceId(this), edt_email_forgot_password.text.toString())
+            attemptSendOtp()
         }
     }
 
@@ -179,5 +182,27 @@ class ForgotPasswordActivity : BaseActivity(), LoginPresenter.MainView {
 
     private fun redirectToLogin() {
         onBackPressed()
+    }
+
+    private fun attemptSendOtp() {
+        edt_email_forgot_password.error = null
+        val emailStr = edt_email_forgot_password.text.toString()
+        var cancel = false
+        var focusView: View? = null
+        if (TextUtils.isEmpty(emailStr)) {
+            edt_email_forgot_password.error = getString(R.string.error_field_required_email)
+            focusView = edt_email_forgot_password
+            cancel = true
+        } else if (!Utility.isEmailValid(emailStr)) {
+            edt_email_forgot_password.error = getString(R.string.error_invalid_email)
+            focusView = edt_email_forgot_password
+            cancel = true
+        }
+        if (cancel) {
+            focusView?.requestFocus()
+        } else {
+            showProgress(true)
+            presenter.callSendOtpAPI(Utility.getDeviceId(this), edt_email_forgot_password.text.toString())
+        }
     }
 }

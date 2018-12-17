@@ -17,7 +17,8 @@ class TripDetailsActivity : BaseActivity() {
     private val dataListAll: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? = ArrayList()
     var adapter: TripDetailsViewAdapter? = TripDetailsViewAdapter(
         items = emptyList(),
-        listener = null
+        listener = null,
+        context = this
     )
 
     override fun getLayoutResource(): Int {
@@ -97,7 +98,8 @@ class TripDetailsActivity : BaseActivity() {
                 }
             }
         }
-        adapter = TripDetailsViewAdapter(tripDetailsArrayList, null)
+        adapter = TripDetailsViewAdapter(tripDetailsArrayList, null, this)
         recycler_view!!.adapter = adapter
     }
 }
+

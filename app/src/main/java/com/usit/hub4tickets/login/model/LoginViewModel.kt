@@ -17,13 +17,16 @@ class LoginViewModel(var context: Context?) {
         LoginResponse(responseData = null, message = null, status = null, timeStamp = null)
 
     data class LoginResponse(
+        @Nullable
         @SerializedName("responseData")
         val responseData: ResponseData?,
         @Nullable
         @SerializedName("message")
         var message: String?,
+        @Nullable
         @SerializedName("status")
         val status: String?,
+        @Nullable
         @SerializedName("timeStamp")
         val timeStamp: String?
     )

@@ -15,6 +15,7 @@ import com.usit.hub4tickets.domain.presentation.screens.main.SignUpViewModel
 import com.usit.hub4tickets.login.ui.LoginActivity
 import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.activity_signup.*
+import kotlinx.android.synthetic.main.common_toolbar.*
 
 /**
  * Created by Bhagyashri Burade
@@ -48,6 +49,7 @@ class SignUpActivity : BaseActivity(), SignUpPresenter.MainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
         title = resources.getString(R.string.action_sign_up)
+        mainToolbar.setNavigationOnClickListener { onBackPressed() }
         init()
     }
 
@@ -94,7 +96,7 @@ class SignUpActivity : BaseActivity(), SignUpPresenter.MainView {
             edt_email.error = getString(R.string.error_field_required_email)
             focusView = edt_email
             cancel = true
-        } else if (!isEmailValid(emailStr)) {
+        } else if (!Utility.isEmailValid(emailStr)) {
             edt_email.error = getString(R.string.error_invalid_email)
             focusView = edt_email
             cancel = true
@@ -125,10 +127,6 @@ class SignUpActivity : BaseActivity(), SignUpPresenter.MainView {
             showProgress(true)
             presenter.callAPI(edt_email.text.toString(), edt_password.text.toString(), check.toString())
         }
-    }
-
-    private fun isEmailValid(email: String): Boolean {
-        return email.contains("@")
     }
 
     private fun isPasswordValid(password: String): Boolean {

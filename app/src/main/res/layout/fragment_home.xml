@@ -85,7 +85,6 @@
                     <LinearLayout android:layout_width="@dimen/height_0dp"
                                   android:layout_height="wrap_content"
                                   android:layout_marginRight="@dimen/activity_vertical_margin_half"
-
                                   android:layout_weight="1"
                                   android:orientation="vertical">
                         <ImageView

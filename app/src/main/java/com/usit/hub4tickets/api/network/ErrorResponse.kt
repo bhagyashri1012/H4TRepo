@@ -25,7 +25,10 @@ class ErrorResponse() {
                     val jsonString = throwable.response().errorBody()!!.string()
                     val gson = Gson()
                     val rootResponseModel = gson.fromJson(jsonString, RootResponseModel::class.java)
-                    rootResponseModel.message
+                    if (null != rootResponseModel.message)
+                        rootResponseModel.message
+                    else
+                        ErrorResponse("API Error,Please try again!").message
                 } catch (e: IOException) {
                     Log.e("API Error", e.message)
                     ErrorResponse(e.message).message

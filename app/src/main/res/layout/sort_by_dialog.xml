@@ -10,7 +10,7 @@
     <TextView
             android:id="@+id/tv_dialog_header"
             android:layout_gravity="center_horizontal"
-            style="@style/CustomLargeBoldDialogHeader"
+            style="@style/CustomRegularBoldTextView"
     />
     <LinearLayout
             android:id="@+id/ll_passenger_info"
@@ -126,7 +126,7 @@
                         android:layout_centerVertical="true"
                         android:ellipsize="end"
                         android:textColor="@color/slate_grey"
-                        tools:text="under 12 years"/>
+                        android:text="@string/under_12_years"/>
 
             </LinearLayout>
             <RelativeLayout
@@ -202,7 +202,7 @@
                         android:layout_centerVertical="true"
                         android:ellipsize="end"
                         android:textColor="@color/slate_grey"
-                        tools:text="under 2 years"/>
+                        android:text="@string/under_2_years"/>
 
             </LinearLayout>
             <RelativeLayout
@@ -251,7 +251,7 @@
                 android:id="@+id/tv_dialog_header_rcv"
                 android:layout_margin="@dimen/padding_8dp"
                 android:layout_gravity="center_horizontal"
-                style="@style/CustomLargeBoldDialogHeader"
+                style="@style/CustomRegularBoldTextView"
         />
     </LinearLayout>
 
@@ -320,7 +320,6 @@
         <Button
                 android:text="@string/apply"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 style="@style/CustomButton"
                 android:layout_weight="1"
                 android:id="@+id/button_dialog_apply"/>
