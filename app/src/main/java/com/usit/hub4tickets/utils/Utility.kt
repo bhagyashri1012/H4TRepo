@@ -174,21 +174,13 @@ object Utility {
     //Check if email is valid or not
     fun validateEmail(strEmail: String): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
-
-        return if (strEmail.matches(emailPattern.toRegex()))
-            true
-        else
-            false
+        return strEmail.matches(emailPattern.toRegex())
     }
 
     //Check if email is valid or not
     fun validatePassword(strPwd: String): Boolean {
         val pdwPattern = "^(?=.{6,})(?=.*[@#$%^&+=]).*$"
-
-        return if (strPwd.matches(pdwPattern.toRegex()))
-            true
-        else
-            false
+        return strPwd.matches(regex = pdwPattern.toRegex())
     }
 
 
@@ -322,21 +314,21 @@ object Utility {
         val calendar = convertStingToDate(dateValue)
         // String dayNumberSuffix = getDayNumberSuffix(calendar.get(Calendar.DAY_OF_MONTH));
         val dateFormat = SimpleDateFormat("dd MMM yyyy")
-        return dateFormat.format(calendar.time)
+        return dateFormat.format(calendar?.time)
     }
 
-    private fun convertStingToDate(dateValue: String): Calendar {
+    fun convertStingToDate(dateValue: String): Date? {
 
         val calendar = GregorianCalendar()
         var date: Date? = null
         try {
-            date = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(dateValue)
+            date = SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH).parse(dateValue)
         } catch (e: ParseException) {
             e.printStackTrace()
         }
 
-        calendar.time = date
-        return calendar
+       // calendar.time = date
+        return date
     }
 
     fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap {
@@ -425,17 +417,6 @@ object Utility {
 
     }
 
-    fun getDateFormatTransaction(dateValue: String?): String {
-        if (null == dateValue) {
-            return ""
-        } else if (dateValue == "") {
-            return ""
-        }
-        val calendar = convertStingToDate(dateValue)
-        // String dayNumberSuffix = getDayNumberSuffix(calendar.get(Calendar.DAY_OF_MONTH));
-        val dateFormat = SimpleDateFormat("dd MMM yy")
-        return dateFormat.format(calendar.time)
-    }
 
     fun getStringTypeFromServerDate(dateValue: Date?): String {
         if (null == dateValue || dateValue.equals("")) {
@@ -620,7 +601,7 @@ object Utility {
             context?.contentResolver,
             Settings.Secure.ANDROID_ID
         )
-        return "1234567890123456"
+        return deviceId
     }
 
     fun dateDialog(

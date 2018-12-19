@@ -1,5 +1,6 @@
 package com.usit.hub4tickets.domain.presentation.presenters
 
+import android.content.Context
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
 
 /**
@@ -21,14 +22,16 @@ interface LoginPresenter : BasePresenter {
          *
          * @param viewState
          */
-        fun showState(viewState: ViewState)
+        fun showState(
+            viewState: ViewState
+        )
 
         /**
          * This function return the model that was belong to this screen
          *
          * @return
          */
-        fun doRetrieveModel(): LoginViewModel
+        fun doRetrieveModel(): LoginViewModel?
     }
 
     /**

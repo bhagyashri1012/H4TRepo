@@ -70,7 +70,7 @@ class DashboardActivity : AppCompatActivity() {
             R.id.navigation_home -> {
                 selectedFragment = HomeFragment.newInstance()
             }
-            R.id.navigation_dashboard -> {
+            R.id.navigation_my_account -> {
                 selectedFragment = MyAccountFragment.newInstance()
             }
             R.id.navigation_help -> {
@@ -170,38 +170,6 @@ class DashboardActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    override fun onBackPressed() {
-        if (!Pref.getValue(this, PrefConstants.IS_LOGIN, false)) {
-            CustomDialogPresenter.showDialog(
-                this!!,
-                resources!!.getString(R.string.alert_exit),
-                getString(R.string.alert_exit_msg),
-                resources!!.getString(
-                    R.string.ok
-                ),
-                getString(R.string.no),
-                object : CustomDialogPresenter.CustomDialogView {
-                    override fun onPositiveButtonClicked() {
-                        finish()
-                    }
-
-                    override fun onNegativeButtonClicked() {
-
-                    }
-                })
-        } else {
-            if (navigation.selectedItemId === R.id.navigation_home) {
-                super.onBackPressed()
-            } else {
-                if (supportFragmentManager?.backStackEntryCount == 0) {
-                    navigation.selectedItemId = R.id.navigation_home
-                } else {
-                    supportFragmentManager?.popBackStackImmediate()
-                }
-            }
-        }
-    }
-
     /**
      * Creates an intent, adds location data to it as an extra, and starts the intent service for
      * fetching an address.
@@ -234,12 +202,18 @@ class DashboardActivity : AppCompatActivity() {
             Pref.setValue(
                 this,
                 PrefConstants.DEFAULT_LOCATION,
-                Utility.getAddress(this, location.latitude, location.longitude).split("/")[0].replace("\\s".toRegex(), "")
+                Utility.getAddress(this, location.latitude, location.longitude).split("/")[0].replace(
+                    "\\s".toRegex(),
+                    ""
+                )
             )
             Pref.setValue(
                 this,
                 PrefConstants.DEFAULT_LANGUAGE,
-                Utility.getAddress(this, location.latitude, location.longitude).split("/")[1].replace("\\s".toRegex(), "")
+                Utility.getAddress(this, location.latitude, location.longitude).split("/")[1].replace(
+                    "\\s".toRegex(),
+                    ""
+                )
             )
             /* presenter.callAPISetLocation(
                  Pref.getValue(this, PrefConstants.USER_ID, "")!!,
@@ -294,12 +268,6 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Shows a [Snackbar].
-     * @param mainTextStringId The id for the string resource for the Snackbar text.
-     * @param actionStringId   The text of the action item.
-     * @param listener         The listener associated with the Snackbar action.
-     */
     private fun showSnackbar(
         mainTextStringId: Int,
         actionStringId: Int,
@@ -393,6 +361,78 @@ class DashboardActivity : AppCompatActivity() {
                         }
                         startActivity(intent)
                     })
+        }
+    }
+
+    override fun onBackPressed() {
+        if (navigation.selectedItemId === R.id.navigation_my_account || navigation.selectedItemId === R.id.navigation_help) {
+            if (navigation.selectedItemId === R.id.navigation_home) {
+                CustomDialogPresenter.showDialog(
+                    this!!,
+                    resources!!.getString(R.string.alert_exit),
+                    getString(R.string.alert_exit_msg),
+                    resources!!.getString(
+                        R.string.ok
+                    ),
+                    getString(R.string.no),
+                    object : CustomDialogPresenter.CustomDialogView {
+                        override fun onPositiveButtonClicked() {
+                            finish()
+                        }
+
+                        override fun onNegativeButtonClicked() {
+
+                        }
+                    })
+            } else
+                if (supportFragmentManager?.backStackEntryCount!! == 0) {
+                    navigation.selectedItemId = R.id.navigation_home
+                } else
+                    if (supportFragmentManager?.backStackEntryCount!! > 0) {
+                        supportFragmentManager?.popBackStackImmediate()
+                        try {
+                            if (supportFragmentManager?.backStackEntryCount!! != 0) {
+                                if (supportFragmentManager?.getBackStackEntryAt(0)?.name.equals("LoginFragment")!!)
+                                    navigation.selectedItemId = R.id.navigation_my_account
+                            } else {
+                                if (supportFragmentManager?.backStackEntryCount!! == 0) {
+                                    navigation.selectedItemId = R.id.navigation_my_account
+                                }
+                            }
+                        } catch (e: Exception) {
+                            navigation.selectedItemId = R.id.navigation_my_account
+
+                        }
+
+                    } else {
+                        navigation.selectedItemId = R.id.navigation_home
+                    }
+        } else {
+            if (navigation.selectedItemId === R.id.navigation_home) {
+                CustomDialogPresenter.showDialog(
+                    this!!,
+                    resources!!.getString(R.string.alert_exit),
+                    getString(R.string.alert_exit_msg),
+                    resources!!.getString(
+                        R.string.no
+                    ),
+                    getString(R.string.yes),
+                    object : CustomDialogPresenter.CustomDialogView {
+                        override fun onPositiveButtonClicked() {
+
+                        }
+
+                        override fun onNegativeButtonClicked() {
+                            finish()
+                        }
+                    })
+            } else {
+                if (supportFragmentManager?.backStackEntryCount == 0) {
+                    navigation.selectedItemId = R.id.navigation_home
+                } else {
+                    supportFragmentManager?.popBackStackImmediate()
+                }
+            }
         }
     }
 }

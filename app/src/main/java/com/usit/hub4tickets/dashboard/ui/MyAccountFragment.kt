@@ -3,7 +3,6 @@ package com.usit.hub4tickets.dashboard.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,8 @@ import com.usit.hub4tickets.domain.presentation.presenters.ProfilePresenter
 import com.usit.hub4tickets.domain.presentation.presenters.ProfilePresenter.MainView.ViewState.*
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfilePresenterImpl
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel
-import com.usit.hub4tickets.login.ui.LoginActivity
+import com.usit.hub4tickets.flight.ui.RootFragment
+import com.usit.hub4tickets.login.ui.LoginFragment
 import com.usit.hub4tickets.utils.Pref
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
@@ -21,19 +21,19 @@ import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 import kotlinx.android.synthetic.main.fragment_myaccount.*
 import kotlinx.android.synthetic.main.fragment_myaccount.view.*
 
-class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
+class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
     private lateinit var model: ProfileViewModel
     private lateinit var presenter: ProfilePresenter
     private var listener: OnFragmentInteractionListener? = null
     override fun doRetrieveProfileModel(): ProfileViewModel = this.model
     override fun showState(viewState: ProfilePresenter.MainView.ViewState) {
         when (viewState) {
-            IDLE -> showProgress(false)
-            LOADING -> showProgress(true)
+            IDLE -> Utility.showProgress(false, context)
+            LOADING -> Utility.showProgress(true, context)
             SUCCESS -> autoFillFields()
             ERROR
             -> {
-                showProgress(false)
+                Utility.showProgress(false, context)
                 Utility.showCustomDialog(
                     context,
                     doRetrieveProfileModel().errorMessage,
@@ -47,8 +47,7 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.link_login.setOnClickListener {
-            val intent = Intent(context, LoginActivity::class.java)
-            startActivity(intent)
+            loginScreen()
         }
 
         view.link_my_alerts.setOnClickListener {
@@ -108,13 +107,6 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
         showState(IDLE)
     }
 
-    private fun showProgress(show: Boolean) {
-        if (show)
-            Utility.showProgressDialog(context = context)
-        else
-            Utility.hideProgressBar()
-    }
-
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
@@ -128,11 +120,22 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
             ?.addToBackStack("AccountInfo")?.commit()
     }
 
+
+    private var loginFrag: LoginFragment? = null
+
+    private fun loginScreen() {
+        loginFrag = LoginFragment()
+        fragmentManager?.beginTransaction()?.replace(R.id.container_account_info, loginFrag!!)
+            ?.addToBackStack("LoginFragment")?.commit()
+    }
+
     private fun init() {
         this.model = ProfileViewModel(context)
         this.presenter = ProfilePresenterImpl(this, context!!)
-        if (null == model.profileDomain.responseData)
-            presenter.callAPIGetProfile(Pref.getValue(context, PrefConstants.USER_ID, "0").toString())
+        if (Pref.getValue(context, PrefConstants.IS_LOGIN, false)) {
+            if (null == model.profileDomain.responseData)
+                presenter.callAPIGetProfile(Pref.getValue(context, PrefConstants.USER_ID, "0").toString())
+        }
     }
 
     interface OnFragmentInteractionListener {
@@ -149,24 +152,32 @@ class MyAccountFragment : Fragment(), ProfilePresenter.MainView {
     fun logoutClearData() {
         CustomDialogPresenter.showDialog(
             this!!.context!!,
-            context?.resources!!.getString(R.string.alert_log_out),
+            "",
             getString(R.string.log_out_messege),
             context?.resources!!.getString(
-                R.string.ok
+                R.string.no
             ),
-            getString(R.string.no),
+            getString(R.string.yes),
             object : CustomDialogPresenter.CustomDialogView {
                 override fun onPositiveButtonClicked() {
+
+                }
+
+                override fun onNegativeButtonClicked() {
                     Pref.setValue(context, PrefConstants.IS_LOGIN, false)
                     Pref.setValue(context, PrefConstants.USER_ID, "0")
                     Pref.setValue(context, PrefConstants.EMAIL_ID, "")
                     val ft = fragmentManager!!.beginTransaction()
                     ft.detach(this@MyAccountFragment).attach(this@MyAccountFragment).commit()
                 }
-
-                override fun onNegativeButtonClicked() {
-
-                }
             })
     }
+
+    override fun onBackPressed(): Boolean {
+        if (fragmentManager?.backStackEntryCount == 0)
+            return fragmentManager?.popBackStackImmediate()!!
+        else
+            return super.onBackPressed()
+    }
+
 }

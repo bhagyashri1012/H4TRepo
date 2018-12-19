@@ -51,12 +51,17 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     private var recyclerView: RecyclerView? = null
     private lateinit var model: FlightViewModel
     private lateinit var presenter: FlightPresenter
-
     private val dataListAll: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? = ArrayList()
+
     var adapter: RecyclerViewAdapter? = RecyclerViewAdapter(
         items = emptyList(),
         listener = null
     )
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment, container, false)
@@ -66,10 +71,6 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         super.onViewCreated(view, savedInstanceState)
         init()
         setDataAndListeners(view)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
     }
 
     override fun doRetrieveModel(): FlightViewModel = this.model
@@ -255,6 +256,19 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             )
             focusView = tv_return
             cancel = true
+        } else if (Utility.convertStingToDate(departureDate)!!.after(Utility.convertStingToDate(returnDate))) {
+            CustomDialogPresenter.showDialog(
+                context,
+                "",
+                getString(R.string.error_field_after_return),
+                context!!.resources.getString(
+                    R.string.ok
+                ),
+                null,
+                null
+            )
+            focusView = tv_departure
+            cancel = true
         }
         if (cancel) {
             focusView?.requestFocus()
@@ -367,13 +381,13 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         dialogBuilder.show()
     }
 
-    private var dataListSortBy: java.util.ArrayList<CommonSelectorPojo>? = null
-    private var dataListTravelClass: java.util.ArrayList<CommonSelectorPojo>? = null
+    private var dataListSortBy: ArrayList<CommonSelectorPojo>? = null
+    private var dataListTravelClass: ArrayList<CommonSelectorPojo>? = null
     private fun init() {
         this.model = FlightViewModel(context)
         this.presenter = FlightPresenterImpl(this, context)
-        dataListSortBy = java.util.ArrayList()
-        dataListTravelClass = java.util.ArrayList()
+        dataListSortBy = ArrayList()
+        dataListTravelClass = ArrayList()
         //sort by
         dataListSortBy?.add(
             CommonSelectorPojo(
@@ -481,8 +495,12 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             }
         }
         tv_departure.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_departure, 0) }
-        tv_return.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_return, 1) }
+        tv_return.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_return, 0) }
         btn_class.setOnClickListener { selectTravelClass() }
+        btn_class.text = travelClass
+        btn_passengers.text = adults + " Adult " +
+                childrens + " Children " +
+                infants + " Infants "
         btn_passengers.setOnClickListener { selectTravelClass() }
         im_btn_search.setOnClickListener {
             attemptSearch()
@@ -508,5 +526,9 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         override fun afterTextChanged(s: Editable) {
             afterTextChanged(s, lastLength > s.length)
         }
+    }
+
+    override fun onBackPressed(): Boolean {
+        return fragmentManager?.popBackStackImmediate()!!
     }
 }

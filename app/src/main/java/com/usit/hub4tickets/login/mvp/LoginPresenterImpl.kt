@@ -59,13 +59,13 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
     override fun onAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) = when (route) {
         Enums.APIRoute.GET_SAMPLE -> {
             if (responseModel.status.equals("1")) {
-                mView.doRetrieveModel().loginDomain = responseModel
+                mView.doRetrieveModel()?.loginDomain = responseModel
                 Pref.setValue(mContext, PrefConstants.IS_LOGIN, true)
                 Pref.setValue(mContext, PrefConstants.USER_ID, responseModel.responseData?.userId.toString())
                 Pref.setValue(mContext, PrefConstants.EMAIL_ID, responseModel.responseData?.email.toString())
                 presentState(SUCCESS)
             } else {
-                mView.doRetrieveModel().errorMessage = responseModel.message
+                mView.doRetrieveModel()?.errorMessage = responseModel.message
                 presentState(ERROR)
             }
         }
@@ -73,7 +73,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
 
     override fun onAPICallFailed(route: Enums.APIRoute, message: String?) {
         Utility.hideProgressBar()
-        mView.doRetrieveModel().errorMessage = message
+        mView.doRetrieveModel()?.errorMessage = message
         presentState(ERROR)
     }
 
@@ -97,17 +97,17 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
 
     override fun onVerifyOtpAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
         if (responseModel.status.equals("1")) {
-            mView.doRetrieveModel().loginDomain = responseModel
+            mView.doRetrieveModel()?.loginDomain = responseModel
             presentState(VERIFY_OTP_SUCCESS)
         } else {
-            mView.doRetrieveModel().errorMessage = responseModel.message
+            mView.doRetrieveModel()?.errorMessage = responseModel.message
             presentState(ERROR)
         }
     }
 
     override fun onForgotPasswordAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
         CustomDialogPresenter.showDialog(mContext,
-            "",
+            mContext.resources.getString(R.string.alert_success),
             responseModel.message,
             mContext.resources.getString(
                 R.string.ok
@@ -133,8 +133,8 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
                 Constant.Path.DEVICE_FLAG
             )
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView.doRetrieveModel()?.errorMessage =
+                    mView.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -144,8 +144,8 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
             presentState(LOADING)
             loginInteractor.callSendOtpAPI(deviceId, email)
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView.doRetrieveModel()?.errorMessage =
+                    mView.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -155,8 +155,8 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
             presentState(LOADING)
             loginInteractor.callAPIVerifyOTP(deviceId, email, otp)
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView.doRetrieveModel()?.errorMessage =
+                    mView.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
@@ -166,9 +166,10 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
             presentState(LOADING)
             loginInteractor.callAPIResetPassword(deviceId, email, newPassword)
         } else {
-            mView.doRetrieveModel().errorMessage =
-                    mView.doRetrieveModel().context?.getString(R.string.message_no_internet)
+            mView.doRetrieveModel()?.errorMessage =
+                    mView.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
+
     }
 }

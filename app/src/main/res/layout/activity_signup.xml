@@ -4,31 +4,26 @@
               android:layout_width="match_parent" android:layout_height="match_parent"
               android:gravity="center_horizontal"
               android:orientation="vertical"
+              android:background="@color/white_pure"
               tools:context="com.usit.hub4tickets.registration.ui.SignUpActivity">
 
     <include layout="@layout/common_toolbar"/>
-    <!-- Login progress -->
-    <ProgressBar
-            android:id="@+id/login_progress"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:visibility="gone"/>
 
     <ScrollView
             android:id="@+id/signup_form"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/height_48"
+    >
 
         <RelativeLayout android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:padding="@dimen/activity_vertical_margin"
         >
             <ImageView
                     android:id="@+id/imv_logo"
-                    android:layout_width="180dp"
-                    android:layout_height="180dp"
+                    android:layout_width="160dp"
+                    android:layout_height="140dp"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/image"/>
 
@@ -36,7 +31,6 @@
                     android:id="@+id/email_login_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:layout_below="@+id/imv_logo"
                     android:orientation="vertical">
 

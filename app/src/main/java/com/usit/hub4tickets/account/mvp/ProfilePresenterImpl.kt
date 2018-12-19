@@ -187,6 +187,6 @@ class ProfilePresenterImpl(
     override fun onAPICallFailed(route: Enums.APIRoute, message: String) {
         Utility.hideProgressBar()
         mView.doRetrieveProfileModel().errorMessage = message
-        presentState(ERROR)
+        //presentState(ERROR)
     }
 }

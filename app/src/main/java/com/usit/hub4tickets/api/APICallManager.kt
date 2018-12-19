@@ -93,9 +93,11 @@ class APICallManager {
             email: String,
             password: String,
             promoChecked: String,
-            deviceFlag: Int
+            deviceFlag: Int,
+            location: String,
+            language: String
         ): Flowable<SignUpViewModel.SignUpResponse> {
-            val signUp = SignUp(device_id, email, password, promoChecked, deviceFlag)
+            val signUp = SignUp(device_id, email, password, promoChecked, deviceFlag, location, language)
             return service.getRegistration(signUp)
         }
 
@@ -136,8 +138,13 @@ class APICallManager {
             return service.getCities(stateData)
         }
 
-        fun getSettingsData(userId: String, device_id: String,location: String, lang: String): Flowable<DashboardViewModel.SettingsResponse> {
-            val settingsData = SettingsData(userId, device_id,location,lang)
+        fun getSettingsData(
+            userId: String,
+            device_id: String,
+            location: String,
+            lang: String
+        ): Flowable<DashboardViewModel.SettingsResponse> {
+            val settingsData = SettingsData(userId, device_id, location, lang)
             return service.settingsData(settingsData)
         }
 
@@ -238,7 +245,7 @@ class APICallManager {
             locationCode: String,
             langId: String
         ): Flowable<DashboardViewModel.SettingsResponse> {
-            val saveLocationData = SaveLocationData(deviceId, userId,"","", locationCode, langId)
+            val saveLocationData = SaveLocationData(deviceId, userId, "", "", locationCode, langId)
             return service.setLocationSettingsData(saveLocationData)
         }
     }

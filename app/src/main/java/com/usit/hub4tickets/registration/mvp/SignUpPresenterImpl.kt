@@ -25,7 +25,10 @@ class SignUpPresenterImpl(
         SignUpBaseInteractor(this)
     private val mContext = context
 
-    override fun callAPI(email: String, password: String, check: String) {
+    override fun callAPI(
+        email: String, password: String, check: String, location: String,
+        language: String
+    ) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
             signUpBaseInteractor.callAPIGetSignUp(
@@ -33,7 +36,9 @@ class SignUpPresenterImpl(
                 email,
                 password,
                 check,
-                Constant.Path.DEVICE_FLAG
+                Constant.Path.DEVICE_FLAG,
+                location,
+                language
             )
         } else {
             mView.doRetrieveModel().errorMessage =

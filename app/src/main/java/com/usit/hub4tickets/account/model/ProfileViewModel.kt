@@ -17,52 +17,54 @@ class ProfileViewModel(var context: Context?) {
 
     data class ProfileResponse(
         @Nullable
-@SerializedName("message")        val message: String?,
-        @Nullable  @SerializedName("responseData")
+        @SerializedName("message") val message: String?,
+        @Nullable @SerializedName("responseData")
         val responseData: ResponseData?,
-        @Nullable  @SerializedName("status")
+        @Nullable @SerializedName("status")
         val status: String?
     ) {
         data class ResponseData(
-            @Nullable  @SerializedName("city")
-            val city: String,
-            @Nullable  @SerializedName("country")
-            val country: String,
-            @Nullable  @SerializedName("currency")
-            val currency: String,
-            @Nullable  @SerializedName("email")
-            val email: String,
-            @Nullable  @SerializedName("firstName")
-            val firstName: String,
-            @Nullable  @SerializedName("homeAirPort")
-            val homeAirPort: String,
-            @Nullable  @SerializedName("language")
-            val language: String,
-            @Nullable  @SerializedName("lastName")
-            val lastName: String,
-            @Nullable  @SerializedName("phoneNumber")
-            val phoneNumber: String,
-            @Nullable  @SerializedName("state")
-            val state: String,
-            @Nullable  @SerializedName("timeZone")
-            val timeZone: String,
-            @Nullable  @SerializedName("dNo")
-            val dNo: DNo,
-            @Nullable  @SerializedName("deviceId")
-            val deviceId: String,
-            @Nullable  @SerializedName("countryId")
-            val countryId: String,
-            @Nullable  @SerializedName("stateId")
-            val stateId: String,
-            @Nullable  @SerializedName("cityId")
-            val cityId: String,
-            @Nullable  @SerializedName("userId")
-            val userId: Int
+            @Nullable @SerializedName("city")
+            val city: String?,
+            @Nullable @SerializedName("country")
+            val country: String?,
+            @Nullable @SerializedName("currency")
+            val currency: String?,
+            @Nullable @SerializedName("email")
+            val email: String?,
+            @Nullable @SerializedName("firstName")
+            val firstName: String?,
+            @Nullable @SerializedName("homeAirPort")
+            val homeAirPort: String?,
+            @Nullable @SerializedName("language")
+            val language: String?,
+            @Nullable @SerializedName("lastName")
+            val lastName: String?,
+            @Nullable @SerializedName("phoneNumber")
+            val phoneNumber: String?,
+            @Nullable @SerializedName("state")
+            val state: String?,
+            @Nullable @SerializedName("timeZone")
+            val timeZone: String?,
+            @Nullable @SerializedName("dNo")
+            val dNo: DNo?,
+            @Nullable @SerializedName("deviceId")
+            val deviceId: String?,
+            @Nullable @SerializedName("countryId")
+            val countryId: String?,
+            @Nullable @SerializedName("stateId")
+            val stateId: String?,
+            @Nullable @SerializedName("cityId")
+            val cityId: String?,
+            @Nullable @SerializedName("userId")
+            val userId: Int?,
+            @SerializedName("promoChecked")
+            val promoChecked: Int?
         ) {
             data class DNo(
-                @Nullable  @SerializedName("dname")
+                @Nullable @SerializedName("dname")
                 val dname: String,
-                @Nullable  @SerializedName("dno")
+                @Nullable @SerializedName("dno")
                 val dno: Int
             )
         }

@@ -19,7 +19,9 @@ data class SignUp(
     var email: String,
     var password: String,
     val promoChecked: String,
-    val deviceType: Int
+    val deviceType: Int,
+    var location: String,
+    var language: String
 )
 
 data class SendOtp(

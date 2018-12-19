@@ -131,11 +131,9 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             IDLE -> showProgress(false)
             LOADING -> showProgress(true)
             SUCCESS -> {
-                showProgress(false)
                 autoFillFields()
             }
             UPDATE_SUCCESS -> {
-                showProgress(false)
                 onBackPressed()
             }
             ERROR
@@ -169,6 +167,12 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         edt_home_airport.setText(model.profileDomain.responseData?.homeAirPort)
         edt_time_zone.setText(model.profileDomain.responseData?.timeZone)
         edt_lang.setText(model.profileDomain.responseData?.language)
+
+        if (model.profileDomain.responseData?.promoChecked != 0)
+            checkbox_promotions_account.isChecked = true
+        else
+            checkbox_promotions_account.isChecked = false
+
         Pref.setValue(this, PrefConstants.PROFILE_COUNTRY_ID, model.profileDomain.responseData?.countryId!!)
         Pref.setValue(this, PrefConstants.STATE_ID, model.profileDomain.responseData?.stateId!!)
         presenter.presentState(ProfilePresenter.MainView.ViewState.IDLE)
@@ -185,7 +189,6 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         // Reset errors.
         edt_email.error = null
         edt_phone_no.error = null
-
         // Store values at the time of the login attempt.
         val emailStr = edt_email.text.toString()
         val passwordStr = edt_phone_no.text.toString()

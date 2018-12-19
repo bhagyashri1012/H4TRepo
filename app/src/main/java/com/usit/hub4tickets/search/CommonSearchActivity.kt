@@ -126,7 +126,7 @@ class CommonSearchActivity : BaseActivity() {
                     i, CommonSelectorPojo(
                         arrayListCommonSelectorCurrencyInitial[i].countryCode,
                         arrayListCommonSelectorCurrencyInitial[i].currencyName,
-                        arrayListCommonSelectorCurrencyInitial[i].countryCode
+                        arrayListCommonSelectorCurrencyInitial[i].currencyCode
                     )
                 )
             }

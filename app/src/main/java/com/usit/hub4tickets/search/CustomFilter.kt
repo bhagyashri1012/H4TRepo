@@ -8,7 +8,7 @@ import com.usit.hub4tickets.search.model.CommonSelectorPojo
  * Date: 23/11/2018
  * Email: bhagyashri.burade@usit.net.in
  */
-class CustomFilter(internal var filterList: ArrayList<CommonSelectorPojo>, internal var adapter: CommonSearchAdapter) :
+class CustomFilter(private var filterList: ArrayList<CommonSelectorPojo>, private var adapter: CommonSearchAdapter) :
     Filter() {
 
     //FILTERING
@@ -47,7 +47,8 @@ class CustomFilter(internal var filterList: ArrayList<CommonSelectorPojo>, inter
     //PUBLISH RESULTS
 
     override fun publishResults(constraint: CharSequence, results: FilterResults) {
-        adapter.temArrayListCommonSelector = results.values as ArrayList<CommonSelectorPojo>
+        if (null != results.values)
+            adapter.temArrayListCommonSelector = results.values as ArrayList<CommonSelectorPojo>
         adapter.notifyDataSetChanged()
 
     }

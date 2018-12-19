@@ -22,7 +22,7 @@ class MainFlightActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_flight)
         title = resources.getString(R.string.flight)
-        mainToolbar.setNavigationOnClickListener { onBackPressed() }
+        mainToolbar.setNavigationOnClickListener { super.onBackPressed() }
         if (savedInstanceState == null) run { initScreen() }
         else run { flihtMainFrag = supportFragmentManager.fragments[0] as FlightMainFragment }
     }

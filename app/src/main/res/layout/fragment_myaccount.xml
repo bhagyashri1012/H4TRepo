@@ -3,6 +3,7 @@
              android:id="@+id/container_account_info"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:background="@color/white_pure"
              tools:context="com.usit.hub4tickets.dashboard.ui.MyAccountFragment">
     <ScrollView
             xmlns:android="http://schemas.android.com/apk/res/android"

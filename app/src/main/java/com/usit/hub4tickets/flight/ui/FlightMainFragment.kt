@@ -13,16 +13,12 @@ import com.usit.hub4tickets.dashboard.ui.DashboardActivity
 import com.usit.hub4tickets.flight.adapter.ViewPagerAdapter
 import kotlinx.android.synthetic.main.fragment_flight_main.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- *
- */
 class FlightMainFragment : Fragment() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
 
     private var viewPagerAdapter: ViewPagerAdapter? = null
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -34,7 +30,7 @@ class FlightMainFragment : Fragment() {
                 startActivity(intent)
                 activity?.finish()
             }
-            R.id.navigation_dashboard -> {
+            R.id.navigation_my_account -> {
                 val intent = Intent(activity?.baseContext, DashboardActivity::class.java)
                 intent.putExtra("SCREEN_NAME", "account")
                 startActivity(intent)
@@ -47,7 +43,6 @@ class FlightMainFragment : Fragment() {
                 activity?.finish()
             }
         }
-
         return@OnNavigationItemSelectedListener true
     }
 
@@ -59,13 +54,13 @@ class FlightMainFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_flight_main, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewPagerAdapter = ViewPagerAdapter(resources, childFragmentManager)
         viewPager.adapter = viewPagerAdapter
+        viewPager.offscreenPageLimit = 0
         tabs.setupWithViewPager(viewPager)
         navigation_flight.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
     }
 
     /**
@@ -76,9 +71,7 @@ class FlightMainFragment : Fragment() {
     fun onBackPressed(): Boolean {
         // currently visible tab Fragment
         val currentFragment = viewPagerAdapter?.getRegisteredFragment(viewPager.currentItem) as OnBackPressListener
-
         return currentFragment?.onBackPressed() ?: false
-
         // this Fragment couldn't handle the onBackPressed call
     }
 

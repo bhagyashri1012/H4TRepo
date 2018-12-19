@@ -16,7 +16,10 @@
     <string name="error_field_required_password">Please enter your password</string>
     <string name="error_field_required_re_password">Please Re-enter your password</string>
     <string name="error_password_too_short">This password is too short</string>
-    <string name="error_invalid_password">This password is incorrect</string>
+    <string name="error_invalid_password">This password is incorrect ! length at least 6 characters,must contains one
+        lowercase characters,must contains one uppercase characters, must contains one special symbols in the list
+        "@#$%"
+    </string>
     <string name="error_not_match_password">Password does not match</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_field_required_email">Please enter your email address</string>
@@ -24,6 +27,7 @@
     <string name="error_field_required_to_airport">Please enter your destination city</string>
     <string name="error_field_required_departure">Please enter your departure date</string>
     <string name="error_field_required_return">Please enter your return date</string>
+    <string name="error_field_after_return">Please enter valid return date</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="action_sign_up">Sign Up</string>
     <string name="action_forgot_password">Forgot Password</string>
@@ -89,9 +93,9 @@
     <string name="visit_site">Visit Site</string>
     <string name="change_password">Change Password</string>
     <string name="login">Log In</string>
-    <string name="logout">Logout</string>
+    <string name="logout">Log Out</string>
     <string name="my_account_info">My Account Info</string>
-    <string name="alert_log_out">Log out</string>
+    <string name="alert_log_out">Log Out</string>
     <string name="log_out_messege">Are you sure you want to logout?</string>
     <string name="forgot_pass">Forgot Password</string>
     <string name="reset_password">Reset Password</string>
@@ -203,4 +207,5 @@
     <string name="passenger_information">Passenger Information</string>
     <string name="under_12_years">Under 12 years</string>
     <string name="under_2_years">Under 2 years</string>
+    <string name="yes">Yes</string>
 </resources>

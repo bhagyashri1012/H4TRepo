@@ -15,8 +15,7 @@ import com.usit.hub4tickets.flight.ui.RootFragment
 import com.usit.hub4tickets.utils.Pref
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
-import kotlinx.android.synthetic.main.activity_personal_info.*
-import kotlinx.android.synthetic.main.activity_signup.*
+import com.usit.hub4tickets.utils.Utility.showProgress
 import kotlinx.android.synthetic.main.change_password_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_account_info.*
 
@@ -27,14 +26,14 @@ class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
     override fun doRetrieveProfileModel(): ProfileViewModel = this.model
     override fun showState(viewState: ProfilePresenter.MainView.ViewState) {
         when (viewState) {
-            ProfilePresenter.MainView.ViewState.IDLE -> showProgress(false)
-            ProfilePresenter.MainView.ViewState.LOADING -> showProgress(true)
-            ProfilePresenter.MainView.ViewState.SUCCESS -> showProgress(false)
-            ProfilePresenter.MainView.ViewState.CHANGE_PASSWORD_SUCCESS -> showProgress(false)
+            ProfilePresenter.MainView.ViewState.IDLE -> showProgress(false, context)
+            ProfilePresenter.MainView.ViewState.LOADING -> showProgress(true, context)
+            ProfilePresenter.MainView.ViewState.SUCCESS -> showProgress(false, context)
+            ProfilePresenter.MainView.ViewState.CHANGE_PASSWORD_SUCCESS -> showProgress(false, context)
             ProfilePresenter.MainView.ViewState.ERROR
             -> {
                 presenter.presentState(ProfilePresenter.MainView.ViewState.IDLE)
-                showProgress(false)
+                showProgress(false, context)
                 Utility.showCustomDialog(
                     context,
                     doRetrieveProfileModel().errorMessage,
@@ -43,13 +42,6 @@ class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
                 )
             }
         }
-    }
-
-    private fun showProgress(show: Boolean) {
-        if (show)
-            Utility.showProgressDialog(context = context)
-        else
-            Utility.hideProgressBar()
     }
 
     override fun onCreateView(
@@ -70,7 +62,6 @@ class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
         cv_change_password.setOnClickListener {
             Utility.hideSoftKeyboard(it)
             changePassword()
-
         }
     }
 
@@ -104,12 +95,9 @@ class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
         dialogView: View,
         dialogBuilder: AlertDialog
     ) {
-        // Reset errors.
         dialogView.edt_change_current_password.error = null
         dialogView.edt_new_change_password.error = null
         dialogView.edt_change_confirm_password.error = null
-
-        // Store values at the time of the login attempt.
         val olPassStr = dialogView.edt_change_current_password.text.toString()
         val newPasswordStr = dialogView.edt_new_change_password.text.toString()
         val confirmPasswordStr = dialogView.edt_change_confirm_password.text.toString()
@@ -151,15 +139,10 @@ class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
             focusView = dialogView.edt_change_confirm_password
             cancel = true
         }
-
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView?.requestFocus()
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true)
+            showProgress(true, context)
             presenter.callAPIChangePassword(
                 dialogBuilder,
                 Pref.getValue(context, PrefConstants.USER_ID, "0").toString()
@@ -173,16 +156,6 @@ class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
 
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 4
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AccountInfoFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
     }
 
     override fun onBackPressed(): Boolean {

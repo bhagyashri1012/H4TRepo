@@ -13,6 +13,7 @@ import com.usit.hub4tickets.R
 import com.usit.hub4tickets.dashboard.adapter.HorizontalAdapter
 import com.usit.hub4tickets.dashboard.ui.settings.SettingsFragment
 import com.usit.hub4tickets.flight.ui.MainFlightActivity
+import com.usit.hub4tickets.flight.ui.RootFragment
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
@@ -29,7 +30,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class HomeFragment : Fragment() {
+class HomeFragment : RootFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -77,11 +78,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
-
-
     override fun onDetach() {
         super.onDetach()
         listener = null
@@ -101,6 +97,5 @@ class HomeFragment : Fragment() {
                 }
             }
     }
-
 
 }

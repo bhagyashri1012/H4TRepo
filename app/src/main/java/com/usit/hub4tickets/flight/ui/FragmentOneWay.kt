@@ -49,13 +49,17 @@ class FragmentOneWay : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     private var recyclerView: RecyclerView? = null
     private lateinit var model: FlightViewModel
     private lateinit var presenter: FlightPresenter
+    private val dataListAll: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? = ArrayList()
 
     var adapter: RecyclerViewAdapter? = RecyclerViewAdapter(
         items = emptyList(),
         listener = null
     )
-    private val dataListAll: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? = ArrayList()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_one_way, container, false)
@@ -93,6 +97,8 @@ class FragmentOneWay : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             }
             FlightPresenter.MainView.ViewState.ERROR
             -> {
+                dataListAll?.clear()
+                adapter?.notifyDataSetChanged()
                 presenter.presentState(FlightPresenter.MainView.ViewState.IDLE)
                 Utility.showCustomDialog(context, doRetrieveModel().errorMessage.message, "", null)
             }
@@ -168,13 +174,14 @@ class FragmentOneWay : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         edt_from.error = null//removes error
         edt_to.error = null
     }
-    private var dataListSortBy: ArrayList<CommonSelectorPojo>? =null
-    private var dataListTravelClass: ArrayList<CommonSelectorPojo>? =null
+
+    private var dataListSortBy: ArrayList<CommonSelectorPojo>? = null
+    private var dataListTravelClass: ArrayList<CommonSelectorPojo>? = null
     private fun init() {
         this.model = FlightViewModel(context)
         this.presenter = FlightPresenterImpl(this, context)
         dataListSortBy = ArrayList()
-        dataListTravelClass= ArrayList()
+        dataListTravelClass = ArrayList()
         //sort by
         dataListSortBy?.add(
             CommonSelectorPojo(
@@ -280,9 +287,13 @@ class FragmentOneWay : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             }
         }
         tv_departure.text = Utility.getCurrentDateNow()
-        tv_departure.setOnClickListener { Utility.dateDialog(c, activity, tv_departure) }
+        tv_departure.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_departure, 0) }
         tv_return.visibility = View.GONE
         btn_class.setOnClickListener { selectTravelClass() }
+        btn_class.text = travelClass
+        btn_passengers.text = adults + " Adult " +
+                childrens + " Children " +
+                infants + " Infants "
         btn_passengers.setOnClickListener { selectTravelClass() }
         im_btn_search.setOnClickListener {
             attemptSearch()
@@ -344,7 +355,7 @@ class FragmentOneWay : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             btn_passengers.text = dialogView.tv_quantity_adult.text.toString() + " Adult " +
                     dialogView.tv_quantity_children.text.toString() + " Children " +
                     dialogView.tv_quantity_infants.text.toString() + " Infants "
-            btn_class.text = travelClassCode
+            btn_class.text = travelClass
             dialogBuilder.dismiss()
         }
         dialogView.button_dialog_cancel.setOnClickListener {
