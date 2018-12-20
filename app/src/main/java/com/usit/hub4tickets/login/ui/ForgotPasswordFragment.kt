@@ -85,12 +85,12 @@ class ForgotPasswordFragment : RootFragment(), LoginPresenter.MainView {
         val confirmPasswordStr = dialogView.edt_confirm_password.text.toString()
         var cancel = false
         var focusView: View? = null
-        if (!TextUtils.isEmpty(passwordStr)) {
+        if (TextUtils.isEmpty(passwordStr)) {
             dialogView.edt_new_password.error = getString(R.string.error_field_required_password)
             focusView = dialogView.edt_new_password
             cancel = true
         }
-        if (!TextUtils.isEmpty(confirmPasswordStr)) {
+        if (TextUtils.isEmpty(confirmPasswordStr)) {
             dialogView.edt_confirm_password.error = getString(R.string.error_field_required_re_password)
             focusView = dialogView.edt_confirm_password
             cancel = true
@@ -199,12 +199,12 @@ class ForgotPasswordFragment : RootFragment(), LoginPresenter.MainView {
         email = emailStr
         var cancel = false
         var focusView: View? = null
-        if (!TextUtils.isEmpty(emailStr)) {
+        if (TextUtils.isEmpty(emailStr)) {
             edt_email_forgot_password.error = getString(R.string.error_field_required_email)
             focusView = edt_email_forgot_password
             cancel = true
         }
-        if (!TextUtils.isEmpty(emailStr) && !Utility.isEmailValid(emailStr)) {
+        if (TextUtils.isEmpty(emailStr) && !Utility.isEmailValid(emailStr)) {
             edt_email_forgot_password.error = getString(R.string.error_invalid_email)
             focusView = edt_email_forgot_password
             cancel = true
