@@ -1,6 +1,7 @@
 package com.usit.hub4tickets.domain.presentation.screens.main
 
 import android.content.Context
+import android.support.v7.app.AlertDialog
 import android.util.Log
 import com.usit.hub4tickets.MainApplication
 import com.usit.hub4tickets.R
@@ -79,7 +80,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
 
     override fun onSentOtpAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
         CustomDialogPresenter.showDialog(mContext,
-            mContext.resources.getString(R.string.alert_success),
+            "",
             responseModel.message,
             mContext.resources.getString(
                 R.string.ok
@@ -95,19 +96,45 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
             })
     }
 
-    override fun onVerifyOtpAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
+    override fun onVerifyOtpAPICallSucceed(
+        route: Enums.APIRoute,
+        responseModel: LoginViewModel.LoginResponse,
+        dialogBuilder: AlertDialog
+    ) {
         if (responseModel.status.equals("1")) {
-            mView.doRetrieveModel()?.loginDomain = responseModel
-            presentState(VERIFY_OTP_SUCCESS)
+            CustomDialogPresenter.showDialog(mContext,
+                "",
+                responseModel.message,
+                mContext.resources.getString(
+                    R.string.ok
+                ),
+                null,
+                object : CustomDialogPresenter.CustomDialogView {
+                    override fun onPositiveButtonClicked() {
+
+                        mView.doRetrieveModel()?.loginDomain = responseModel
+                        dialogBuilder.dismiss()
+                        presentState(VERIFY_OTP_SUCCESS)
+                    }
+
+                    override fun onNegativeButtonClicked() {
+                    }
+                })
+
         } else {
             mView.doRetrieveModel()?.errorMessage = responseModel.message
             presentState(ERROR)
         }
     }
 
-    override fun onForgotPasswordAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
+    override fun onForgotPasswordAPICallSucceed(
+        route: Enums.APIRoute,
+        responseModel: LoginViewModel.LoginResponse,
+        dialogBuilder: AlertDialog
+    ) {
+        Utility.hideProgressBar()
         CustomDialogPresenter.showDialog(mContext,
-            mContext.resources.getString(R.string.alert_success),
+            "",
             responseModel.message,
             mContext.resources.getString(
                 R.string.ok
@@ -116,6 +143,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
             object : CustomDialogPresenter.CustomDialogView {
                 override fun onPositiveButtonClicked() {
                     presentState(CHANGE_PASSWORD_SUCCESS)
+                    dialogBuilder.dismiss()
                 }
 
                 override fun onNegativeButtonClicked() {
@@ -150,10 +178,15 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
         }
     }
 
-    override fun callVerifyOTPAPI(deviceId: String, email: String, otp: String) {
+    override fun callVerifyOTPAPI(
+        deviceId: String,
+        email: String,
+        otp: String,
+        dialogBuilder: AlertDialog
+    ) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
-            loginInteractor.callAPIVerifyOTP(deviceId, email, otp)
+            loginInteractor.callAPIVerifyOTP(deviceId, email, otp, dialogBuilder)
         } else {
             mView.doRetrieveModel()?.errorMessage =
                     mView.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
@@ -161,10 +194,15 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
         }
     }
 
-    override fun callResetPassword(deviceId: String, email: String, newPassword: String) {
+    override fun callResetPassword(
+        deviceId: String,
+        email: String,
+        newPassword: String,
+        dialogBuilder: AlertDialog
+    ) {
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
-            loginInteractor.callAPIResetPassword(deviceId, email, newPassword)
+            loginInteractor.callAPIResetPassword(deviceId, email, newPassword, dialogBuilder)
         } else {
             mView.doRetrieveModel()?.errorMessage =
                     mView.doRetrieveModel()?.context?.getString(R.string.message_no_internet)

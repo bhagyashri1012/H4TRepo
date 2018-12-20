@@ -213,6 +213,8 @@ class APICallManager {
         }
 
         fun getFlightDetails(
+            userId: String,
+            deviceId: String,
             adults: String,
             cabinClass: String,
             children: String,
@@ -225,6 +227,8 @@ class APICallManager {
             returnFrom: String
         ): Flowable<FlightViewModel.FlightListResponse> {
             val flightData = FlightData(
+                userId,
+                deviceId,
                 adults,
                 cabinClass,
                 children,

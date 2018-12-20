@@ -26,6 +26,7 @@ class FlightPresenterImpl(
     private val mContext = context
 
     override fun callFlightDetails(
+        userId: String,
         adults: String,
         cabinClass: String,
         children: String,
@@ -40,6 +41,8 @@ class FlightPresenterImpl(
         if (MainApplication.getInstance.isConnected()) {
             presentState(LOADING)
             flightPresenterImpl.callAPIFlightDetails(
+                userId,
+                Utility.getDeviceId(context = mContext),
                 adults,
                 cabinClass,
                 children,

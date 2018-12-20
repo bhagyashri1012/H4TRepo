@@ -22,12 +22,13 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_flight)
-        rl_toolbar.visibility= View.GONE
+        rl_toolbar.visibility = View.GONE
         if (savedInstanceState == null) run { initScreen() }
         else run { loginFrag = supportFragmentManager.fragments[0] as LoginFragment }
     }
 
     private fun initScreen() {
+        Pref.setValue(this, PrefConstants.IS_DASHBOARD, true)
         loginFrag = LoginFragment()
         supportFragmentManager.beginTransaction().replace(R.id.container_flight, loginFrag!!).commit()
     }

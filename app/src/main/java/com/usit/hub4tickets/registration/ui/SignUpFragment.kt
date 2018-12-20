@@ -117,7 +117,7 @@ class SignUpFragment : RootFragment(), SignUpPresenter.MainView {
             edt_confirm_password_signup.error = getString(R.string.error_field_required_re_password)
             focusView = edt_confirm_password_signup
             cancel = true
-        } else if (!TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
+        } else if (!TextUtils.isEmpty(passwordStr) && !Utility.isPasswordValid(passwordStr)) {
             edt_password.error = getString(R.string.error_invalid_password)
             focusView = edt_password
             cancel = true
@@ -144,13 +144,7 @@ class SignUpFragment : RootFragment(), SignUpPresenter.MainView {
         }
     }
 
-    private fun isPasswordValid(password: String): Boolean {
-        var PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})"
-        var pattern: Pattern = Pattern.compile(PASSWORD_PATTERN)
-        var matcher: Matcher? = null
-        matcher = pattern.matcher(password)
-        return matcher!!.matches()
-    }
+
 
     override fun onBackPressed(): Boolean {
         return fragmentManager?.popBackStackImmediate()!!

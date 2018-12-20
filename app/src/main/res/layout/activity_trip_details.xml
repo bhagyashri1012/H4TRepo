@@ -2,7 +2,7 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"
+        android:layout_width="match_parent" xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical">
     <include layout="@layout/common_toolbar"/>
     <ScrollView
@@ -47,12 +47,14 @@
                               android:maxLines="2"
                               android:layout_weight="1"
                     />
-                    <TextView style="@style/CustomRegularTextView"
-                              android:text="3 Adults"
-                              android:layout_weight="1"
-                              android:gravity="right"
-                              android:textColor="@color/cool_grey"
-                              android:maxLines="2"
+                    <TextView
+                            android:id="@+id/tv_details_passengers"
+                            style="@style/CustomRegularTextView"
+                            tools:text="3 Adults"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="@color/cool_grey"
+                            android:maxLines="2"
                     />
                 </LinearLayout>
                 <LinearLayout
@@ -69,8 +71,9 @@
                               android:maxLines="2"
                               android:layout_weight="1"
                     />
-                    <TextView style="@style/CustomRegularTextView"
-                              android:text="Economy Class"
+                    <TextView android:id="@+id/tv_details_class"
+                              style="@style/CustomRegularTextView"
+                              tools:text="Economy Class"
                               android:textColor="@color/cool_grey"
                               android:maxLines="2"
                               android:layout_weight="1"
@@ -91,12 +94,14 @@
                               android:maxLines="2"
                               android:layout_weight="1"
                     />
-                    <TextView style="@style/CustomRegularTextView"
-                              android:text="$2500"
-                              android:textColor="@color/cool_grey"
-                              android:maxLines="2"
-                              android:layout_weight="1"
-                              android:gravity="right"
+                    <TextView
+                            android:id="@+id/tv_details_price"
+                            style="@style/CustomRegularTextView"
+                            tools:text="$2500"
+                            android:textColor="@color/cool_grey"
+                            android:maxLines="2"
+                            android:layout_weight="1"
+                            android:gravity="right"
                     />
                 </LinearLayout>
             </LinearLayout>
@@ -117,14 +122,14 @@
     >
         <TextView android:id="@+id/tv_total_deals"
                   style="@style/WhiteRegularTextView"
-                  android:text="2 Deals from"
+                  tools:text="2 Deals from"
                   android:layout_weight="1"
                   android:layout_marginRight="@dimen/padding_8dp"
                   android:maxLines="2"
         />
         <TextView android:id="@+id/tv_price"
                   style="@style/WhiteRegularTextView"
-                  android:text="$25000"
+                  tools:text="$25000"
                   android:layout_weight="1"
                   android:maxLines="2"
         />

@@ -86,6 +86,7 @@ class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
+        Pref.setValue(this, PrefConstants.IS_FIRST_TIME, true)
         if (intent.extras != null) {
             when (intent.extras.get("SCREEN_NAME")) {
                 "home" -> loadFragment(HomeFragment.newInstance())
@@ -372,16 +373,18 @@ class DashboardActivity : AppCompatActivity() {
                     resources!!.getString(R.string.alert_exit),
                     getString(R.string.alert_exit_msg),
                     resources!!.getString(
-                        R.string.ok
+                        R.string.no
                     ),
-                    getString(R.string.no),
+                    getString(R.string.yes),
                     object : CustomDialogPresenter.CustomDialogView {
                         override fun onPositiveButtonClicked() {
-                            finish()
+
                         }
 
                         override fun onNegativeButtonClicked() {
-
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            startActivity(intent)
+                            finish()
                         }
                     })
             } else
@@ -423,6 +426,8 @@ class DashboardActivity : AppCompatActivity() {
                         }
 
                         override fun onNegativeButtonClicked() {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            startActivity(intent)
                             finish()
                         }
                     })

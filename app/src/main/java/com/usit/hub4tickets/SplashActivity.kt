@@ -22,7 +22,6 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        Pref.setValue(this, PrefConstants.IS_DASHBOARD, false)
 
         //Initialize the Handler
         mDelayHandler = Handler()

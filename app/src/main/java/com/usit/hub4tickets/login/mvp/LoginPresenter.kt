@@ -1,6 +1,6 @@
 package com.usit.hub4tickets.domain.presentation.presenters
 
-import android.content.Context
+import android.support.v7.app.AlertDialog
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginViewModel
 
 /**
@@ -43,6 +43,16 @@ interface LoginPresenter : BasePresenter {
 
     fun callAPI(deviceId: String, email: String, password: String)
     fun callSendOtpAPI(deviceId: String, toString: String)
-    fun callVerifyOTPAPI(deviceId: String, email: String, otp: String)
-    fun callResetPassword(deviceId: String, email: String, newPassword: String)
+    fun callVerifyOTPAPI(
+        deviceId: String,
+        email: String,
+        otp: String,
+        dialogBuilder: AlertDialog
+    )
+    fun callResetPassword(
+        deviceId: String,
+        email: String,
+        newPassword: String,
+        dialogBuilder: AlertDialog
+    )
 }

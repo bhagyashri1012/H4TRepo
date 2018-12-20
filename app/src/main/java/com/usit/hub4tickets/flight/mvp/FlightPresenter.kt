@@ -42,6 +42,7 @@ interface FlightPresenter : BasePresenter {
     fun callAPIAirportData(flag: String?, toString: String)
 
     fun callFlightDetails(
+        userId: String,
         adults: String,
         travel_class: String,
         children: String,

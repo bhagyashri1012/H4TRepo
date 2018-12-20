@@ -106,6 +106,8 @@ data class AirportData(
 )
 
 data class FlightData(
+    var userId: String,
+    val deviceId: String,
     val adults: String,
     val travel_class: String,
     val children: String,

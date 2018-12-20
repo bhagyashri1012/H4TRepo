@@ -31,6 +31,10 @@ class TripDetailsActivity : BaseActivity() {
         init()
         if (null != intent.extras) {
             setDataToRecyclerViewAdapter(intent.extras.getParcelable(Constant.Path.FLIGHT_DETAILS) as FlightViewModel.FlightListResponse.ResponseData)
+            tv_details_passengers.text = intent.extras.getString(Constant.Path.TOTAL_PASSENGERS)
+            tv_details_class.text = intent.extras.getString(Constant.Path.CABIN_CLASS)
+            tv_details_price.text =
+                    (intent.extras.getParcelable(Constant.Path.FLIGHT_DETAILS) as FlightViewModel.FlightListResponse.ResponseData).price.toString()
         }
         btn_continue_booking.setOnClickListener {
             val intent = Intent(baseContext, TripProvidersListActivity::class.java)
@@ -100,6 +104,8 @@ class TripDetailsActivity : BaseActivity() {
         }
         adapter = TripDetailsViewAdapter(tripDetailsArrayList, null, this)
         recycler_view!!.adapter = adapter
+
+
     }
 }
 

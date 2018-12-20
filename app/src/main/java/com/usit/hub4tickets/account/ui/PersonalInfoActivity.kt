@@ -189,20 +189,16 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         // Reset errors.
         edt_email.error = null
         edt_phone_no.error = null
-        // Store values at the time of the login attempt.
         val emailStr = edt_email.text.toString()
         val passwordStr = edt_phone_no.text.toString()
         var check = if (!checkbox_promotions_account.isChecked) "0" else "1"
-
         var cancel = false
         var focusView: View? = null
-        // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(passwordStr) && !isPhoneNumber(passwordStr)) {
             edt_phone_no.error = getString(R.string.error_field_required)
             focusView = edt_phone_no
             cancel = true
         }
-        // Check for a valid email address.
         if (TextUtils.isEmpty(emailStr)) {
             edt_email.error = getString(R.string.error_field_required)
             focusView = edt_email
@@ -212,18 +208,12 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             focusView = edt_email
             cancel = true
         }
-
         checkbox_promotions_account.setOnCheckedChangeListener { buttonView, isChecked ->
             check = if (isChecked) "0" else "1"
         }
-
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView?.requestFocus()
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
             showProgress(true)
             presenter.callAPIUpdateProfile(
                 Pref.getValue(this, PrefConstants.USER_ID, "0").toString(),
@@ -236,17 +226,10 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
                 Pref.getValue(this, PrefConstants.PROFILE_COUNTRY_ID, "").toString(),
                 Pref.getValue(this, PrefConstants.STATE_ID, "").toString(),
                 Pref.getValue(this, PrefConstants.CITY_ID, "").toString(),
-                Pref.getValue(this, PrefConstants.LANGUAGE_ID, "").toString(),
+                Pref.getValue(this, PrefConstants.PROFILE_LANGUAGE_ID, "").toString(),
                 check
             )
         }
-    }
-
-    override fun showProgress(show: Boolean) {
-        if (show)
-            Utility.showProgressDialog(context = this)
-        else
-            Utility.hideProgressBar()
     }
 
 

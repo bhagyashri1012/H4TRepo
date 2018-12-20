@@ -97,9 +97,9 @@ class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
     }
 
     private fun autoFillFields() {
-        tv_country_name.text = model.profileDomain.responseData?.country
-        tv_lang_name.text = model.profileDomain.responseData?.language
-        tv_currency_name.text = model.profileDomain.responseData?.currency
+        tv_country_name.text = model.profileDomain.responseData?.sqUserdetails?.countryName
+        tv_lang_name.text = model.profileDomain.responseData?.sqUserdetails?.languageName
+        tv_currency_name.text = model.profileDomain.responseData?.sqUserdetails?.currencyName
         Pref.setValue(context, PrefConstants.EMAIL_ID, model.profileDomain.responseData?.email.toString())
         link_login.text = Pref.getValue(context, PrefConstants.EMAIL_ID, "")
         if (link_login.text == "null")

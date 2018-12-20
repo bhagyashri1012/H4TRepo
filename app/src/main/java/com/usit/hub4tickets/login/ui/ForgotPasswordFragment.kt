@@ -78,28 +78,29 @@ class ForgotPasswordFragment : RootFragment(), LoginPresenter.MainView {
         }
     }
 
-    private fun attemptResetPassword(dialogView: View) {
+    private fun attemptResetPassword(dialogView: View, dialogBuilder: AlertDialog) {
         dialogView.edt_new_password.error = null
         dialogView.edt_confirm_password.error = null
         val passwordStr = dialogView.edt_new_password.text.toString()
         val confirmPasswordStr = dialogView.edt_confirm_password.text.toString()
         var cancel = false
         var focusView: View? = null
-        if (TextUtils.isEmpty(passwordStr)) {
+        if (!TextUtils.isEmpty(passwordStr)) {
             dialogView.edt_new_password.error = getString(R.string.error_field_required_password)
             focusView = dialogView.edt_new_password
             cancel = true
-        } else if (TextUtils.isEmpty(confirmPasswordStr)) {
+        }
+        if (!TextUtils.isEmpty(confirmPasswordStr)) {
             dialogView.edt_confirm_password.error = getString(R.string.error_field_required_re_password)
             focusView = dialogView.edt_confirm_password
             cancel = true
         }
-        if (!TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
+        if (!TextUtils.isEmpty(passwordStr) && !Utility.isPasswordValid(passwordStr)) {
             dialogView.edt_new_password.error = getString(R.string.error_invalid_password)
             focusView = dialogView.edt_new_password
             cancel = true
         }
-        if (!TextUtils.isEmpty(confirmPasswordStr) && !isPasswordValid(passwordStr)) {
+        if (!TextUtils.isEmpty(confirmPasswordStr) && !Utility.isPasswordValid(passwordStr)) {
             dialogView.edt_confirm_password.error = getString(R.string.error_invalid_password)
             focusView = dialogView.edt_new_password
             cancel = true
@@ -116,13 +117,9 @@ class ForgotPasswordFragment : RootFragment(), LoginPresenter.MainView {
             presenter?.callResetPassword(
                 Utility.getDeviceId(context),
                 email,
-                dialogView.edt_confirm_password.text.toString()
+                dialogView.edt_confirm_password.text.toString(),dialogBuilder
             )
         }
-    }
-
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length > 4
     }
 
     private fun verifyOtp() {
@@ -157,7 +154,8 @@ class ForgotPasswordFragment : RootFragment(), LoginPresenter.MainView {
         dialogView.button_verify.setOnClickListener {
             val otp = dialogView.editTextEnterOtp.text.toString()
             Utility.hideSoftKeyboard(dialogView.editTextEnterOtp)
-            presenter?.callVerifyOTPAPI(Utility.getDeviceId(context), email, otp)
+            presenter?.callVerifyOTPAPI(Utility.getDeviceId(context), email, otp,dialogBuilder)
+
         }
         dialogView.button_cancel.setOnClickListener {
             Utility.hideProgressBar()
@@ -179,7 +177,7 @@ class ForgotPasswordFragment : RootFragment(), LoginPresenter.MainView {
         val dialogView = inflater.inflate(R.layout.forgot_password_dialog, null)
         dialogView.button_reset_password.setOnClickListener {
             Utility.hideSoftKeyboard(dialogView)
-            attemptResetPassword(dialogView)
+            attemptResetPassword(dialogView,dialogBuilder)
         }
         dialogView.button_cancel_fp.setOnClickListener {
             Utility.hideProgressBar()
@@ -201,11 +199,12 @@ class ForgotPasswordFragment : RootFragment(), LoginPresenter.MainView {
         email = emailStr
         var cancel = false
         var focusView: View? = null
-        if (TextUtils.isEmpty(emailStr)) {
+        if (!TextUtils.isEmpty(emailStr)) {
             edt_email_forgot_password.error = getString(R.string.error_field_required_email)
             focusView = edt_email_forgot_password
             cancel = true
-        } else if (!Utility.isEmailValid(emailStr)) {
+        }
+        if (!TextUtils.isEmpty(emailStr) && !Utility.isEmailValid(emailStr)) {
             edt_email_forgot_password.error = getString(R.string.error_invalid_email)
             focusView = edt_email_forgot_password
             cancel = true

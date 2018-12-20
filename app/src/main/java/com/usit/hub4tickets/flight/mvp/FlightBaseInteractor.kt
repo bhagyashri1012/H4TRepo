@@ -4,6 +4,7 @@ import com.usit.hub4tickets.api.network.ErrorResponse
 import com.usit.hub4tickets.domain.api.APICallManager
 import com.usit.hub4tickets.domain.api.AirportDataAPICallListener
 import com.usit.hub4tickets.utils.Enums
+import com.usit.hub4tickets.utils.Utility
 import com.usit.hub4tickets.utils.presentation.presenters.BaseInteractor
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -31,6 +32,8 @@ class FlightBaseInteractor(private var listenerAirportDataAPICallListener: Airpo
     }
 
     fun callAPIFlightDetails(
+        userId: String,
+        deviceId: String,
         adults: String,
         cabinClass: String,
         children: String,
@@ -44,6 +47,8 @@ class FlightBaseInteractor(private var listenerAirportDataAPICallListener: Airpo
     ) {
         val route = Enums.APIRoute.GET_SAMPLE
         val call = APICallManager.getInstance.apiManager.getFlightDetails(
+            userId,
+            deviceId,
             adults,
             cabinClass,
             children,

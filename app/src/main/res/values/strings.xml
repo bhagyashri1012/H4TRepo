@@ -16,9 +16,7 @@
     <string name="error_field_required_password">Please enter your password</string>
     <string name="error_field_required_re_password">Please Re-enter your password</string>
     <string name="error_password_too_short">This password is too short</string>
-    <string name="error_invalid_password">This password is incorrect ! length at least 6 characters,must contains one
-        lowercase characters,must contains one uppercase characters, must contains one special symbols in the list
-        "@#$%"
+    <string name="error_invalid_password">Password must be minimum length 8, at least 1 special character, at least 1 numeric
     </string>
     <string name="error_not_match_password">Password does not match</string>
     <string name="error_field_required">This field is required</string>

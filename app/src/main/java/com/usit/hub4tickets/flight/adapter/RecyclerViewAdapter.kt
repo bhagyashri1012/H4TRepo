@@ -14,7 +14,8 @@ import com.usit.hub4tickets.flight.model.FlightViewModel
 
 class RecyclerViewAdapter(
     var items: List<FlightViewModel.FlightListResponse.ResponseData>,
-    private val listener: OnItemClickListener?
+    private val listener: OnItemClickListener?,
+    var totalPassengers: String?
 ) : RecyclerView.Adapter<TextItemViewHolderForArray>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TextItemViewHolderForArray {
@@ -24,7 +25,7 @@ class RecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: TextItemViewHolderForArray, position: Int) {
         holder.bind(items[position])
-        holder.itemView.setOnClickListener { listener?.onFlightRowClick(items[position]) }
+        holder.itemView.setOnClickListener { listener?.onFlightRowClick(items[position],totalPassengers) }
     }
 
     override fun getItemId(position: Int): Long {
@@ -32,7 +33,10 @@ class RecyclerViewAdapter(
     }
 
     interface OnItemClickListener {
-        fun onFlightRowClick(responseData: FlightViewModel.FlightListResponse.ResponseData)
+        fun onFlightRowClick(
+            responseData: FlightViewModel.FlightListResponse.ResponseData,
+            totalPassengers: String?
+        )
     }
 
     override fun getItemCount(): Int {

@@ -58,8 +58,12 @@ class ProfileViewModel(var context: Context?) {
             val cityId: String?,
             @Nullable @SerializedName("userId")
             val userId: Int?,
+            @Nullable
             @SerializedName("promoChecked")
-            val promoChecked: Int?
+            val promoChecked: Int?,
+            @Nullable
+            @SerializedName("sqUserdetails")
+            val sqUserdetails: SqUserdetails?
         ) {
             data class DNo(
                 @Nullable @SerializedName("dname")
@@ -68,5 +72,35 @@ class ProfileViewModel(var context: Context?) {
                 val dno: Int
             )
         }
+
+        data class SqUserdetails(
+            @Nullable
+            @SerializedName("countryId")
+            val countryId: Int,
+            @Nullable
+            @SerializedName("countryName")
+            val countryName: String,
+            @Nullable
+            @SerializedName("currencyName")
+            val currencyName: String,
+            @Nullable
+            @SerializedName("deviceId")
+            val deviceId: String,
+            @Nullable
+            @SerializedName("languageId")
+            val languageId: Int,
+            @Nullable
+            @SerializedName("languageName")
+            val languageName: String,
+            @Nullable
+            @SerializedName("latestCurrencyId")
+            val latestCurrencyId: String,
+            @Nullable
+            @SerializedName("userDetailsId")
+            val userDetailsId: Int,
+            @Nullable
+            @SerializedName("userId")
+            val userId: Int
+        )
     }
 }

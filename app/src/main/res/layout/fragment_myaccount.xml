@@ -162,6 +162,7 @@
                                 android:id="@+id/link_my_alerts"
                                 style="@style/CustomMediumTextView"
                                 android:text="@string/my_alerts"
+                                android:enabled="false"
                                 android:layout_margin="@dimen/margin_16dp"
                         />
                         <View style="@style/Divider"/>
@@ -169,6 +170,7 @@
                                 android:id="@+id/link_my_history"
                                 style="@style/CustomMediumTextView"
                                 android:text="@string/my_history"
+                                android:enabled="false"
                                 android:layout_margin="@dimen/activity_vertical_margin"/>
                         <View
                                 style="@style/Divider"
@@ -177,6 +179,7 @@
                                 android:id="@+id/link_clear_history"
                                 style="@style/CustomMediumTextView"
                                 android:text="@string/clear_history"
+                                android:enabled="false"
                                 android:layout_margin="@dimen/activity_vertical_margin"/>
                         <View
                                 style="@style/Divider"

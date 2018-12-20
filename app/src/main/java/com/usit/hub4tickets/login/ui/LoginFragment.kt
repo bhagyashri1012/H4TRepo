@@ -24,8 +24,7 @@ import com.usit.hub4tickets.utils.Pref
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.activity_login.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -84,16 +83,19 @@ class LoginFragment : RootFragment(), LoginPresenter.MainView {
     private fun init() {
         this.model = LoginViewModel(context)
         this.presenter = LoginPresenterImpl(this, context!!)
+
     }
 
     private fun redirectToDashboard() {
-        if (Pref.getValue(context, PrefConstants.IS_FIRST_TIME, false)) {
+        if (Pref.getValue(context, PrefConstants.IS_DASHBOARD, false)) {
+            val intent = Intent(context, DashboardActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
+
+        } else {
             showState(IDLE)
             activity?.onBackPressed()
 
-        } else {
-            val intent = Intent(context, DashboardActivity::class.java)
-            startActivity(intent)
         }
     }
 
@@ -146,6 +148,12 @@ class LoginFragment : RootFragment(), LoginPresenter.MainView {
     }
 
     private fun attemptLogin() {
+        /* edt_email_login.filters = arrayOf(InputFilter { source, start, end, dest, dstart, dend ->
+             if (source.toString().equals(" ", ignoreCase = true)) {
+                 ""
+             } else source
+         })*/
+
         // Reset errors.
         edt_email_login.error = null
         edt_password_login.error = null
@@ -165,7 +173,7 @@ class LoginFragment : RootFragment(), LoginPresenter.MainView {
             edt_password_login.error = getString(R.string.error_field_required_password)
             focusView = edt_password_login
             cancel = true
-        } else if (!TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
+        } else if (!TextUtils.isEmpty(passwordStr) && !Utility.isPasswordValid(passwordStr)) {
             edt_password_login.error = getString(R.string.error_invalid_password)
             focusView = edt_password_login
             cancel = true
@@ -182,36 +190,8 @@ class LoginFragment : RootFragment(), LoginPresenter.MainView {
         }
     }
 
-
-    private fun isPasswordValid(password: String): Boolean {
-        var PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})"
-        var pattern: Pattern = Pattern.compile(PASSWORD_PATTERN)
-        var matcher: Matcher? = null
-        matcher = pattern.matcher(password)
-        return matcher!!.matches()
-    }
-
     override fun onBackPressed(): Boolean {
         return fragmentManager?.popBackStackImmediate()!!
-    }
-
-    inner class PasswordValidator {
-        private val PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})"
-        private val pattern: Pattern = Pattern.compile(PASSWORD_PATTERN)
-        private var matcher: Matcher? = null
-
-        /**
-         * Validate password with regular expression
-         * @param password password for validation
-         * @return true valid password, false invalid password
-         */
-        fun validate(password: String): Boolean {
-
-            matcher = pattern.matcher(password)
-            return matcher!!.matches()
-
-        }
-
     }
 
 }

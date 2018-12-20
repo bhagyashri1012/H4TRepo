@@ -39,6 +39,7 @@ import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
@@ -178,9 +179,13 @@ object Utility {
     }
 
     //Check if email is valid or not
-    fun validatePassword(strPwd: String): Boolean {
-        val pdwPattern = "^(?=.{6,})(?=.*[@#$%^&+=]).*$"
-        return strPwd.matches(regex = pdwPattern.toRegex())
+    //val pdwPattern = "^(?=.{6,})(?=.*[@#$%^&+=]).*$"
+    fun isPasswordValid(password: String): Boolean {
+        var PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})"
+        var pattern: Pattern = Pattern.compile(PASSWORD_PATTERN)
+        var matcher: Matcher?
+        matcher = pattern.matcher(password)
+        return matcher!!.matches()
     }
 
 
@@ -327,7 +332,7 @@ object Utility {
             e.printStackTrace()
         }
 
-       // calendar.time = date
+        // calendar.time = date
         return date
     }
 
@@ -765,7 +770,7 @@ object Utility {
                 textView?.text = "1"
             }
         } else if (infants) {
-            if (Integer.parseInt(textView?.text.toString()) in 1..2)
+            if (Integer.parseInt(textView?.text.toString()) in 1..3)
                 textView.text = Integer.parseInt(textView?.text.toString()).minus(1).toString()
             else
                 textView?.text = "0"
@@ -789,7 +794,7 @@ object Utility {
                 textView?.text = "1"
             }
         } else if (infants) {
-            if (Integer.parseInt(textView?.text.toString()) in 0..2)
+            if (Integer.parseInt(textView?.text.toString()) in 0..3)
                 textView.text = Integer.parseInt(textView?.text.toString()).plus(1).toString()
             else
                 textView?.text = "0"

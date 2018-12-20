@@ -21,10 +21,7 @@ import com.usit.hub4tickets.flight.adapter.RecyclerViewAdapter
 import com.usit.hub4tickets.flight.model.FlightViewModel
 import com.usit.hub4tickets.search.CommonSearchActivity
 import com.usit.hub4tickets.search.model.CommonSelectorPojo
-import com.usit.hub4tickets.utils.Constant
-import com.usit.hub4tickets.utils.PrefConstants
-import com.usit.hub4tickets.utils.SignleSelectionAdapter
-import com.usit.hub4tickets.utils.Utility
+import com.usit.hub4tickets.utils.*
 import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 import kotlinx.android.synthetic.main.search_layout.*
 import kotlinx.android.synthetic.main.sort_by_dialog.view.*
@@ -53,10 +50,8 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     private lateinit var presenter: FlightPresenter
     private val dataListAll: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? = ArrayList()
 
-    var adapter: RecyclerViewAdapter? = RecyclerViewAdapter(
-        items = emptyList(),
-        listener = null
-    )
+    var adapter: RecyclerViewAdapter? =
+        RecyclerViewAdapter(items = emptyList(), listener = null, totalPassengers = null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +92,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                 )
             }
             FLIGHT_DETAILS_SUCCESS -> {
+
                 setDataToRecyclerViewAdapter(model.flightListViewModel.responseData)
             }
             ERROR
@@ -109,8 +105,11 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         }
     }
 
-    override fun onFlightRowClick(responseData: FlightViewModel.FlightListResponse.ResponseData) {
-        enterNextFragment(responseData)
+    override fun onFlightRowClick(
+        responseData: FlightViewModel.FlightListResponse.ResponseData,
+        totalPassengers: String?
+    ) {
+        enterNextFragment(responseData, totalPassengers!!)
     }
 
     override fun onResume() {
@@ -186,9 +185,14 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         presenter.callAPIAirportData(flag, toString)
     }
 
-    private fun enterNextFragment(responseData: FlightViewModel.FlightListResponse.ResponseData) {
+    private fun enterNextFragment(
+        responseData: FlightViewModel.FlightListResponse.ResponseData,
+        totalPassengers: String
+    ) {
         val intent = Intent(activity?.baseContext, TripDetailsActivity::class.java)
         intent.putExtra(Constant.Path.FLIGHT_DETAILS, responseData)
+        intent.putExtra(Constant.Path.TOTAL_PASSENGERS, totalPassengers)
+        intent.putExtra(Constant.Path.CABIN_CLASS, travelClass)
         startActivity(intent)
     }
 
@@ -275,6 +279,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         } else {
             Utility.showProgress(true, context)
             presenter.callFlightDetails(
+                Pref.getValue(context, PrefConstants.USER_ID, "0").toString(),
                 adults!!,
                 travelClassCode.toString(),//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
                 childrens!!,
@@ -507,12 +512,14 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         }
     }
 
+    var totalPassengers: String = ""
     private fun setDataToRecyclerViewAdapter(responseData: List<FlightViewModel.FlightListResponse.ResponseData>?) {
         dataListAll?.clear()
         if (responseData != null) {
+            totalPassengers = btn_passengers.text.toString()
             dataListAll?.addAll(responseData)
         }
-        adapter = RecyclerViewAdapter(dataListAll!!, this)
+        adapter = RecyclerViewAdapter(dataListAll!!, this, totalPassengers)
         recyclerView!!.adapter = adapter
     }
 
