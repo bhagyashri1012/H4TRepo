@@ -182,6 +182,7 @@ object Utility {
     //val pdwPattern = "^(?=.{6,})(?=.*[@#$%^&+=]).*$"
     fun isPasswordValid(password: String): Boolean {
         var PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})"
+        //var PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[0-9])(?=.*[^\\w\\*])[^\\s]{8,20}\$\n"
         var pattern: Pattern = Pattern.compile(PASSWORD_PATTERN)
         var matcher: Matcher?
         matcher = pattern.matcher(password)
@@ -807,9 +808,12 @@ object Utility {
     }
 
     fun isEmailValid(email: String): Boolean {
+
         return try {
-            val pattern =
-                Pattern.compile("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
+            val EMAIL_STRING =
+                "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+            val pattern = Pattern.compile(EMAIL_STRING);
+
             val matcher = pattern.matcher(email)
             matcher.matches()
         } catch (e: Exception) {

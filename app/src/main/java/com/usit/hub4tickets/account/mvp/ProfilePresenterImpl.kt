@@ -186,6 +186,6 @@ class ProfilePresenterImpl(
 
     override fun onAPICallFailed(route: Enums.APIRoute, message: String) {
         mView.doRetrieveProfileModel().errorMessage = message
-        presentState(IDLE)
+        presentState(ERROR)
     }
 }

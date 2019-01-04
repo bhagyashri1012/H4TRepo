@@ -17,6 +17,7 @@ import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
 import com.usit.hub4tickets.utils.Utility.showProgress
 import kotlinx.android.synthetic.main.change_password_dialog.view.*
+import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.fragment_account_info.*
 
 class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
@@ -68,6 +69,8 @@ class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
     private fun init() {
         this.model = ProfileViewModel(context)
         this.presenter = ProfilePresenterImpl(this, context!!)
+        titleToolBar.text = resources.getString(R.string.my_account_info)
+        mainToolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
     private fun changePassword() {
@@ -119,17 +122,17 @@ class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
             cancel = true
         }
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(olPassStr) && !isPasswordValid(olPassStr)) {
+        if (!TextUtils.isEmpty(olPassStr) && !Utility.isPasswordValid(olPassStr)) {
             dialogView.edt_change_current_password.error = getString(R.string.error_invalid_password)
             focusView = dialogView.edt_change_current_password
             cancel = true
         }
-        if (!TextUtils.isEmpty(newPasswordStr) && !isPasswordValid(newPasswordStr)) {
+        if (!TextUtils.isEmpty(newPasswordStr) && !Utility.isPasswordValid(newPasswordStr)) {
             dialogView.edt_new_change_password.error = getString(R.string.error_invalid_password)
             focusView = dialogView.edt_new_change_password
             cancel = true
         }
-        if (!TextUtils.isEmpty(confirmPasswordStr) && !isPasswordValid(confirmPasswordStr)) {
+        if (!TextUtils.isEmpty(confirmPasswordStr) && !Utility.isPasswordValid(confirmPasswordStr)) {
             dialogView.edt_change_confirm_password.error = getString(R.string.error_invalid_password)
             focusView = dialogView.edt_change_confirm_password
             cancel = true
@@ -154,11 +157,7 @@ class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
         }
     }
 
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length > 4
-    }
-
     override fun onBackPressed(): Boolean {
-        return this?.onBackPressed()
+        return fragmentManager?.popBackStackImmediate()!!
     }
 }

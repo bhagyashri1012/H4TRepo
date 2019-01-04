@@ -42,7 +42,7 @@
                 >
 
                     <TextView style="@style/CustomRegularTextView"
-                              android:text="Passangers"
+                              android:text="@string/passenger"
                               android:layout_marginBottom="@dimen/margin_4dp"
                               android:maxLines="2"
                               android:layout_weight="1"

@@ -28,7 +28,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initScreen() {
-        Pref.setValue(this, PrefConstants.IS_DASHBOARD, true)
         loginFrag = LoginFragment()
         supportFragmentManager.beginTransaction().replace(R.id.container_flight, loginFrag!!).commit()
     }
@@ -54,7 +53,11 @@ class LoginActivity : AppCompatActivity() {
                     }
                 })
         } else {
-            super.onBackPressed()
+            if (supportFragmentManager?.backStackEntryCount == 0) {
+                super.onBackPressed()
+            } else {
+                supportFragmentManager?.popBackStackImmediate()
+            }
         }
     }
 }

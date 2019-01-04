@@ -327,4 +327,6 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
         startActivityForResult(intent, languageSelectionRequest)
     }
+
+
 }

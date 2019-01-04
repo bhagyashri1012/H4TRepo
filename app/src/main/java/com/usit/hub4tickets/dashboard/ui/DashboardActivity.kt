@@ -86,6 +86,7 @@ class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
+        Pref.setValue(this, PrefConstants.IS_DASHBOARD, true)
         Pref.setValue(this, PrefConstants.IS_FIRST_TIME, true)
         if (intent.extras != null) {
             when (intent.extras.get("SCREEN_NAME")) {

@@ -38,15 +38,14 @@ class TextItemViewForTripDetailsHolder(itemView: View) : RecyclerView.ViewHolder
     private val tripAirline: TextView = itemView.findViewById(R.id.tv_airline) as TextView
     private val rvStopDetails: RecyclerView = itemView.findViewById(R.id.recycler_view_stop_details) as RecyclerView
     fun bind(tripDetailsResponse: FlightViewModel.TripAllDetails, context: Context?) {
-        tripTitle.text = tripDetailsResponse?.fromCity + " - " +
-                tripDetailsResponse?.toCity
-        tripDate.text = tripDetailsResponse?.startDate
         if (null != tripDetailsResponse) {
+            tripTitle.text = tripDetailsResponse?.fromCity + " - " +
+                    tripDetailsResponse?.toCity
+            tripDate.text = tripDetailsResponse?.startDate
             tripTime.text = tripDetailsResponse?.startTime + " - " +
                     tripDetailsResponse?.endTime
             tripDestinatn.text = tripDetailsResponse?.startAirPortName + " - " +
-                    tripDetailsResponse?.endAirPortName + " ," +
-                    tripDetailsResponse?.airline
+                    tripDetailsResponse?.endAirPortName
             tripDuration.text = tripDetailsResponse?.duration
             tripAirline.text = tripDetailsResponse?.airline
             val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -93,11 +92,23 @@ class TextItemViewHolderForArray(itemView: View) : RecyclerView.ViewHolder(itemV
     private val imvOutBound: ImageView = itemView.findViewById(R.id.imv_out_bound) as ImageView
 
     fun bind(responseData: FlightViewModel.FlightListResponse.ResponseData) {
+        //out bound
+        if (null != responseData.outbondFlightDetails) {
+            tvDurationOutBound.text = responseData.outbondFlightDetails?.duration
+            tvTimeOutBound.text = responseData.outbondFlightDetails?.startTime + " - " +
+                    responseData.outbondFlightDetails?.endTime
+            tvDestinationOutBound.text = responseData.outbondFlightDetails?.fromCity + " - " +
+                    responseData.outbondFlightDetails?.toCity + " , " +
+                    responseData.outbondFlightDetails?.airline
+            Glide.with(itemView.context).load(responseData.outbondFlightDetails?.imgUrl).into(imvOutBound)
+
+            textView.text = responseData.currency + " " + responseData.price?.toString()
+        }
         if (null != responseData.inbondFlightDetails) {
             tvTime.text = responseData.inbondFlightDetails?.startTime + " - " +
                     responseData.inbondFlightDetails?.endTime
-            tvDestination.text = responseData.inbondFlightDetails?.startAirPortName + " - " +
-                    responseData.inbondFlightDetails?.endAirPortName + " ," + responseData.inbondFlightDetails?.airline
+            tvDestination.text = responseData.inbondFlightDetails?.fromCity + " - " +
+                    responseData.inbondFlightDetails?.toCity + " , " + responseData.inbondFlightDetails?.airline
             tvDuration.text = responseData.inbondFlightDetails?.duration
             Glide.with(itemView.context).load(responseData.inbondFlightDetails?.imgUrl).into(imvInBound)
         } else {
@@ -106,15 +117,5 @@ class TextItemViewHolderForArray(itemView: View) : RecyclerView.ViewHolder(itemV
             tvDuration.visibility = View.GONE
             imvInBound.visibility = View.GONE
         }
-        //out bound
-        tvDurationOutBound.text = responseData.outbondFlightDetails?.duration
-        tvTimeOutBound.text = responseData.outbondFlightDetails?.startTime + " - " +
-                responseData.outbondFlightDetails?.endTime
-        tvDestinationOutBound.text = responseData.outbondFlightDetails?.startAirPortName + " - " +
-                responseData.outbondFlightDetails?.endAirPortName + " ," + responseData.outbondFlightDetails?.airline
-        Glide.with(itemView.context).load(responseData.outbondFlightDetails?.imgUrl).into(imvOutBound)
-
-        textView.text = responseData.currency.toString() + " " + responseData.price.toString()
-
     }
 }

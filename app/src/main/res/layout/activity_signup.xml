@@ -44,7 +44,8 @@
                             android:layout_width="match_parent"
                             style="@style/CustomRegularTextView"
                             android:hint="@string/prompt_email"
-                            android:inputType="textEmailAddress"
+                            android:inputType="textVisiblePassword"
+                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890*@#$%_-\\^.&amp;"
                             android:maxLines="1"
                             android:singleLine="true"/>
 
@@ -65,6 +66,7 @@
                             android:imeActionLabel="@string/action_sign_in_short"
                             android:imeOptions="actionUnspecified"
                             android:inputType="textPassword"
+                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890*@#$%_-\\^.&amp;"
                             android:maxLines="1"
                             android:singleLine="true"/>
 
@@ -86,6 +88,7 @@
                             android:imeActionLabel="@string/action_sign_in_short"
                             android:imeOptions="actionUnspecified"
                             android:inputType="textPassword"
+                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890*@#$%_-\\^.&amp;"
                             android:maxLines="1"
                             android:singleLine="true"/>
 

@@ -3,6 +3,7 @@ package com.usit.hub4tickets.login.ui
 import android.os.Bundle
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
+import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.common_toolbar.*
 
 class ForgotPasswordActivity : BaseActivity() {

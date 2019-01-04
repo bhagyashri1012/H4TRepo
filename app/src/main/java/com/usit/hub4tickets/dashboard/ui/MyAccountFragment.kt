@@ -18,6 +18,7 @@ import com.usit.hub4tickets.utils.Pref
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
 import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
+import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.fragment_myaccount.*
 import kotlinx.android.synthetic.main.fragment_myaccount.view.*
 
@@ -164,6 +165,7 @@ class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
                 }
 
                 override fun onNegativeButtonClicked() {
+                    Pref.setValue(context, PrefConstants.IS_FIRST_TIME, false)
                     Pref.setValue(context, PrefConstants.IS_LOGIN, false)
                     Pref.setValue(context, PrefConstants.USER_ID, "0")
                     Pref.setValue(context, PrefConstants.EMAIL_ID, "")
@@ -174,6 +176,8 @@ class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
     }
 
     override fun onBackPressed(): Boolean {
+        if (fragmentManager?.getBackStackEntryAt(0)?.name.equals("SignUpFragment")!!)
+            return super.onBackPressed()
         if (fragmentManager?.backStackEntryCount == 0)
             return fragmentManager?.popBackStackImmediate()!!
         else

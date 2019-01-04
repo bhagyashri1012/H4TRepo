@@ -41,6 +41,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     private var fromCode: String? = null
     private var toCode: String? = null
     private var sortByCode: String? = null
+    private var searchText: String? = null
     private var travelClassCode: String? = "ECONOMY"
     private var travelClass: String? = "Economy"
     private val FROM_SELECTION_REQUEST = 501
@@ -157,19 +158,47 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             FROM_SELECTION_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK) {
                     isItemClicked = true
-                    edt_from.setText(
-                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
-                    )
                     fromCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
+                    if (fromCode.equals(toCode)) {
+                        edt_from.setText("")
+                        CustomDialogPresenter.showDialog(
+                            context,
+                            "",
+                            getString(R.string.error_field_same_location),
+                            context!!.resources.getString(
+                                R.string.ok
+                            ),
+                            null,
+                            null
+                        )
+                    } else {
+                        edt_from.setText(
+                            data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
+                        )
+                    }
                 }
             }
             TO_SELECTION_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK) {
                     isItemClickedTo = true
-                    edt_to.setText(
-                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
-                    )
                     toCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
+                    if (fromCode.equals(toCode)) {
+                        edt_to.setText("")
+                        CustomDialogPresenter.showDialog(
+                            context,
+                            "",
+                            getString(R.string.error_field_same_location),
+                            context!!.resources.getString(
+                                R.string.ok
+                            ),
+                            null,
+                            null
+                        )
+                    }else {
+                        edt_to.setText(
+                            data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
+                        )
+                    }
                 }
             }
         }
@@ -196,6 +225,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         startActivity(intent)
     }
 
+
     private fun openSearchActivityFlightReturn(
         arrayListAirPortData: ArrayList<FlightViewModel.AirPortDataResponse.ResponseData>,
         title: String,
@@ -203,8 +233,13 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         flag: String
     ) {
         if (arrayListAirPortData.size > 0) {
+            if (flag == Constant.Path.TO)
+                searchText = edt_to.text.toString()
+            else if (flag == Constant.Path.FROM)
+                searchText = edt_from.text.toString()
             val intent = Intent(context, CommonSearchActivity::class.java)
             intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
+            intent.putExtra(Constant.Path.SERACH_TEXT, searchText)
             intent.putParcelableArrayListExtra(Constant.Path.AIRPORT_FROM_LIST, arrayListAirPortData)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivityForResult(intent, selectionRequest)
@@ -272,6 +307,18 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                 null
             )
             focusView = tv_departure
+            cancel = true
+        } else if (fromCode.equals(toCode)) {
+            CustomDialogPresenter.showDialog(
+                context,
+                "",
+                getString(R.string.error_field_same_location),
+                context!!.resources.getString(
+                    R.string.ok
+                ),
+                null,
+                null
+            )
             cancel = true
         }
         if (cancel) {
@@ -479,7 +526,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
 
     private fun setDataAndListeners(v: View) {
         tv_departure.text = Utility.getCurrentDateNow()
-        tv_return.text = Utility.getCurrentDateAfter()
+        tv_return.text = Utility.getCurrentDateNow()
         recyclerView = v?.findViewById(R.id.recycler_view) as RecyclerView
         val layoutManager = LinearLayoutManager(context)
         recyclerView!!.layoutManager = layoutManager as RecyclerView.LayoutManager?

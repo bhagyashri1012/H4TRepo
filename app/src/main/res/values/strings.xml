@@ -16,7 +16,7 @@
     <string name="error_field_required_password">Please enter your password</string>
     <string name="error_field_required_re_password">Please Re-enter your password</string>
     <string name="error_password_too_short">This password is too short</string>
-    <string name="error_invalid_password">Password must be minimum length 8, at least 1 special character, at least 1 numeric
+    <string name="error_invalid_password">Password must be minimum 8 characters in length, contains at least 1 special character at least 1 numeric and at least 1 uppercase alphabet
     </string>
     <string name="error_not_match_password">Password does not match</string>
     <string name="error_field_required">This field is required</string>
@@ -26,6 +26,7 @@
     <string name="error_field_required_departure">Please enter your departure date</string>
     <string name="error_field_required_return">Please enter your return date</string>
     <string name="error_field_after_return">Please enter valid return date</string>
+    <string name="error_field_same_location">From and To location can’t be same</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="action_sign_up">Sign Up</string>
     <string name="action_forgot_password">Forgot Password</string>
@@ -206,4 +207,5 @@
     <string name="under_12_years">Under 12 years</string>
     <string name="under_2_years">Under 2 years</string>
     <string name="yes">Yes</string>
+    <string name="passenger">Passenger</string>
 </resources>

@@ -74,7 +74,7 @@
             >
 
                 <TextView android:id="@+id/tv_time"
-                          style="@style/CustomRegularTextView"
+                          style="@style/CustomSmallTextView"
                           android:text="2.14am - 4.25am"
                           android:textAlignment="viewEnd"
                           android:layout_marginBottom="@dimen/activity_vertical_margin_half"

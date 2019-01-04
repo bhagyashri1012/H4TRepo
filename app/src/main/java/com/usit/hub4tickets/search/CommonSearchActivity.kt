@@ -26,6 +26,7 @@ class CommonSearchActivity : BaseActivity() {
 
     private var searchItemsListAdapter: CommonSearchAdapter? = null
     private var strActivityTitle: String? = ""
+    private var searchText: String? = ""
     private var arrayListCommonSelectorInitial: ArrayList<DashboardViewModel.CountriesResponse.CountriesResponseData> =
         ArrayList()
     private var arrayListCommonSelectorLangInitial: ArrayList<DashboardViewModel.LanguageResponse.ResponseData> =
@@ -46,6 +47,7 @@ class CommonSearchActivity : BaseActivity() {
         Utility.hideKeyBordActivity(this)
         if (intent.extras != null) {
             strActivityTitle = intent.extras!!.getString(Constant.Path.ACTIVITY_TITLE)
+            searchText = intent.extras!!.getString(Constant.Path.SERACH_TEXT)
             when (strActivityTitle) {
                 "SettingsFragment" -> {
                     if (null != intent.extras.getSerializable(Constant.Path.LOCATION_LIST))
@@ -193,8 +195,9 @@ class CommonSearchActivity : BaseActivity() {
             recycler_city_list!!.layoutManager = mLayoutManager as RecyclerView.LayoutManager?
             recycler_city_list!!.adapter = searchItemsListAdapter
 
-            var searchText = this.findViewById<SearchView>(R.id.search_text)
-            searchText.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            var searchTextView = this.findViewById<SearchView>(R.id.search_text)
+            searchTextView.setQuery(searchText, true)
+            searchTextView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     query?.replace("\\s+$".toRegex(), "")
                     searchItemsListAdapter!!.getFilter().filter(query)

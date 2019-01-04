@@ -80,7 +80,8 @@ class FragmentOneWay : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                 openSearchActivityFlightReturn(
                     model.flightViewModel.responseData as ArrayList<FlightViewModel.AirPortDataResponse.ResponseData>,
                     this.javaClass.simpleName.toString(),
-                    FROM_SELECTION_REQUEST
+                    FROM_SELECTION_REQUEST,
+                    Constant.Path.FROM
                 )
             }
             FlightPresenter.MainView.ViewState.SUCCESS_TO -> {
@@ -88,7 +89,9 @@ class FragmentOneWay : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                 openSearchActivityFlightReturn(
                     model.flightViewModel.responseData as ArrayList<FlightViewModel.AirPortDataResponse.ResponseData>,
                     this.javaClass.simpleName.toString(),
-                    TO_SELECTION_REQUEST
+                    TO_SELECTION_REQUEST,
+                    Constant.Path.TO
+
                 )
             }
             FlightPresenter.MainView.ViewState.FLIGHT_DETAILS_SUCCESS -> {
@@ -118,15 +121,45 @@ class FragmentOneWay : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             FROM_SELECTION_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK) {
                     isItemClicked = true
-                    edt_from.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME))
                     fromCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
+                    if (fromCode.equals(toCode)) {
+                        edt_from.setText("")
+                        CustomDialogPresenter.showDialog(
+                            context,
+                            "",
+                            getString(R.string.error_field_same_location),
+                            context!!.resources.getString(
+                                R.string.ok
+                            ),
+                            null,
+                            null
+                        )
+                    } else {
+                        edt_from.setText(
+                            data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
+                        )
+                    }
                 }
             }
             TO_SELECTION_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK) {
                     isItemClickedTo = true
-                    edt_to.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME))
                     toCode = data?.getStringExtra(PrefConstants.SELECTED_ITEMS_TYPE)
+                    if (fromCode.equals(toCode)) {
+                        edt_to.setText("")
+                        CustomDialogPresenter.showDialog(
+                            context,
+                            "",
+                            getString(R.string.error_field_same_location),
+                            context!!.resources.getString(
+                                R.string.ok
+                            ),
+                            null,
+                            null
+                        )
+                    }else {
+                        edt_to.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME))
+                    }
                 }
             }
         }
@@ -415,14 +448,22 @@ class FragmentOneWay : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         dialogBuilder.show()
     }
 
+    private var searchText: String? = null
+
     private fun openSearchActivityFlightReturn(
         arrayListAirPortData: ArrayList<FlightViewModel.AirPortDataResponse.ResponseData>,
         title: String,
-        selectionRequest: Int
+        selectionRequest: Int,
+        flag: String
     ) {
         if (arrayListAirPortData.size > 0) {
+            if (flag == Constant.Path.TO)
+                searchText = edt_to.text.toString()
+            else if (flag == Constant.Path.FROM)
+                searchText = edt_from.text.toString()
             val intent = Intent(context, CommonSearchActivity::class.java)
             intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
+            intent.putExtra(Constant.Path.SERACH_TEXT, searchText)
             intent.putParcelableArrayListExtra(Constant.Path.AIRPORT_RETURN_LIST, arrayListAirPortData)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivityForResult(intent, selectionRequest)

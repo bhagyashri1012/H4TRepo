@@ -147,6 +147,7 @@ class SignUpFragment : RootFragment(), SignUpPresenter.MainView {
 
 
     override fun onBackPressed(): Boolean {
-        return fragmentManager?.popBackStackImmediate()!!
+        return super.onBackPressed()
     }
+
 }

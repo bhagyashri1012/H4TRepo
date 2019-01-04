@@ -33,7 +33,8 @@ class TripDetailsActivity : BaseActivity() {
             setDataToRecyclerViewAdapter(intent.extras.getParcelable(Constant.Path.FLIGHT_DETAILS) as FlightViewModel.FlightListResponse.ResponseData)
             tv_details_passengers.text = intent.extras.getString(Constant.Path.TOTAL_PASSENGERS)
             tv_details_class.text = intent.extras.getString(Constant.Path.CABIN_CLASS)
-            tv_details_price.text =
+            tv_details_price.text = (intent.extras.getParcelable(Constant.Path.FLIGHT_DETAILS) as FlightViewModel.FlightListResponse.ResponseData).currency +
+                    " " +
                     (intent.extras.getParcelable(Constant.Path.FLIGHT_DETAILS) as FlightViewModel.FlightListResponse.ResponseData).price.toString()
         }
         btn_continue_booking.setOnClickListener {
@@ -57,10 +58,10 @@ class TripDetailsActivity : BaseActivity() {
                 if (null != flightDetails) {
                     val tripAllDetails = FlightViewModel.TripAllDetails(
                         flightDetails?.airline,
-                        dataListAll[i].inbondFlightDetails?.currency,
-                        dataListAll[i].inbondFlightDetails?.duration,
+                        flightDetails.currency,
+                        flightDetails.duration,
                         dataListAll[i].price.toString(),
-                        flightDetails?.endAirPortName,
+                        flightDetails.endAirPortName,
                         flightDetails?.endDate,
                         flightDetails?.endTime,
                         flightDetails?.flightNo,
@@ -81,8 +82,8 @@ class TripDetailsActivity : BaseActivity() {
                 if (null != flightDetailsOutBound) {
                     val tripAllDetailsOutBound = FlightViewModel.TripAllDetails(
                         flightDetailsOutBound?.airline,
-                        dataListAll[i].outbondFlightDetails?.currency,
-                        dataListAll[i].outbondFlightDetails?.duration,
+                        flightDetailsOutBound.currency,
+                        flightDetailsOutBound.duration,
                         dataListAll[i].price.toString(),
                         flightDetailsOutBound?.endAirPortName,
                         flightDetailsOutBound?.endDate,

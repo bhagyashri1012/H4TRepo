@@ -79,6 +79,7 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
     }
 
     override fun onSentOtpAPICallSucceed(route: Enums.APIRoute, responseModel: LoginViewModel.LoginResponse) {
+        Utility.hideProgressBar()
         CustomDialogPresenter.showDialog(mContext,
             "",
             responseModel.message,
@@ -101,6 +102,8 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
         responseModel: LoginViewModel.LoginResponse,
         dialogBuilder: AlertDialog
     ) {
+        Utility.hideProgressBar()
+
         if (responseModel.status.equals("1")) {
             CustomDialogPresenter.showDialog(mContext,
                 "",
@@ -153,7 +156,6 @@ class LoginPresenterImpl(private val mView: LoginPresenter.MainView, context: Co
 
     override fun callAPI(deviceId: String, email: String, password: String) {
         if (MainApplication.getInstance.isConnected()) {
-            presentState(LOADING)
             loginInteractor.callAPIGetLogin(
                 deviceId,
                 email,

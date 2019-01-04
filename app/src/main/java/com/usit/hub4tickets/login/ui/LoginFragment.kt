@@ -3,7 +3,6 @@ package com.usit.hub4tickets.login.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.dashboard.ui.DashboardActivity
-import com.usit.hub4tickets.dashboard.ui.MyAccountFragment
 import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter
 import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter.MainView.ViewState.*
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginPresenterImpl
@@ -26,15 +24,6 @@ import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.activity_login.*
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- *
- */
 class LoginFragment : RootFragment(), LoginPresenter.MainView {
     private lateinit var model: LoginViewModel
     private lateinit var presenter: LoginPresenter
@@ -87,21 +76,28 @@ class LoginFragment : RootFragment(), LoginPresenter.MainView {
     }
 
     private fun redirectToDashboard() {
-        if (Pref.getValue(context, PrefConstants.IS_DASHBOARD, false)) {
+
+        if (Pref.getValue(context, PrefConstants.IS_LOGIN, false) && !Pref.getValue(
+                context,
+                PrefConstants.IS_DASHBOARD,
+                false
+            )
+        ) {
             val intent = Intent(context, DashboardActivity::class.java)
             startActivity(intent)
             activity?.finish()
-
-        } else {
-            showState(IDLE)
+        } else if (Pref.getValue(context, PrefConstants.IS_LOGIN, false) && Pref.getValue(
+                context,
+                PrefConstants.IS_DASHBOARD,
+                false
+            )
+        ) {
             activity?.onBackPressed()
-
         }
     }
 
     private var forgotPasswordFragment: ForgotPasswordFragment? = null
     private var signUpFragment: SignUpFragment? = null
-    private var myAccountFragment: MyAccountFragment? = null
 
     private fun forgotPassword() {
         if (Pref.getValue(context, PrefConstants.IS_FIRST_TIME, false)) {
@@ -136,14 +132,20 @@ class LoginFragment : RootFragment(), LoginPresenter.MainView {
         sign_in_button.setOnClickListener { attemptLogin() }
         sign_up_button.setOnClickListener { attemptSignUp() }
         forgot_pass_button.setOnClickListener { forgotPassword() }
-        if (Pref.getValue(context, PrefConstants.IS_FIRST_TIME, false))
-            tv_skip.visibility = View.GONE
+        if (Pref.getValue(context, PrefConstants.IS_FIRST_TIME, false) && Pref.getValue(
+                context,
+                PrefConstants.IS_DASHBOARD,
+                false
+            )
+        ) tv_skip.visibility = View.GONE
         else
             tv_skip.visibility = View.VISIBLE
         tv_skip.setOnClickListener {
             Pref.setValue(context, PrefConstants.IS_LOGIN, false)
             Pref.setValue(context, PrefConstants.IS_FIRST_TIME, true)
-            redirectToDashboard()
+            val intent = Intent(context, DashboardActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
         }
     }
 
@@ -191,7 +193,7 @@ class LoginFragment : RootFragment(), LoginPresenter.MainView {
     }
 
     override fun onBackPressed(): Boolean {
-        return fragmentManager?.popBackStackImmediate()!!
+       return super.onBackPressed()
     }
 
 }

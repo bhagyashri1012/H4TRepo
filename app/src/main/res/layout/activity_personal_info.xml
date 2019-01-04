@@ -68,7 +68,8 @@
                         style="@style/CustomRegularTextView"
                         android:hint="@string/prompt_email"
                         android:enabled="false"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textVisiblePassword"
+                        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890*@#$%_-\\^.&amp;"
                         android:maxLines="1"
                         android:singleLine="true"/>
 

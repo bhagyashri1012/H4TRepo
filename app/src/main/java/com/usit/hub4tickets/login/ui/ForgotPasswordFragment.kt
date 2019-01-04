@@ -113,11 +113,10 @@ class ForgotPasswordFragment : RootFragment(), LoginPresenter.MainView {
         if (cancel) {
             focusView?.requestFocus()
         } else {
-            Utility.showProgress(true, context)
             presenter?.callResetPassword(
                 Utility.getDeviceId(context),
                 email,
-                dialogView.edt_confirm_password.text.toString(),dialogBuilder
+                dialogView.edt_confirm_password.text.toString(), dialogBuilder
             )
         }
     }
@@ -154,7 +153,7 @@ class ForgotPasswordFragment : RootFragment(), LoginPresenter.MainView {
         dialogView.button_verify.setOnClickListener {
             val otp = dialogView.editTextEnterOtp.text.toString()
             Utility.hideSoftKeyboard(dialogView.editTextEnterOtp)
-            presenter?.callVerifyOTPAPI(Utility.getDeviceId(context), email, otp,dialogBuilder)
+            presenter?.callVerifyOTPAPI(Utility.getDeviceId(context), email, otp, dialogBuilder)
 
         }
         dialogView.button_cancel.setOnClickListener {
@@ -177,14 +176,13 @@ class ForgotPasswordFragment : RootFragment(), LoginPresenter.MainView {
         val dialogView = inflater.inflate(R.layout.forgot_password_dialog, null)
         dialogView.button_reset_password.setOnClickListener {
             Utility.hideSoftKeyboard(dialogView)
-            attemptResetPassword(dialogView,dialogBuilder)
+            attemptResetPassword(dialogView, dialogBuilder)
         }
         dialogView.button_cancel_fp.setOnClickListener {
             Utility.hideProgressBar()
             dialogBuilder.dismiss()
         }
         dialogBuilder.setView(dialogView)
-        dialogBuilder.setCanceledOnTouchOutside(false)
         dialogBuilder.show()
     }
 
@@ -203,16 +201,15 @@ class ForgotPasswordFragment : RootFragment(), LoginPresenter.MainView {
             edt_email_forgot_password.error = getString(R.string.error_field_required_email)
             focusView = edt_email_forgot_password
             cancel = true
-        }
-        if (TextUtils.isEmpty(emailStr) && !Utility.isEmailValid(emailStr)) {
-            edt_email_forgot_password.error = getString(R.string.error_invalid_email)
-            focusView = edt_email_forgot_password
-            cancel = true
-        }
+        } else
+            if (TextUtils.isEmpty(emailStr) && !Utility.isEmailValid(emailStr)) {
+                edt_email_forgot_password.error = getString(R.string.error_invalid_email)
+                focusView = edt_email_forgot_password
+                cancel = true
+            }
         if (cancel) {
             focusView?.requestFocus()
         } else {
-            Utility.showProgress(true, context)
             presenter?.callSendOtpAPI(Utility.getDeviceId(context), edt_email_forgot_password.text.toString())
         }
     }

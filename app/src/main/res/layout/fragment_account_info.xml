@@ -1,81 +1,92 @@
-<ScrollView
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent" android:layout_height="match_parent"
         android:fillViewport="true"
-        android:fadingEdge="none"
-        android:scrollbars="none"
         android:background="@color/white_pure"
-        android:overScrollMode="never"
+        android:orientation="vertical"
 >
-    <RelativeLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin">
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="vertical">
-            <LinearLayout android:id="@+id/cv_personal_info"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_margin="@dimen/margin_16dp"
-                          android:orientation="vertical">
-                <TextView
-                        style="@style/CustomMediumTextView"
-                        android:text="@string/personal_information"
-                        android:textColor="@color/colorPrimary"
-                        android:padding="@dimen/padding_8dp"/>
-            </LinearLayout>
-            <View style="@style/Divider"/>
-            <LinearLayout android:id="@+id/cv_change_password"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_margin="@dimen/margin_16dp"
-                          android:orientation="vertical">
+    <include layout="@layout/common_toolbar"/>
 
-                <TextView
-                        style="@style/CustomMediumTextView"
-                        android:text="@string/change_password"
-                        android:textColor="@color/colorPrimary"
-                        android:padding="@dimen/padding_8dp"/>
-            </LinearLayout>
-            <View style="@style/Divider"/>
-            <LinearLayout android:id="@+id/cv_payment_methods"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_margin="@dimen/margin_16dp"
-                          android:orientation="vertical">
-                <TextView
-                        style="@style/CustomMediumTextView"
-                        android:text="@string/payment_methods"
-                        android:textColor="@color/colorPrimary"
-                        android:padding="@dimen/padding_8dp"/>
-            </LinearLayout>
-            <View style="@style/Divider"/>
-            <LinearLayout android:id="@+id/cv_connected_account"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_margin="@dimen/margin_16dp"
-                          android:orientation="vertical">
-                <TextView
-                        style="@style/CustomMediumTextView"
-                        android:text="@string/conn_account"
-                        android:textColor="@color/colorPrimary"
-                        android:padding="@dimen/padding_8dp"/>
-            </LinearLayout>
-            <View style="@style/Divider"/>
-            <LinearLayout android:id="@+id/cv_passport"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_margin="@dimen/margin_16dp"
-                          android:orientation="vertical">
-                <TextView
-                        style="@style/CustomMediumTextView"
-                        android:text="@string/passport"
-                        android:textColor="@color/colorPrimary"
-                        android:padding="@dimen/padding_8dp"/>
-            </LinearLayout>
-            <View style="@style/Divider"/>
+    <ScrollView
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:fadingEdge="none"
+            android:scrollbars="none"
+            android:background="@color/white_pure"
+            android:overScrollMode="never"
+    >
 
-        </LinearLayout>
-    </RelativeLayout>
-</ScrollView>
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin">
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical">
+                <LinearLayout android:id="@+id/cv_personal_info"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_margin="@dimen/margin_16dp"
+                              android:orientation="vertical">
+                    <TextView
+                            style="@style/CustomMediumTextView"
+                            android:text="@string/personal_information"
+                            android:textColor="@color/colorPrimary"
+                            android:padding="@dimen/padding_8dp"/>
+                </LinearLayout>
+                <View style="@style/Divider"/>
+                <LinearLayout android:id="@+id/cv_change_password"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_margin="@dimen/margin_16dp"
+                              android:orientation="vertical">
+
+                    <TextView
+                            style="@style/CustomMediumTextView"
+                            android:text="@string/change_password"
+                            android:textColor="@color/colorPrimary"
+                            android:padding="@dimen/padding_8dp"/>
+                </LinearLayout>
+                <View style="@style/Divider"/>
+                <LinearLayout android:id="@+id/cv_payment_methods"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_margin="@dimen/margin_16dp"
+                              android:orientation="vertical">
+                    <TextView
+                            style="@style/CustomMediumTextView"
+                            android:text="@string/payment_methods"
+                            android:textColor="@color/colorPrimary"
+                            android:padding="@dimen/padding_8dp"/>
+                </LinearLayout>
+                <View style="@style/Divider"/>
+                <LinearLayout android:id="@+id/cv_connected_account"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_margin="@dimen/margin_16dp"
+                              android:orientation="vertical">
+                    <TextView
+                            style="@style/CustomMediumTextView"
+                            android:text="@string/conn_account"
+                            android:textColor="@color/colorPrimary"
+                            android:padding="@dimen/padding_8dp"/>
+                </LinearLayout>
+                <View style="@style/Divider"/>
+                <LinearLayout android:id="@+id/cv_passport"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_margin="@dimen/margin_16dp"
+                              android:orientation="vertical">
+                    <TextView
+                            style="@style/CustomMediumTextView"
+                            android:text="@string/passport"
+                            android:textColor="@color/colorPrimary"
+                            android:padding="@dimen/padding_8dp"/>
+                </LinearLayout>
+                <View style="@style/Divider"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>
+
