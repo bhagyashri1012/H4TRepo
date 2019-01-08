@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.activity_personal_info.*
 import kotlinx.android.synthetic.main.common_toolbar.*
 
 class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, DashboardPresenter.MainView {
-
     private val LOCATION_SELECTION_REQUEST = 201
     private val LANGUAGE_SELECTION_REQUEST = 102
     private val STATE_SELECTION_REQUEST = 103
@@ -172,9 +171,14 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             checkbox_promotions_account.isChecked = true
         else
             checkbox_promotions_account.isChecked = false
-
-        Pref.setValue(this, PrefConstants.PROFILE_COUNTRY_ID, model.profileDomain.responseData?.countryId!!)
-        Pref.setValue(this, PrefConstants.STATE_ID, model.profileDomain.responseData?.stateId!!)
+        if (null != model.profileDomain.responseData?.sqUserdetails?.countryId!!)
+            Pref.setValue(
+                this,
+                PrefConstants.PROFILE_COUNTRY_ID,
+                model.profileDomain.responseData?.sqUserdetails?.countryId!!.toString()
+            )
+        if (null != model.profileDomain?.responseData?.stateId)
+            Pref.setValue(this, PrefConstants.STATE_ID, model.profileDomain.responseData?.stateId!!.toString())
         presenter.presentState(ProfilePresenter.MainView.ViewState.IDLE)
     }
 

@@ -12,6 +12,8 @@ import com.usit.hub4tickets.domain.presentation.presenters.ProfilePresenter
 import com.usit.hub4tickets.domain.presentation.presenters.ProfilePresenter.MainView.ViewState.*
 import com.usit.hub4tickets.login.ProfileBaseInteractor
 import com.usit.hub4tickets.utils.Enums
+import com.usit.hub4tickets.utils.Pref
+import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
 import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 
@@ -24,6 +26,12 @@ class ProfilePresenterImpl(
     private val mView: ProfilePresenter.MainView,
     context: Context
 ) : ProfilePresenter, ProfileInfoAPICallListener {
+
+    private val profileBaseInteractor: ProfileBaseInteractor =
+        ProfileBaseInteractor(this)
+    private val mContext = context
+    private var device_id = Secure.getString(mContext.contentResolver, Secure.ANDROID_ID)
+
     override fun callAPIUpdateProfile(
         userId: String,
         email: String,
@@ -62,10 +70,6 @@ class ProfilePresenterImpl(
         }
     }
 
-    private val profileBaseInteractor: ProfileBaseInteractor =
-        ProfileBaseInteractor(this)
-    private val mContext = context
-    private var device_id = Secure.getString(mContext.contentResolver, Secure.ANDROID_ID)
 
     override fun callAPIGetProfile(userId: String) {
         if (MainApplication.getInstance.isConnected()) {
@@ -98,6 +102,21 @@ class ProfilePresenterImpl(
         }
     }
 
+    override fun callAPIGetSettingsData(userId: String) {
+        if (MainApplication.getInstance.isConnected()) {
+            profileBaseInteractor.callAPIGetSettingsData(
+                Utility.getDeviceId(context = mContext),
+                userId,
+                Pref.getValue(mContext, PrefConstants.DEFAULT_LOCATION, "")!!,
+                Pref.getValue(mContext, PrefConstants.DEFAULT_LANGUAGE, "")!!
+            )
+        } else {
+            mView?.doRetrieveProfileModel()?.errorMessage =
+                    mView?.doRetrieveProfileModel()?.context?.getString(R.string.message_no_internet)
+            presentState(ERROR)
+        }
+    }
+
     override fun presentState(state: ProfilePresenter.MainView.ViewState) {
         // user state logging
         Log.i(PersonalInfoActivity::class.java.simpleName, state.name)
@@ -105,6 +124,7 @@ class ProfilePresenterImpl(
             IDLE -> mView.showState(IDLE)
             LOADING -> mView.showState(LOADING)
             SUCCESS -> mView.showState(SUCCESS)
+            SETTING_DATA_SUCCESS -> mView.showState(SETTING_DATA_SUCCESS)
             ERROR -> mView.showState(ERROR)
             UPDATE_SUCCESS -> mView.showState(UPDATE_SUCCESS)
             CHANGE_PASSWORD_SUCCESS -> mView.showState(CHANGE_PASSWORD_SUCCESS)
@@ -127,10 +147,20 @@ class ProfilePresenterImpl(
 
     }
 
+    override fun onAPICallSucceedSettingData(
+        route: Enums.APIRoute,
+        responseModelSettings: ProfileViewModel.SettingsResponse
+    ) =
+        when (route) {
+            Enums.APIRoute.GET_SAMPLE -> {
+                mView.doRetrieveProfileModel().settingsDomain = responseModelSettings
+                presentState(SETTING_DATA_SUCCESS)
+            }
+        }
+
     override fun onAPICallSucceed(route: Enums.APIRoute, responseModel: ProfileViewModel.ProfileResponse) =
         when (route) {
             Enums.APIRoute.GET_SAMPLE -> {
-
                 mView.doRetrieveProfileModel().profileDomain = responseModel
                 presentState(SUCCESS)
             }

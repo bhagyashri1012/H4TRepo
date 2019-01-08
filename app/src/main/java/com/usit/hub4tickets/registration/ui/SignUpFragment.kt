@@ -22,8 +22,6 @@ import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.activity_signup.*
 import kotlinx.android.synthetic.main.common_toolbar.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 class SignUpFragment : RootFragment(), SignUpPresenter.MainView {
     private lateinit var model: SignUpViewModel
@@ -81,8 +79,7 @@ class SignUpFragment : RootFragment(), SignUpPresenter.MainView {
         showState(SignUpPresenter.MainView.ViewState.IDLE)
         if (Pref.getValue(context, PrefConstants.IS_FIRST_TIME, false)) {
             loginFragment = LoginFragment()
-            fragmentManager?.beginTransaction()?.replace(R.id.container_account_info, loginFragment!!)
-                ?.addToBackStack("LoginFragment")?.commit()
+            fragmentManager?.beginTransaction()?.replace(R.id.container_account_info, loginFragment!!)?.commit()
         } else {
             val intent = Intent(context, LoginActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -133,6 +130,9 @@ class SignUpFragment : RootFragment(), SignUpPresenter.MainView {
         if (cancel) {
             focusView?.requestFocus()
         } else {
+            edt_password.clearFocus()
+            edt_confirm_password_signup.clearFocus()
+            edt_email.clearFocus()
             Utility.showProgress(true, context)
             presenter.callAPI(
                 edt_email.text.toString(),
@@ -145,9 +145,8 @@ class SignUpFragment : RootFragment(), SignUpPresenter.MainView {
     }
 
 
-
     override fun onBackPressed(): Boolean {
-        return super.onBackPressed()
+        return fragmentManager?.popBackStackImmediate()!!
     }
 
 }

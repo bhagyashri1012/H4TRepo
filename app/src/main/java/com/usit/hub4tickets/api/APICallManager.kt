@@ -148,6 +148,16 @@ class APICallManager {
             return service.settingsData(settingsData)
         }
 
+        fun getSettingsDataWithoutUserId(
+            userId: String,
+            device_id: String,
+            location: String,
+            lang: String
+        ): Flowable<ProfileViewModel.SettingsResponse> {
+            val settingsData = SettingsData(userId, device_id, location, lang)
+            return service.getSettingsDataWithoutUserId(settingsData)
+        }
+
         fun saveSettingsData(
             userId: String,
             device_id: String,

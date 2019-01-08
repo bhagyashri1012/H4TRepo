@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.account.ui.AccountInfoFragment
+import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.presentation.presenters.ProfilePresenter
 import com.usit.hub4tickets.domain.presentation.presenters.ProfilePresenter.MainView.ViewState.*
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfilePresenterImpl
@@ -18,7 +19,6 @@ import com.usit.hub4tickets.utils.Pref
 import com.usit.hub4tickets.utils.PrefConstants
 import com.usit.hub4tickets.utils.Utility
 import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
-import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.fragment_myaccount.*
 import kotlinx.android.synthetic.main.fragment_myaccount.view.*
 
@@ -32,15 +32,15 @@ class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
             IDLE -> Utility.showProgress(false, context)
             LOADING -> Utility.showProgress(true, context)
             SUCCESS -> autoFillFields()
+            SETTING_DATA_SUCCESS -> autoFillFieldsFromSettingsData()
             ERROR
             -> {
-                Utility.showProgress(false, context)
-                Utility.showCustomDialog(
+                /*Utility.showCustomDialog(
                     context,
                     doRetrieveProfileModel().errorMessage,
                     "",
                     null
-                )
+                )*/
             }
         }
     }
@@ -89,12 +89,18 @@ class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
-
         link_account_info.setOnClickListener {
             initScreen()
         }
 
         link_log_out.setOnClickListener { logoutClearData() }
+    }
+
+    private fun autoFillFieldsFromSettingsData() {
+        tv_country_name.text = model.settingsDomain.responseData?.countryName
+        tv_lang_name.text = model.settingsDomain.responseData?.languageName
+        tv_currency_name.text = model.settingsDomain.responseData?.currencyName
+        showState(IDLE)
     }
 
     private fun autoFillFields() {
@@ -136,7 +142,9 @@ class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
         if (Pref.getValue(context, PrefConstants.IS_LOGIN, false)) {
             if (null == model.profileDomain.responseData)
                 presenter.callAPIGetProfile(Pref.getValue(context, PrefConstants.USER_ID, "0").toString())
-        }
+        } else
+            presenter.callAPIGetSettingsData(Pref.getValue(context, PrefConstants.USER_ID, "0").toString())
+
     }
 
     interface OnFragmentInteractionListener {
@@ -165,7 +173,6 @@ class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
                 }
 
                 override fun onNegativeButtonClicked() {
-                    Pref.setValue(context, PrefConstants.IS_FIRST_TIME, false)
                     Pref.setValue(context, PrefConstants.IS_LOGIN, false)
                     Pref.setValue(context, PrefConstants.USER_ID, "0")
                     Pref.setValue(context, PrefConstants.EMAIL_ID, "")
@@ -178,7 +185,7 @@ class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
     override fun onBackPressed(): Boolean {
         if (fragmentManager?.getBackStackEntryAt(0)?.name.equals("SignUpFragment")!!)
             return super.onBackPressed()
-        if (fragmentManager?.backStackEntryCount == 0)
+        else if (fragmentManager?.backStackEntryCount == 0)
             return fragmentManager?.popBackStackImmediate()!!
         else
             return super.onBackPressed()

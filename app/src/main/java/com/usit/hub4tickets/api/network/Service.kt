@@ -50,6 +50,9 @@ interface Service {
     @POST("settingdata")
     fun settingsData(@Body settingsData: SettingsData): Flowable<DashboardViewModel.SettingsResponse>
 
+    @POST("settingdata")
+    fun getSettingsDataWithoutUserId(@Body settingsData: SettingsData): Flowable<ProfileViewModel.SettingsResponse>
+
     @POST("savesettingdata")
     fun saveSettingsData(@Body settingsData: SaveSettingsData): Flowable<DashboardViewModel.SettingsResponse>
 

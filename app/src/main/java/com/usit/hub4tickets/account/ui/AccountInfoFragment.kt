@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.presentation.presenters.ProfilePresenter
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfilePresenterImpl
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel
@@ -21,7 +22,6 @@ import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.fragment_account_info.*
 
 class AccountInfoFragment : RootFragment(), ProfilePresenter.MainView {
-
     private lateinit var model: ProfileViewModel
     private lateinit var presenter: ProfilePresenter
     override fun doRetrieveProfileModel(): ProfileViewModel = this.model

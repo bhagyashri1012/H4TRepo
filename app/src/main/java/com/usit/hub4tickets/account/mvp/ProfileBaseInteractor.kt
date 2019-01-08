@@ -3,8 +3,8 @@ package com.usit.hub4tickets.login
 import com.usit.hub4tickets.api.network.ErrorResponse
 import com.usit.hub4tickets.domain.api.APICallManager
 import com.usit.hub4tickets.domain.api.ProfileInfoAPICallListener
-import com.usit.hub4tickets.utils.presentation.presenters.BaseInteractor
 import com.usit.hub4tickets.utils.Enums
+import com.usit.hub4tickets.utils.presentation.presenters.BaseInteractor
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -85,6 +85,20 @@ class ProfileBaseInteractor(private var listenerProfileInfo: ProfileInfoAPICallL
         call.subscribe(
             { response ->
                 listenerProfileInfo.onAPICallChangePasswordSucceed(route, response, dialogView)
+            },
+            { error ->
+                listenerProfileInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
+            })
+    }
+
+    fun callAPIGetSettingsData(device_id: String, userId: String, location: String, lang: String) {
+        val route = Enums.APIRoute.GET_SAMPLE
+        val call = APICallManager.getInstance.apiManager.getSettingsDataWithoutUserId(device_id, userId, location, lang)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+        call.subscribe(
+            { response ->
+                listenerProfileInfo.onAPICallSucceedSettingData(route, response)
             },
             { error ->
                 listenerProfileInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)

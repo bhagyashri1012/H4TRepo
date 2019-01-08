@@ -366,6 +366,8 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
+    private var flag: Int = 0
+
     override fun onBackPressed() {
         if (navigation.selectedItemId === R.id.navigation_my_account || navigation.selectedItemId === R.id.navigation_help) {
             if (navigation.selectedItemId === R.id.navigation_home) {
@@ -393,21 +395,36 @@ class DashboardActivity : AppCompatActivity() {
                     navigation.selectedItemId = R.id.navigation_home
                 } else
                     if (supportFragmentManager?.backStackEntryCount!! > 0) {
-                        supportFragmentManager?.popBackStackImmediate()
+
                         try {
+                            flag++
                             if (supportFragmentManager?.backStackEntryCount!! != 0) {
-                                if (supportFragmentManager?.getBackStackEntryAt(0)?.name.equals("LoginFragment")!!)
-                                    navigation.selectedItemId = R.id.navigation_my_account
+                                if (supportFragmentManager?.getBackStackEntryAt(0)?.name.equals("LoginFragment")!!) {
+                                    val backStackEntry = supportFragmentManager.backStackEntryCount
+                                    if (backStackEntry > 0) {
+                                        for (i in 0 until backStackEntry) {
+                                            supportFragmentManager.popBackStackImmediate()
+                                        }
+                                    }
+                                   // navigation.selectedItemId = R.id.navigation_my_account
+                                }
                             } else {
                                 if (supportFragmentManager?.backStackEntryCount!! == 0) {
-                                    navigation.selectedItemId = R.id.navigation_my_account
+                                    if (flag == 1)
+                                        navigation.selectedItemId = R.id.navigation_my_account
+                                    else
+                                        navigation.selectedItemId = R.id.navigation_home
                                 }
                             }
                         } catch (e: Exception) {
-                            navigation.selectedItemId = R.id.navigation_my_account
+                            flag++
+                            if (flag == 1)
+                                navigation.selectedItemId = R.id.navigation_my_account
+                            else
+                                navigation.selectedItemId = R.id.navigation_home
 
                         }
-
+                        supportFragmentManager?.popBackStackImmediate()
                     } else {
                         navigation.selectedItemId = R.id.navigation_home
                     }

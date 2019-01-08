@@ -1,6 +1,7 @@
 package com.usit.hub4tickets.domain.presentation.presenters
 
 import android.support.v7.app.AlertDialog
+import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel
 
 
@@ -15,7 +16,7 @@ interface ProfilePresenter : BasePresenter {
          * This enum is used for determine the current state of this screen
          */
         enum class ViewState {
-            IDLE, LOADING, LOAD_SIGN_UP, SUCCESS, ERROR, UPDATE_SUCCESS, CHANGE_PASSWORD_SUCCESS,
+            IDLE, LOADING, LOAD_SIGN_UP, SUCCESS, ERROR, UPDATE_SUCCESS, CHANGE_PASSWORD_SUCCESS, SETTING_DATA_SUCCESS,
         }
 
         /**
@@ -40,6 +41,8 @@ interface ProfilePresenter : BasePresenter {
      * @param state
      */
     fun presentState(state: MainView.ViewState)
+
+    fun callAPIGetSettingsData(userId: String)
 
     fun callAPIGetProfile(userId: String)
 

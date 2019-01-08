@@ -39,7 +39,7 @@ class DashboardViewModel(var context: Context?) {
         val responseData: ResponseData?,
         @SerializedName("status")
         val status: String?
-    ) : Parcelable {
+    ) : Parcelable{
         data class ResponseData(
             @SerializedName("countryId")
             val countryId: Int,
@@ -56,9 +56,7 @@ class DashboardViewModel(var context: Context?) {
             @SerializedName("latestCurrencyId")
             val latestCurrencyId: String,
             @SerializedName("userDetailsId")
-            val userDetailsId: Int,
-            @SerializedName("userId")
-            val userId: Int
+            val userDetailsId: Int
         ) : Parcelable {
             companion object {
                 @JvmField
@@ -76,7 +74,6 @@ class DashboardViewModel(var context: Context?) {
                 source.readInt(),
                 source.readString(),
                 source.readString(),
-                source.readInt(),
                 source.readInt()
             )
 
@@ -91,7 +88,6 @@ class DashboardViewModel(var context: Context?) {
                 writeString(languageName)
                 writeString(latestCurrencyId)
                 writeInt(userDetailsId)
-                writeInt(userId)
             }
         }
 
@@ -103,10 +99,10 @@ class DashboardViewModel(var context: Context?) {
             }
         }
 
-        constructor(source: Parcel) : this(
-            source.readString(),
-            source.readParcelable<ResponseData>(ResponseData::class.java.classLoader),
-            source.readString()
+        constructor(source: Parcel): this(
+        source.readString(),
+        source.readParcelable<ResponseData>(ResponseData::class.java.classLoader),
+        source.readString()
         )
 
         override fun describeContents() = 0

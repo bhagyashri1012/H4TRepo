@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.dashboard.ui.DashboardActivity
+import com.usit.hub4tickets.dashboard.ui.MyAccountFragment
 import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter
 import com.usit.hub4tickets.domain.presentation.presenters.LoginPresenter.MainView.ViewState.*
 import com.usit.hub4tickets.domain.presentation.screens.main.LoginPresenterImpl
@@ -92,10 +93,13 @@ class LoginFragment : RootFragment(), LoginPresenter.MainView {
                 false
             )
         ) {
-            activity?.onBackPressed()
+            myAccountFragment = MyAccountFragment()
+            val fragmentManager = activity?.supportFragmentManager
+            fragmentManager?.beginTransaction()?.replace(R.id.container_account_info, myAccountFragment!!)?.commit()
         }
     }
 
+    private var myAccountFragment: MyAccountFragment? = null
     private var forgotPasswordFragment: ForgotPasswordFragment? = null
     private var signUpFragment: SignUpFragment? = null
 
@@ -193,7 +197,7 @@ class LoginFragment : RootFragment(), LoginPresenter.MainView {
     }
 
     override fun onBackPressed(): Boolean {
-       return super.onBackPressed()
+        return super.onBackPressed()
     }
 
 }
