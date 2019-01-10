@@ -16,7 +16,8 @@
     <string name="error_field_required_password">Please enter your password</string>
     <string name="error_field_required_re_password">Please Re-enter your password</string>
     <string name="error_password_too_short">This password is too short</string>
-    <string name="error_invalid_password">Password must be minimum 8 characters in length, contains at least 1 special character at least 1 numeric and at least 1 uppercase alphabet
+    <string name="error_invalid_password">Password must be minimum 8 characters in length, contains at least 1 special
+        character at least 1 numeric and at least 1 uppercase alphabet
     </string>
     <string name="error_not_match_password">Password does not match</string>
     <string name="error_field_required">This field is required</string>
@@ -56,6 +57,7 @@
     <string name="contact_app_support">Contact App Support</string>
     <string name="flight">Flight</string>
     <string name="flight_details">Trip Details</string>
+    <string name="trip_stop_details">Trip Stop Details</string>
     <string name="select_provider">Select Provider</string>
     <string name="hotels">Hotels</string>
     <string name="sports">Sports</string>

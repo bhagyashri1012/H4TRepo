@@ -201,12 +201,12 @@ class ForgotPasswordFragment : RootFragment(), LoginPresenter.MainView {
             edt_email_forgot_password.error = getString(R.string.error_field_required_email)
             focusView = edt_email_forgot_password
             cancel = true
-        }else
-        if (!TextUtils.isEmpty(emailStr) && !Utility.isEmailValid(emailStr)) {
-            edt_email_forgot_password.error = getString(R.string.error_invalid_email)
-            focusView = edt_email_forgot_password
-            cancel = true
-        }
+        } else
+            if (!TextUtils.isEmpty(emailStr) && !Utility.isEmailValid(emailStr)) {
+                edt_email_forgot_password.error = getString(R.string.error_invalid_email)
+                focusView = edt_email_forgot_password
+                cancel = true
+            }
         if (cancel) {
             focusView?.requestFocus()
         } else {

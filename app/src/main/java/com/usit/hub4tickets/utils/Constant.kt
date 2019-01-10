@@ -37,6 +37,7 @@ class Constant {
         val CABIN_CLASS = "CABIN_CLASS"
         val FINAL_PRICE = "FINAL_PRICE"
         val SERACH_TEXT = "SERACH_TEXT"
+        val STOP_DETAILS= "STOP_DETAILS"
 
     }
 }

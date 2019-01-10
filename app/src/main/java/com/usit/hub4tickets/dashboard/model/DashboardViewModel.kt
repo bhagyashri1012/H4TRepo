@@ -39,7 +39,7 @@ class DashboardViewModel(var context: Context?) {
         val responseData: ResponseData?,
         @SerializedName("status")
         val status: String?
-    ) : Parcelable{
+    ) : Parcelable {
         data class ResponseData(
             @SerializedName("countryId")
             val countryId: Int,
@@ -99,10 +99,10 @@ class DashboardViewModel(var context: Context?) {
             }
         }
 
-        constructor(source: Parcel): this(
-        source.readString(),
-        source.readParcelable<ResponseData>(ResponseData::class.java.classLoader),
-        source.readString()
+        constructor(source: Parcel) : this(
+            source.readString(),
+            source.readParcelable<ResponseData>(ResponseData::class.java.classLoader),
+            source.readString()
         )
 
         override fun describeContents() = 0

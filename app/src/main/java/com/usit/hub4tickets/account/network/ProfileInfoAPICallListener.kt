@@ -1,6 +1,5 @@
 package com.usit.hub4tickets.domain.api
 
-import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel
 import com.usit.hub4tickets.utils.Enums
 

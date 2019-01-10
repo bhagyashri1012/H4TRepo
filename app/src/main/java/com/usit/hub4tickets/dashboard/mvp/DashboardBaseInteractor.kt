@@ -106,7 +106,32 @@ class DashboardBaseInteractor(private var listenerSettingsInfo: DashboardAPICall
                 listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
             })
     }
-
+    fun callAPIGetTimeZone() {
+        val route = Enums.APIRoute.GET_SAMPLE
+        val call = APICallManager.getInstance.apiManager.getTimeZones()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+        call.subscribe(
+            { response ->
+                listenerSettingsInfo.onAPICallGetLanguageSucceed(route, response)
+            },
+            { error ->
+                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
+            })
+    }
+    fun callAPIGetAirports() {
+        val route = Enums.APIRoute.GET_SAMPLE
+        val call = APICallManager.getInstance.apiManager.getAirports()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+        call.subscribe(
+            { response ->
+                listenerSettingsInfo.onAPICallGetLanguageSucceed(route, response)
+            },
+            { error ->
+                listenerSettingsInfo.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
+            })
+    }
     fun callAPIGetCurrency() {
         val route = Enums.APIRoute.GET_SAMPLE
         val call = APICallManager.getInstance.apiManager.getCurrencies()

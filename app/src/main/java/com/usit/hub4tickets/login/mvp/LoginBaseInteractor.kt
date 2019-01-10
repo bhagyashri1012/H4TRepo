@@ -56,7 +56,7 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
             .observeOn(AndroidSchedulers.mainThread())
         call.subscribe(
             { response ->
-                listener.onVerifyOtpAPICallSucceed(route, response,dialogBuilder)
+                listener.onVerifyOtpAPICallSucceed(route, response, dialogBuilder)
             },
             { error ->
                 listener.onAPICallFailed(route, ErrorResponse.parseError(error)!!)
@@ -75,7 +75,7 @@ class LoginBaseInteractor(private var listener: LoginAPICallListener) :
             .observeOn(AndroidSchedulers.mainThread())
         call.subscribe(
             { response ->
-                listener.onForgotPasswordAPICallSucceed(route, response,dialogBuilder)
+                listener.onForgotPasswordAPICallSucceed(route, response, dialogBuilder)
             },
             { error ->
                 listener.onAPICallFailed(route, ErrorResponse.parseError(error)!!)

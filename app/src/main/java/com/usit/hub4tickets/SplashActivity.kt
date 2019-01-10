@@ -37,7 +37,12 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun performOperations() {
-        if (Pref.getValue(this@SplashActivity, PrefConstants.IS_LOGIN, false) || Pref.getValue(this@SplashActivity, PrefConstants.IS_FIRST_TIME, false)) {
+        if (Pref.getValue(this@SplashActivity, PrefConstants.IS_LOGIN, false) || Pref.getValue(
+                this@SplashActivity,
+                PrefConstants.IS_FIRST_TIME,
+                false
+            )
+        ) {
             startActivity(Intent(applicationContext, DashboardActivity::class.java))
             finish()
         } else {

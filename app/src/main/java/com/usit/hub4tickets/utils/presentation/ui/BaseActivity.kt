@@ -17,7 +17,6 @@ import com.usit.hub4tickets.MainApplication
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.presenters.BaseView
 import com.usit.hub4tickets.utils.ConnectivityReceiver
-import com.usit.hub4tickets.utils.Utility
 
 
 abstract class BaseActivity : AppCompatActivity(), BaseView, View.OnClickListener {

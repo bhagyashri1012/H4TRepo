@@ -1,14 +1,12 @@
 package com.usit.hub4tickets.dashboard.ui
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.account.ui.AccountInfoFragment
-import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.presentation.presenters.ProfilePresenter
 import com.usit.hub4tickets.domain.presentation.presenters.ProfilePresenter.MainView.ViewState.*
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfilePresenterImpl
@@ -25,7 +23,6 @@ import kotlinx.android.synthetic.main.fragment_myaccount.view.*
 class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
     private lateinit var model: ProfileViewModel
     private lateinit var presenter: ProfilePresenter
-    private var listener: OnFragmentInteractionListener? = null
     override fun doRetrieveProfileModel(): ProfileViewModel = this.model
     override fun showState(viewState: ProfilePresenter.MainView.ViewState) {
         when (viewState) {
@@ -114,10 +111,6 @@ class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
         showState(IDLE)
     }
 
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
-
     private var accountMainFrag: AccountInfoFragment? = null
 
     private fun initScreen() {
@@ -147,10 +140,6 @@ class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
 
     }
 
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
-    }
-
     companion object {
         @JvmStatic
         fun newInstance(): MyAccountFragment {
@@ -160,7 +149,7 @@ class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
 
     fun logoutClearData() {
         CustomDialogPresenter.showDialog(
-            this!!.context!!,
+            this.context!!,
             "",
             getString(R.string.log_out_messege),
             context?.resources!!.getString(
@@ -183,7 +172,7 @@ class MyAccountFragment : RootFragment(), ProfilePresenter.MainView {
     }
 
     override fun onBackPressed(): Boolean {
-        if (fragmentManager?.getBackStackEntryAt(0)?.name.equals("SignUpFragment")!!)
+        if (fragmentManager?.getBackStackEntryAt(0)?.name.equals("SignUpFragment"))
             return super.onBackPressed()
         else if (fragmentManager?.backStackEntryCount == 0)
             return fragmentManager?.popBackStackImmediate()!!

@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.usit.hub4tickets.R
-import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.presentation.presenters.ProfilePresenter
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfilePresenterImpl
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel

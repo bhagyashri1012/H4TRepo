@@ -49,6 +49,7 @@ interface LoginPresenter : BasePresenter {
         otp: String,
         dialogBuilder: AlertDialog
     )
+
     fun callResetPassword(
         deviceId: String,
         email: String,

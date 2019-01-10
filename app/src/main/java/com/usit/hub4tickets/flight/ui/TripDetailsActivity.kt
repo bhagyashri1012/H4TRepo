@@ -8,6 +8,7 @@ import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
 import com.usit.hub4tickets.flight.adapter.TripDetailsViewAdapter
 import com.usit.hub4tickets.flight.model.FlightViewModel
 import com.usit.hub4tickets.utils.Constant
+import com.usit.hub4tickets.utils.webview.WebViewActivity
 import kotlinx.android.synthetic.main.activity_trip_details.*
 import kotlinx.android.synthetic.main.common_toolbar.*
 
@@ -20,6 +21,9 @@ class TripDetailsActivity : BaseActivity() {
         listener = null,
         context = this
     )
+    private var response: FlightViewModel.FlightListResponse.ResponseData? = null
+    private var deeplink = ""
+    private var dataProvider = ""
 
     override fun getLayoutResource(): Int {
         return R.layout.common_toolbar
@@ -30,7 +34,9 @@ class TripDetailsActivity : BaseActivity() {
         setContentView(R.layout.activity_trip_details)
         init()
         if (null != intent.extras) {
-            setDataToRecyclerViewAdapter(intent.extras.getParcelable(Constant.Path.FLIGHT_DETAILS) as FlightViewModel.FlightListResponse.ResponseData)
+            response =
+                    intent.extras.getParcelable(Constant.Path.FLIGHT_DETAILS) as FlightViewModel.FlightListResponse.ResponseData
+            setDataToRecyclerViewAdapter(response)
             tv_details_passengers.text = intent.extras.getString(Constant.Path.TOTAL_PASSENGERS)
             tv_details_class.text = intent.extras.getString(Constant.Path.CABIN_CLASS)
             tv_details_price.text = (intent.extras.getParcelable(Constant.Path.FLIGHT_DETAILS) as FlightViewModel.FlightListResponse.ResponseData).currency +
@@ -38,7 +44,10 @@ class TripDetailsActivity : BaseActivity() {
                     (intent.extras.getParcelable(Constant.Path.FLIGHT_DETAILS) as FlightViewModel.FlightListResponse.ResponseData).price.toString()
         }
         btn_continue_booking.setOnClickListener {
-            val intent = Intent(baseContext, TripProvidersListActivity::class.java)
+            // val intent = Intent(baseContext, TripProvidersListActivity::class.java)
+            val intent = Intent(this, WebViewActivity::class.java)
+            intent.putExtra(Constant.Path.URL, deeplink)
+            intent.putExtra(Constant.Path.HEADING, dataProvider)
             startActivity(intent)
         }
     }
@@ -53,6 +62,8 @@ class TripDetailsActivity : BaseActivity() {
     private fun setDataToRecyclerViewAdapter(responseData: FlightViewModel.FlightListResponse.ResponseData?) {
         if (responseData != null) {
             dataListAll?.add(responseData)
+            deeplink = responseData.deepLink.toString()
+            dataProvider = responseData.dataProvider.toString()
             for (i in dataListAll!!.indices) {
                 val flightDetails = dataListAll[i].inbondFlightDetails
                 if (null != flightDetails) {
@@ -105,8 +116,6 @@ class TripDetailsActivity : BaseActivity() {
         }
         adapter = TripDetailsViewAdapter(tripDetailsArrayList, null, this)
         recycler_view!!.adapter = adapter
-
-
     }
 }
 

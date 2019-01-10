@@ -104,6 +104,12 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         edt_lang.setOnClickListener {
             presenterDashboard.callAPIGetLanguage()
         }
+        edt_time_zone.setOnClickListener {
+            presenterDashboard.callAPITimeZone()
+        }
+        edt_home_airport.setOnClickListener {
+            presenterDashboard.callAPIAirports()
+        }
         edt_state.setOnClickListener {
             if (edt_country.text.toString().isNotEmpty())
                 presenterDashboard.callAPIGetState(Pref.getValue(this, PrefConstants.PROFILE_COUNTRY_ID, "").toString())
@@ -212,7 +218,7 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             focusView = edt_email
             cancel = true
         }
-        checkbox_promotions_account.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkbox_promotions_account.setOnCheckedChangeListener { _, isChecked ->
             check = if (isChecked) "0" else "1"
         }
         if (cancel) {
@@ -235,7 +241,6 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             )
         }
     }
-
 
     private fun isPhoneNumber(password: String): Boolean {
         return password.length > 8
@@ -331,6 +336,4 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
         startActivityForResult(intent, languageSelectionRequest)
     }
-
-
 }

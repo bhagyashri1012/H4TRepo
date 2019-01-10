@@ -25,7 +25,7 @@ class RecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: TextItemViewHolderForArray, position: Int) {
         holder.bind(items[position])
-        holder.itemView.setOnClickListener { listener?.onFlightRowClick(items[position],totalPassengers) }
+        holder.itemView.setOnClickListener { listener?.onFlightRowClick(items[position], totalPassengers) }
     }
 
     override fun getItemId(position: Int): Long {

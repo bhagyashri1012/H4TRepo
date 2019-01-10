@@ -1,7 +1,6 @@
 package com.usit.hub4tickets.domain.presentation.presenters
 
 import android.support.v7.app.AlertDialog
-import com.usit.hub4tickets.dashboard.model.DashboardViewModel
 import com.usit.hub4tickets.domain.presentation.screens.main.ProfileViewModel
 
 

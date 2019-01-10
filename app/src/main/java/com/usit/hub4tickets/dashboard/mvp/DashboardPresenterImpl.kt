@@ -117,6 +117,28 @@ class DashboardPresenterImpl(
         }
     }
 
+    override fun callAPITimeZone() {
+        if (MainApplication.getInstance.isConnected()) {
+            presentState(LOADING)
+            dashboardBaseInteractor.callAPIGetTimeZone()
+        } else {
+            mView?.doRetrieveModel()?.errorMessage =
+                    mView?.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
+            presentState(ERROR)
+        }
+    }
+
+    override fun callAPIAirports() {
+        if (MainApplication.getInstance.isConnected()) {
+            presentState(LOADING)
+            dashboardBaseInteractor.callAPIGetAirports()
+        } else {
+            mView?.doRetrieveModel()?.errorMessage =
+                    mView?.doRetrieveModel()?.context?.getString(R.string.message_no_internet)
+            presentState(ERROR)
+        }
+    }
+
     override fun presentState(state: DashboardPresenter.MainView.ViewState) {
         // user state logging
         Log.i(PersonalInfoActivity::class.java.simpleName, state.name)
@@ -130,6 +152,8 @@ class DashboardPresenterImpl(
             COUNTRY_SUCCESS -> mView?.showState(COUNTRY_SUCCESS)
             STATE_SUCCESS -> mView?.showState(STATE_SUCCESS)
             CITY_SUCCESS -> mView?.showState(CITY_SUCCESS)
+            TIME_ZONE_SUCCESS -> mView?.showState(TIME_ZONE_SUCCESS)
+            AIRPORTS_SUCCESS -> mView?.showState(AIRPORTS_SUCCESS)
             ERROR -> mView?.showState(ERROR)
         }
     }
@@ -220,6 +244,30 @@ class DashboardPresenterImpl(
             Enums.APIRoute.GET_SAMPLE -> {
                 mView?.doRetrieveModel()?.dashboradLangDomain = responseModel
                 presentState(LANG_SUCCESS)
+            }
+        }
+    }
+
+    override fun onAPICallGetTimeZoneSucceed(
+        route: Enums.APIRoute,
+        responseModel: DashboardViewModel.LanguageResponse
+    ) {
+        when (route) {
+            Enums.APIRoute.GET_SAMPLE -> {
+                mView?.doRetrieveModel()?.dashboradLangDomain = responseModel
+                presentState(TIME_ZONE_SUCCESS)
+            }
+        }
+    }
+
+    override fun onAPICallGetAirportsSucceed(
+        route: Enums.APIRoute,
+        responseModel: DashboardViewModel.LanguageResponse
+    ) {
+        when (route) {
+            Enums.APIRoute.GET_SAMPLE -> {
+                mView?.doRetrieveModel()?.dashboradLangDomain = responseModel
+                presentState(AIRPORTS_SUCCESS)
             }
         }
     }

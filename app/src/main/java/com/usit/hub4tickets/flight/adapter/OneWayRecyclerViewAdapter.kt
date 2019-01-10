@@ -9,7 +9,8 @@ import com.usit.hub4tickets.R
  * Created by anupamchugh on 05/10/16.
  */
 
-class OneWayRecyclerViewAdapter(internal var items: Array<String>, items1: Array<String>) : RecyclerView.Adapter<TextItemViewHolder>() {
+class OneWayRecyclerViewAdapter(internal var items: Array<String>, items1: Array<String>) :
+    RecyclerView.Adapter<TextItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TextItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_one_way_list_item, parent, false)

@@ -406,7 +406,7 @@ class DashboardActivity : AppCompatActivity() {
                                             supportFragmentManager.popBackStackImmediate()
                                         }
                                     }
-                                   // navigation.selectedItemId = R.id.navigation_my_account
+                                    // navigation.selectedItemId = R.id.navigation_my_account
                                 }
                             } else {
                                 if (supportFragmentManager?.backStackEntryCount!! == 0) {

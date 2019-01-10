@@ -13,7 +13,7 @@ interface DashboardPresenter : BasePresenter {
          * This enum is used for determine the current state of this screen
          */
         enum class ViewState {
-            IDLE, LOADING, LOAD_SIGN_UP, SUCCESS, ERROR, LANG_SUCCESS, CURRENCY_SUCCESS, COUNTRY_SUCCESS, SAVE_SUCCESS, STATE_SUCCESS, CITY_SUCCESS,
+            IDLE, LOADING, LOAD_SIGN_UP, SUCCESS, ERROR, LANG_SUCCESS, CURRENCY_SUCCESS, COUNTRY_SUCCESS, SAVE_SUCCESS, STATE_SUCCESS, CITY_SUCCESS, TIME_ZONE_SUCCESS, AIRPORTS_SUCCESS
         }
 
         /**
@@ -53,4 +53,6 @@ interface DashboardPresenter : BasePresenter {
     fun callAPIGetCity(stateId: String)
     fun callAPIGetCurrency()
     fun callAPIGetLanguage()
+    fun callAPITimeZone()
+    fun callAPIAirports()
 }

@@ -1,7 +1,6 @@
 package com.usit.hub4tickets.flight.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -21,7 +20,7 @@ class FragmentMultiCity : RootFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val items = resources.getStringArray(R.array.tab_A)
-        val adapter = OneWayRecyclerViewAdapter(items,items)
+        val adapter = OneWayRecyclerViewAdapter(items, items)
         recyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager

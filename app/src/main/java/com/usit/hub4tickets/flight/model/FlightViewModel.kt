@@ -33,10 +33,15 @@ class FlightViewModel(var context: Context?) {
         val status: String?
     ) : Parcelable {
         data class ResponseData(
-            @Nullable @SerializedName("currency")
+            @Nullable
+            @SerializedName("currency")
             val currency: String?,
-            @Nullable @SerializedName("dataProvider")
+            @Nullable
+            @SerializedName("dataProvider")
             val dataProvider: String?,
+            @Nullable
+            @SerializedName("deepLink")
+            val deepLink: String?,
             @Nullable
             @SerializedName("inbondFlightDetails")
             val inbondFlightDetails: InbondFlightDetails?,
@@ -71,7 +76,7 @@ class FlightViewModel(var context: Context?) {
                 @Nullable @SerializedName("startTime")
                 val startTime: String?,
                 @Nullable @SerializedName("stopCount")
-                val stopCount: Int,
+                val stopCount: String?,
                 @Nullable @SerializedName("stopDetails")
                 val stopDetails: ArrayList<StopDetail>?,
                 @Nullable @SerializedName("toCity")
@@ -156,7 +161,7 @@ class FlightViewModel(var context: Context?) {
                     source.readString(),
                     source.readString(),
                     source.readString(),
-                    source.readInt(),
+                    source.readString(),
                     source.createTypedArrayList(StopDetail.CREATOR),
                     source.readString()
                 )
@@ -176,7 +181,7 @@ class FlightViewModel(var context: Context?) {
                     writeString(startAirPortName)
                     writeString(startDate)
                     writeString(startTime)
-                    writeInt(stopCount)
+                    writeString(stopCount)
                     writeTypedList(stopDetails)
                     writeString(toCity)
                 }
@@ -208,7 +213,7 @@ class FlightViewModel(var context: Context?) {
                 @Nullable @SerializedName("startTime")
                 val startTime: String?,
                 @Nullable @SerializedName("stopCount")
-                val stopCount: Int,
+                val stopCount: String?,
                 @Nullable @SerializedName("stopDetails")
                 val stopDetails: List<StopDetail>?,
                 @Nullable @SerializedName("toCity")
@@ -293,7 +298,7 @@ class FlightViewModel(var context: Context?) {
                     source.readString(),
                     source.readString(),
                     source.readString(),
-                    source.readInt(),
+                    source.readString(),
                     source.createTypedArrayList(StopDetail.CREATOR),
                     source.readString()
                 )
@@ -313,7 +318,7 @@ class FlightViewModel(var context: Context?) {
                     writeString(startAirPortName)
                     writeString(startDate)
                     writeString(startTime)
-                    writeInt(stopCount)
+                    writeString(stopCount)
                     writeTypedList(stopDetails)
                     writeString(toCity)
                 }
@@ -330,6 +335,7 @@ class FlightViewModel(var context: Context?) {
             constructor(source: Parcel) : this(
                 source.readString(),
                 source.readString(),
+                source.readString(),
                 source.readParcelable<InbondFlightDetails>(InbondFlightDetails::class.java.classLoader),
                 source.readParcelable<OutbondFlightDetails>(OutbondFlightDetails::class.java.classLoader),
                 source.readDouble()
@@ -340,6 +346,7 @@ class FlightViewModel(var context: Context?) {
             override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
                 writeString(currency)
                 writeString(dataProvider)
+                writeString(deepLink)
                 writeParcelable(inbondFlightDetails, 0)
                 writeParcelable(outbondFlightDetails, 0)
                 writeDouble(price)
@@ -453,25 +460,80 @@ class FlightViewModel(var context: Context?) {
         val startAirPortName: String?,
         val startDate: String?,
         val startTime: String?,
-        val stopCount: Int?,
+        val stopCount: String?,
         val stopDetailsInBound: ArrayList<FlightListResponse.ResponseData.InbondFlightDetails.StopDetail>?,
         val stopDetailsOutBound: List<FlightListResponse.ResponseData.OutbondFlightDetails.StopDetail>?,
         val toCity: String?
+    ) : Parcelable {
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<TripAllDetails> = object : Parcelable.Creator<TripAllDetails> {
+                override fun createFromParcel(source: Parcel): TripAllDetails = TripAllDetails(source)
+                override fun newArray(size: Int): Array<TripAllDetails?> = arrayOfNulls(size)
+            }
+        }
 
-    )
+        constructor(source: Parcel) : this(
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.createTypedArrayList(FlightListResponse.ResponseData.InbondFlightDetails.StopDetail.CREATOR),
+            source.createTypedArrayList(FlightListResponse.ResponseData.OutbondFlightDetails.StopDetail.CREATOR),
+            source.readString()
+        )
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+            writeString(airline)
+            writeString(currency)
+            writeString(duration)
+            writeString(price)
+            writeString(endAirPortName)
+            writeString(endDate)
+            writeString(endTime)
+            writeString(flightNo)
+            writeString(fromCity)
+            writeString(imgUrl)
+            writeString(startAirPortName)
+            writeString(startDate)
+            writeString(startTime)
+            writeString(stopCount)
+            writeTypedList(stopDetailsInBound)
+            writeTypedList(stopDetailsOutBound)
+            writeString(toCity)
+        }
+    }
 
     data class StopDetail(
-        val duration: String?,
-        val price: String?,
-        val currency: String?,
-        var airline: String?,
+        @Nullable @SerializedName("airline")
+        val airline: String?,
+        @Nullable @SerializedName("endAirPortName")
         val endAirPortName: String?,
+        @Nullable @SerializedName("endDate")
         val endDate: String?,
+        @Nullable @SerializedName("endTime")
         val endTime: String?,
+        @Nullable @SerializedName("flightNo")
         val flightNo: String?,
+        @Nullable @SerializedName("imgUrl")
         val imgUrl: String?,
+        @Nullable @SerializedName("startAirPortName")
         val startAirPortName: String?,
+        @Nullable @SerializedName("startDate")
         val startDate: String?,
+        @Nullable @SerializedName("startTime")
         val startTime: String?
     )
 

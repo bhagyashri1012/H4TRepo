@@ -194,7 +194,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                             null,
                             null
                         )
-                    }else {
+                    } else {
                         edt_to.setText(
                             data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME)
                         )

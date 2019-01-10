@@ -16,11 +16,13 @@ interface LoginAPICallListener {
         response: LoginViewModel.LoginResponse,
         dialogBuilder: AlertDialog
     )
+
     fun onSentOtpAPICallSucceed(route: Enums.APIRoute, response: LoginViewModel.LoginResponse)
     fun onForgotPasswordAPICallSucceed(
         route: Enums.APIRoute,
         response: LoginViewModel.LoginResponse,
         dialogBuilder: AlertDialog
     )
+
     fun onAPICallFailed(route: Enums.APIRoute, message: String?)
 }

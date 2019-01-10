@@ -6,7 +6,6 @@ import android.net.ConnectivityManager
 import android.support.multidex.MultiDex
 
 
-
 /**
  * Created by Bhagyashri Burade
  * Date: 24/10/2018

@@ -38,6 +38,12 @@ interface Service {
     @GET("langauges")
     fun getLangauges(): Flowable<DashboardViewModel.LanguageResponse>
 
+    @GET("timezone")
+    fun getTimezone(): Flowable<DashboardViewModel.LanguageResponse>
+
+    @GET("airports")
+    fun getAirports(): Flowable<DashboardViewModel.LanguageResponse>
+
     @GET("currencies")
     fun getCurrencies(): Flowable<DashboardViewModel.CurrencyResponse>
 

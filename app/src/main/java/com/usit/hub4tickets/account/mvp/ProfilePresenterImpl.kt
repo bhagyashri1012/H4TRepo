@@ -111,8 +111,8 @@ class ProfilePresenterImpl(
                 Pref.getValue(mContext, PrefConstants.DEFAULT_LANGUAGE, "")!!
             )
         } else {
-            mView?.doRetrieveProfileModel()?.errorMessage =
-                    mView?.doRetrieveProfileModel()?.context?.getString(R.string.message_no_internet)
+            mView.doRetrieveProfileModel().errorMessage =
+                    mView.doRetrieveProfileModel().context?.getString(R.string.message_no_internet)
             presentState(ERROR)
         }
     }
