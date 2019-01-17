@@ -10,7 +10,7 @@ class Constant {
     object Path {
         // TODO: Replace API URL Endpoint
         val DEFAULT_URL_API = "http://103.3.43.235:5050/hub4ticket-api/"
-        //val DEFAULT_URL_API = "http://192.168.10.184:8080/hub4ticket-api/"
+        //val DEFAULT_URL_API = "http://192.168.10.190:8080/hub4ticket-api/"
         //val BASE_URL_API = "https://glacial-escarpment-50090.herokuapp.com"
         val DEVICE_FLAG = 1
         val PREF_FILE = "Hub4Tickits"
@@ -26,6 +26,8 @@ class Constant {
         val LOCATION_LIST_PROFILE = "LOCATION_LIST_PROFILE"
         val STATE_LIST_PROFILE = "STATE_LIST_PROFILE"
         val CITY_LIST_PROFILE = "CITY_LIST_PROFILE"
+        val AIRPORT_LIST_PROFILE = "AIRPORT_LIST_PROFILE"
+        val TIMEZONE_LIST_PROFILE = "TIMEZONE_LIST_PROFILE"
         val ACTIVITY_TITLE = "ACTIVITY_TITLE"
         val FROM = "FROM"
         val TO = "TO"
@@ -38,6 +40,7 @@ class Constant {
         val FINAL_PRICE = "FINAL_PRICE"
         val SERACH_TEXT = "SERACH_TEXT"
         val STOP_DETAILS= "STOP_DETAILS"
+        val PRICE= "PRICE"
 
     }
 }

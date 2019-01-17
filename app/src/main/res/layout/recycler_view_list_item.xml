@@ -79,6 +79,17 @@
                     android:maxLines="2"
                     android:layout_marginBottom="@dimen/margin_4dp"
             />
+            <TextView
+                    android:id="@+id/stop_count_outbound"
+                    tools:text="1 stop"
+                    android:layout_gravity="end|bottom"
+                    android:maxLines="1"
+                    android:gravity="end|right"
+                    android:textAlignment="viewEnd"
+                    android:layout_weight="1"
+                    android:textColor="@color/rose"
+                    android:layout_marginBottom="@dimen/margin_2dp"
+                    style="@style/CustomRegularTextView"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -153,6 +164,17 @@
                     android:maxLines="2"
                     android:layout_marginBottom="@dimen/margin_4dp"
             />
+            <TextView
+                    android:id="@+id/stop_count"
+                    tools:text="1 stop"
+                    android:layout_gravity="end|bottom"
+                    android:maxLines="1"
+                    android:gravity="end|right"
+                    android:textAlignment="viewEnd"
+                    android:layout_weight="1"
+                    android:textColor="@color/rose"
+                    android:layout_marginBottom="@dimen/margin_2dp"
+                    style="@style/CustomRegularTextView"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -160,7 +182,6 @@
             android:id="@+id/list_item"
             tools:text="$8,000 $"
             android:layout_gravity="end"
-            android:textColor="@android:color/holo_blue_light"
             android:maxLines="2"
             style="@style/CustomRegularTextView"/>
     <View

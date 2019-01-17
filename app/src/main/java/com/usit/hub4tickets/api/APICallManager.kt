@@ -124,11 +124,11 @@ class APICallManager {
             return service.getLangauges()
         }
 
-        fun getTimeZones(): Flowable<DashboardViewModel.LanguageResponse> {
+        fun getTimeZones(): Flowable<DashboardViewModel.TimeZoneResponse> {
             return service.getTimezone()
         }
 
-        fun getAirports(): Flowable<DashboardViewModel.LanguageResponse> {
+        fun getAirports(): Flowable<DashboardViewModel.AirportDataResponse> {
             return service.getAirports()
         }
 

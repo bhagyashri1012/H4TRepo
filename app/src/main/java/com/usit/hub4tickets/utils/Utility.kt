@@ -636,8 +636,8 @@ object Utility {
     ) {
         val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.US)
         var day = c!!.get(Calendar.DAY_OF_MONTH)
-        var year = c!!.get(Calendar.YEAR)
-        var month = c!!.get(Calendar.MONTH)
+        var year = c.get(Calendar.YEAR)
+        var month = c.get(Calendar.MONTH)
         val listener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             val newDate = Calendar.getInstance()
             newDate.set(year, monthOfYear, dayOfMonth)
@@ -760,7 +760,12 @@ object Utility {
     }
 
 
-    fun onMinusClick(textView: TextView, adults: Boolean, infants: Boolean) {
+    fun onMinusClick(
+        textView: TextView,
+        adults: Boolean,
+        infants: Boolean,
+        adultsStr: String?
+    ) {
         if (adults) {
             if (Integer.parseInt(textView?.text.toString()) != 0 && Integer.parseInt(textView?.text.toString()) in 1..7) {
                 if (Integer.parseInt(textView?.text.toString()) in 2..7)
@@ -771,9 +776,9 @@ object Utility {
                 textView?.text = "1"
             }
         } else if (infants) {
-            if (Integer.parseInt(textView?.text.toString()) in 1..3)
+            if (Integer.parseInt(textView?.text.toString()) in 1..3) {
                 textView.text = Integer.parseInt(textView?.text.toString()).minus(1).toString()
-            else
+            } else
                 textView?.text = "0"
         } else {
             if (Integer.parseInt(textView?.text.toString()) in 1..7)
@@ -784,26 +789,32 @@ object Utility {
     }
 
 
-    fun onAddClick(textView: TextView, adults: Boolean, infants: Boolean) {
+    fun onAddClick(
+        textView: TextView,
+        adults: Boolean,
+        infants: Boolean,
+        adultsStr: String?
+    ) {
         if (adults) {
-            if (Integer.parseInt(textView?.text.toString()) != 0 && Integer.parseInt(textView?.text.toString()) in 1..7) {
-                if (Integer.parseInt(textView?.text.toString()) in 1..7)
-                    textView.text = Integer.parseInt(textView?.text.toString()).plus(1).toString()
+            if (Integer.parseInt(textView.text.toString()) != 0 && Integer.parseInt(textView.text.toString()) in 1..7) {
+                if (Integer.parseInt(textView.text.toString()) in 1..7)
+                    textView.text = Integer.parseInt(textView.text.toString()).plus(1).toString()
                 else
-                    textView?.text = "1"
+                    textView.text = "1"
             } else {
-                textView?.text = "1"
+                textView.text = "1"
             }
         } else if (infants) {
-            if (Integer.parseInt(textView?.text.toString()) in 0..3)
-                textView.text = Integer.parseInt(textView?.text.toString()).plus(1).toString()
-            else
-                textView?.text = "0"
+            if (Integer.parseInt(textView.text.toString()) in 0..3) {
+                if (Integer.parseInt(textView.text.toString()) in 0..adultsStr!!.toInt().minus(1))
+                    textView.text = Integer.parseInt(textView.text.toString()).plus(1).toString()
+            } else
+                textView.text = "0"
         } else {
-            if (Integer.parseInt(textView?.text.toString()) in 0..7)
-                textView.text = Integer.parseInt(textView?.text.toString()).plus(1).toString()
+            if (Integer.parseInt(textView.text.toString()) in 0..7)
+                textView.text = Integer.parseInt(textView.text.toString()).plus(1).toString()
             else
-                textView?.text = "0"
+                textView.text = "0"
         }
     }
 

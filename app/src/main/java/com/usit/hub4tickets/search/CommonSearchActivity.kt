@@ -23,10 +23,9 @@ import kotlinx.android.synthetic.main.activity_comman_serach.*
  * Email: bhagyashri.burade@usit.net.in
  */
 class CommonSearchActivity : BaseActivity() {
-
+    private var searchText: String? = ""
     private var searchItemsListAdapter: CommonSearchAdapter? = null
     private var strActivityTitle: String? = ""
-    private var searchText: String? = ""
     private var arrayListCommonSelectorInitial: ArrayList<DashboardViewModel.CountriesResponse.CountriesResponseData> =
         ArrayList()
     private var arrayListCommonSelectorLangInitial: ArrayList<DashboardViewModel.LanguageResponse.ResponseData> =
@@ -39,6 +38,10 @@ class CommonSearchActivity : BaseActivity() {
         ArrayList()
     private var arrayListCommonSelectorFromInitial: ArrayList<FlightViewModel.AirPortDataResponse.ResponseData> =
         ArrayList()
+    private var airportNamesInitial: ArrayList<DashboardViewModel.AirportDataResponse.ResponseData> =
+        ArrayList()
+    private var timeZonesInitial: ArrayList<DashboardViewModel.TimeZoneResponse.ResponseData> =
+        ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +51,7 @@ class CommonSearchActivity : BaseActivity() {
         if (intent.extras != null) {
             strActivityTitle = intent.extras!!.getString(Constant.Path.ACTIVITY_TITLE)
             searchText = intent.extras!!.getString(Constant.Path.SERACH_TEXT)
+
             when (strActivityTitle) {
                 "SettingsFragment" -> {
                     if (null != intent.extras.getSerializable(Constant.Path.LOCATION_LIST))
@@ -73,6 +77,12 @@ class CommonSearchActivity : BaseActivity() {
                     if (null != intent.extras.getSerializable(Constant.Path.LANGUAGE_LIST_PROFILE))
                         arrayListCommonSelectorLangInitial =
                                 intent.extras.getSerializable(Constant.Path.LANGUAGE_LIST_PROFILE) as ArrayList<DashboardViewModel.LanguageResponse.ResponseData>
+                    if (null != intent.extras.getSerializable(Constant.Path.AIRPORT_LIST_PROFILE))
+                        airportNamesInitial =
+                                intent.extras.getSerializable(Constant.Path.AIRPORT_LIST_PROFILE) as ArrayList<DashboardViewModel.AirportDataResponse.ResponseData>
+                    if (null != intent.extras.getSerializable(Constant.Path.TIMEZONE_LIST_PROFILE))
+                        timeZonesInitial =
+                                intent.extras.getSerializable(Constant.Path.TIMEZONE_LIST_PROFILE) as ArrayList<DashboardViewModel.TimeZoneResponse.ResponseData>
                 }
 
                 "FragmentReturn" -> {
@@ -111,6 +121,28 @@ class CommonSearchActivity : BaseActivity() {
             }
         }
 
+        if (timeZonesInitial != null) {
+            for (i in timeZonesInitial!!.indices) {
+                arrayListCommonSelector.add(
+                    i, CommonSelectorPojo(
+                        timeZonesInitial[i].timezoneId.toString(),
+                        timeZonesInitial[i].zoneName,
+                        timeZonesInitial[i].timestamp
+                    )
+                )
+            }
+        }
+        if (airportNamesInitial != null) {
+            for (i in airportNamesInitial!!.indices) {
+                arrayListCommonSelector.add(
+                    i, CommonSelectorPojo(
+                        airportNamesInitial[i].airPortId.toString(),
+                        airportNamesInitial[i].airPortName,
+                        airportNamesInitial[i].airPortCode
+                    )
+                )
+            }
+        }
         if (arrayListCommonSelectorLangInitial != null) {
             for (i in arrayListCommonSelectorLangInitial!!.indices) {
                 arrayListCommonSelector.add(
@@ -194,7 +226,6 @@ class CommonSearchActivity : BaseActivity() {
             val mLayoutManager = LinearLayoutManager(this)
             recycler_city_list!!.layoutManager = mLayoutManager as RecyclerView.LayoutManager?
             recycler_city_list!!.adapter = searchItemsListAdapter
-
             var searchTextView = this.findViewById<SearchView>(R.id.search_text)
             searchTextView.setQuery(searchText, true)
             searchTextView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

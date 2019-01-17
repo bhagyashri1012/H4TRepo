@@ -103,6 +103,7 @@
                         android:layout_width="match_parent"
                         style="@style/CustomRegularTextView"
                         android:hint="@string/prompt_home_airport"
+                        android:focusableInTouchMode="false"
                         android:inputType="text"
                         android:maxLines="1"
                         android:maxLength="200"
@@ -121,8 +122,9 @@
                         style="@style/CustomRegularTextView"
                         android:hint="@string/prompt_time_zone"
                         android:inputType="number"
-                        android:digits="0123456789"
+                        android:focusableInTouchMode="false"
                         android:maxLines="1"
+                        android:maxLength="200"
                         android:singleLine="true"/>
             </android.support.design.widget.TextInputLayout>
 

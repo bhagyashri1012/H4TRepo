@@ -38,15 +38,24 @@ class SeeDetailsActivity : BaseActivity() {
                 val flightDetails = stopDetailsResponse?.stopDetailsInBound
                 if (null != flightDetails) {
                     val tripAllDetails = FlightViewModel.StopDetail(
-                        flightDetails[i].airline,
-                        flightDetails[i].endAirPortName,
-                        flightDetails[i].endDate,
-                        flightDetails[i].endTime,
-                        flightDetails[i].flightNo,
-                        flightDetails[i].imgUrl,
-                        flightDetails[i].startAirPortName,
-                        flightDetails[i].startDate,
-                        flightDetails[i].startTime
+                        flightDetails[i]?.airline,
+                        flightDetails[i]?.duration,
+                        flightDetails[i]?.endAirPortAddress,
+                        flightDetails[i]?.endAirPortName,
+                        flightDetails[i]?.endAirportShortName,
+                        flightDetails[i]?.endDate,
+                        flightDetails[i]?.endTime,
+                        flightDetails[i]?.flightNo,
+                        flightDetails[i]?.fromCity,
+                        flightDetails[i]?.imgUrl,
+                        flightDetails[i]?.startAirPortAddress,
+                        flightDetails[i]?.startAirPortName,
+                        flightDetails[i]?.startAirportShortName,
+                        flightDetails[i]?.startDate,
+                        flightDetails[i]?.startTime,
+                        flightDetails[i]?.toCity,
+                        flightDetails[i]?.waitingDuration
+
                     )
                     stopDataListAll.add(i, tripAllDetails)
                 }
@@ -58,15 +67,23 @@ class SeeDetailsActivity : BaseActivity() {
                 val flightDetails = stopDetailsResponse?.stopDetailsOutBound
                 if (null != flightDetails) {
                     val tripAllDetails = FlightViewModel.StopDetail(
-                        flightDetails[i].airline,
-                        flightDetails[i].endAirPortName,
-                        flightDetails[i].endDate,
-                        flightDetails[i].endTime,
-                        flightDetails[i].flightNo,
-                        flightDetails[i].imgUrl,
-                        flightDetails[i].startAirPortName,
-                        flightDetails[i].startDate,
-                        flightDetails[i].startTime
+                        flightDetails[i]?.airline,
+                        flightDetails[i]?.duration,
+                        flightDetails[i]?.endAirPortAddress,
+                        flightDetails[i]?.endAirPortName,
+                        flightDetails[i]?.endAirportShortName,
+                        flightDetails[i]?.endDate,
+                        flightDetails[i]?.endTime,
+                        flightDetails[i]?.flightNo,
+                        flightDetails[i]?.fromCity,
+                        flightDetails[i]?.imgUrl,
+                        flightDetails[i]?.startAirPortAddress,
+                        flightDetails[i]?.startAirPortName,
+                        flightDetails[i]?.startAirportShortName,
+                        flightDetails[i]?.startDate,
+                        flightDetails[i]?.startTime,
+                        flightDetails[i]?.toCity,
+                        flightDetails[i]?.waitingDuration
                     )
                     stopDataListAll.add(i, tripAllDetails)
                 }

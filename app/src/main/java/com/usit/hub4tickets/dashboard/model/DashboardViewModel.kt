@@ -31,6 +31,12 @@ class DashboardViewModel(var context: Context?) {
     var dashboradCityDomain: DashboardViewModel.CityResponse =
         DashboardViewModel.CityResponse(message = null, responseData = null, status = null)
 
+    var dashboradTimeZoneDomain: DashboardViewModel.TimeZoneResponse =
+        DashboardViewModel.TimeZoneResponse(message = null, responseData = null, status = null)
+
+    var dashboradAirportDomain: DashboardViewModel.AirportDataResponse =
+        DashboardViewModel.AirportDataResponse(message = null, responseData = null, status = null)
+
     data class SettingsResponse(
         @Nullable
         @SerializedName("message")
@@ -44,17 +50,17 @@ class DashboardViewModel(var context: Context?) {
             @SerializedName("countryId")
             val countryId: Int,
             @SerializedName("countryName")
-            val countryName: String,
+            val countryName: String?,
             @SerializedName("currencyName")
-            val currencyName: String,
+            val currencyName: String?,
             @SerializedName("deviceId")
-            val deviceId: String,
+            val deviceId: String?,
             @SerializedName("languageId")
             val languageId: Int,
             @SerializedName("languageName")
-            val languageName: String,
+            val languageName: String?,
             @SerializedName("latestCurrencyId")
-            val latestCurrencyId: String,
+            val latestCurrencyId: String?,
             @SerializedName("userDetailsId")
             val userDetailsId: Int
         ) : Parcelable {
@@ -408,11 +414,11 @@ class DashboardViewModel(var context: Context?) {
     ) : Parcelable {
         data class CountriesResponseData(
             @SerializedName("countryCode")
-            val countryCode: String,
+            val countryCode: String?,
             @SerializedName("countryId")
             val countryId: Int,
             @SerializedName("countryName")
-            val countryName: String,
+            val countryName: String?,
             @SerializedName("msState")
             val msState: List<Any>
         ) : Parcelable {
@@ -467,7 +473,133 @@ class DashboardViewModel(var context: Context?) {
         }
     }
 
+    data class TimeZoneResponse(
+        @SerializedName("message")
+        val message: String?,
+        @SerializedName("responseData")
+        val responseData: List<ResponseData>?,
+        @SerializedName("status")
+        val status: String?
+    ) : Parcelable {
+        data class ResponseData(
+            @SerializedName("timestamp")
+            val timestamp: String,
+            @SerializedName("timezoneId")
+            val timezoneId: Int,
+            @SerializedName("zoneName")
+            val zoneName: String
+        ) : Parcelable {
+            companion object {
+                @JvmField
+                val CREATOR: Parcelable.Creator<ResponseData> = object : Parcelable.Creator<ResponseData> {
+                    override fun createFromParcel(source: Parcel): ResponseData = ResponseData(source)
+                    override fun newArray(size: Int): Array<ResponseData?> = arrayOfNulls(size)
+                }
+            }
 
+            constructor(source: Parcel) : this(
+                source.readString(),
+                source.readInt(),
+                source.readString()
+            )
+
+            override fun describeContents() = 0
+
+            override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+                writeString(timestamp)
+                writeInt(timezoneId)
+                writeString(zoneName)
+            }
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<TimeZoneResponse> = object : Parcelable.Creator<TimeZoneResponse> {
+                override fun createFromParcel(source: Parcel): TimeZoneResponse = TimeZoneResponse(source)
+                override fun newArray(size: Int): Array<TimeZoneResponse?> = arrayOfNulls(size)
+            }
+        }
+
+        constructor(source: Parcel) : this(
+            source.readString(),
+            source.createTypedArrayList(ResponseData.CREATOR),
+            source.readString()
+        )
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+            writeString(message)
+            writeTypedList(responseData)
+            writeString(status)
+        }
+    }
+
+    data class AirportDataResponse(
+        @SerializedName("message")
+        val message: String?,
+        @SerializedName("responseData")
+        val responseData: List<ResponseData>?,
+        @SerializedName("status")
+        val status: String?
+    ) : Parcelable {
+        data class ResponseData(
+            @Nullable
+            @SerializedName("airPortCode")
+            val airPortCode: String?,
+            @Nullable
+            @SerializedName("airPortId")
+            val airPortId: Int,
+            @Nullable
+            @SerializedName("airPortName")
+            val airPortName: String?
+
+        ) : Parcelable {
+            companion object {
+                @JvmField
+                val CREATOR: Parcelable.Creator<ResponseData> = object : Parcelable.Creator<ResponseData> {
+                    override fun createFromParcel(source: Parcel): ResponseData = ResponseData(source)
+                    override fun newArray(size: Int): Array<ResponseData?> = arrayOfNulls(size)
+                }
+            }
+
+            constructor(source: Parcel) : this(
+                source.readString(),
+                source.readInt(),
+                source.readString()
+            )
+
+            override fun describeContents() = 0
+
+            override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+                writeString(airPortCode)
+                writeInt(airPortId)
+                writeString(airPortName)
+            }
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<AirportDataResponse> = object : Parcelable.Creator<AirportDataResponse> {
+                override fun createFromParcel(source: Parcel): AirportDataResponse = AirportDataResponse(source)
+                override fun newArray(size: Int): Array<AirportDataResponse?> = arrayOfNulls(size)
+            }
+        }
+
+        constructor(source: Parcel) : this(
+            source.readString(),
+            source.createTypedArrayList(ResponseData.CREATOR),
+            source.readString()
+        )
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+            writeString(message)
+            writeTypedList(responseData)
+            writeString(status)
+        }
+    }
 }
 
 

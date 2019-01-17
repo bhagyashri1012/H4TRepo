@@ -10,6 +10,7 @@ import com.usit.hub4tickets.flight.model.FlightViewModel
 /**
  * Created by anupamchugh on 05/10/16.
  */
+//190
 class TripDetailsViewAdapter(
     private var items: List<FlightViewModel.TripAllDetails>,
     listener: Nothing?,

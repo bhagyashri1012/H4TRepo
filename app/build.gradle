@@ -8,7 +8,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.usit.hub4tickets"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -30,11 +30,9 @@ android {
         }
     }
     dexOptions {
-
-        jumboMode true
-        javaMaxHeapSize "4g"
-
+        javaMaxHeapSize "12g"
     }
+
 }
 
 dependencies {
@@ -67,4 +65,7 @@ dependencies {
     implementation 'com.github.simbiose:Encryption:2.0.1'
     implementation 'com.google.android.gms:play-services-location:11.8.0'
     implementation 'com.github.psinetron:slycalendarview:0.0.6'
+
+    implementation 'com.crystal:crystalrangeseekbar:1.1.3'
+
 }

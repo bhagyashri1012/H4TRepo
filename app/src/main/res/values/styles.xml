@@ -62,6 +62,16 @@
         <item name="android:ellipsize">end</item>
 
     </style>
+    <style name="CustomMediumBoldTextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size_16dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:ellipsize">end</item>
+
+    </style>
     <style name="CustomRegularTextView">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_14dp</item>

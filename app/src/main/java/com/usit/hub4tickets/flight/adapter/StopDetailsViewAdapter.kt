@@ -25,7 +25,6 @@ class StopDetailsViewAdapter(
     }
 
     override fun onBindViewHolder(holder: TextItemViewForStopDetailsHolder, position: Int) {
-        Log.d("StopDetailsViewAdapter=", itemCount.toString())
             holder.bindStopDetails(stopDetails[position])
     }
 

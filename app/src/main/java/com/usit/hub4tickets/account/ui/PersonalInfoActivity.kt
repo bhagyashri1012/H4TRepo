@@ -24,6 +24,8 @@ import kotlinx.android.synthetic.main.activity_personal_info.*
 import kotlinx.android.synthetic.main.common_toolbar.*
 
 class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, DashboardPresenter.MainView {
+    private val TIMEZONE_SELECTION_REQUEST = 203
+    private val AIRPORT_SELECTION_REQUEST = 301
     private val LOCATION_SELECTION_REQUEST = 201
     private val LANGUAGE_SELECTION_REQUEST = 102
     private val STATE_SELECTION_REQUEST = 103
@@ -40,6 +42,22 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         when (viewState) {
             DashboardPresenter.MainView.ViewState.IDLE -> showProgress(false)
             DashboardPresenter.MainView.ViewState.LOADING -> showProgress(true)
+            DashboardPresenter.MainView.ViewState.TIME_ZONE_SUCCESS -> {
+                showProgress(false)
+                openSearchActivityTimeZones(
+                    modelDashboard.dashboradTimeZoneDomain.responseData as ArrayList<DashboardViewModel.TimeZoneResponse.ResponseData>,
+                    this.javaClass.simpleName.toString(),
+                    TIMEZONE_SELECTION_REQUEST
+                )
+            }
+            DashboardPresenter.MainView.ViewState.AIRPORTS_SUCCESS -> {
+                showProgress(false)
+                openSearchActivityAirport(
+                    modelDashboard.dashboradAirportDomain.responseData as ArrayList<DashboardViewModel.AirportDataResponse.ResponseData>,
+                    this.javaClass.simpleName.toString(),
+                    AIRPORT_SELECTION_REQUEST
+                )
+            }
             DashboardPresenter.MainView.ViewState.COUNTRY_SUCCESS -> {
                 showProgress(false)
                 openSearchActivityCountry(
@@ -108,19 +126,16 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
             presenterDashboard.callAPITimeZone()
         }
         edt_home_airport.setOnClickListener {
-            presenterDashboard.callAPIAirports()
+            //presenterDashboard.callAPIAirports()
         }
         edt_state.setOnClickListener {
-            if (edt_country.text.toString().isNotEmpty())
-                presenterDashboard.callAPIGetState(Pref.getValue(this, PrefConstants.PROFILE_COUNTRY_ID, "").toString())
-            else
-                edt_country.error = getString(R.string.error_country_select)
+            //if (edt_country.text.toString().isNotEmpty())
+            presenterDashboard.callAPIGetState(Pref.getValue(this, PrefConstants.PROFILE_COUNTRY_ID, "")!!)
+
         }
         edt_city.setOnClickListener {
-            if (edt_state.text.toString().isNotEmpty())
-                presenterDashboard.callAPIGetCity(Pref.getValue(this, PrefConstants.STATE_ID, "").toString())
-            else
-                edt_state.error = getString(R.string.error_country_select)
+            //if (edt_state.text.toString().isNotEmpty())
+            presenterDashboard.callAPIGetCity(Pref.getValue(this, PrefConstants.STATE_ID, "")!!)
         }
     }
 
@@ -169,22 +184,23 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         edt_country.setText(model.profileDomain.responseData?.country)
         edt_state.setText(model.profileDomain.responseData?.state)
         edt_city.setText(model.profileDomain.responseData?.city)
-        edt_home_airport.setText(model.profileDomain.responseData?.homeAirPort)
-        edt_time_zone.setText(model.profileDomain.responseData?.timeZone)
+        edt_home_airport.setText(model.profileDomain.responseData?.homeAirport)
+        edt_time_zone.setText(model.profileDomain.responseData?.timezone)
         edt_lang.setText(model.profileDomain.responseData?.language)
 
         if (model.profileDomain.responseData?.promoChecked != 0)
             checkbox_promotions_account.isChecked = true
         else
             checkbox_promotions_account.isChecked = false
-        if (null != model.profileDomain.responseData?.sqUserdetails?.countryId!!)
-            Pref.setValue(
-                this,
-                PrefConstants.PROFILE_COUNTRY_ID,
-                model.profileDomain.responseData?.sqUserdetails?.countryId!!.toString()
-            )
-        if (null != model.profileDomain?.responseData?.stateId)
-            Pref.setValue(this, PrefConstants.STATE_ID, model.profileDomain.responseData?.stateId!!.toString())
+        if (null != model.profileDomain.responseData?.countryId)
+            Pref.setValue(this, PrefConstants.PROFILE_COUNTRY_ID, model.profileDomain.responseData?.countryId!!)
+        else
+            Pref.setValue(this, PrefConstants.PROFILE_COUNTRY_ID, "")
+
+        if (null != model.profileDomain.responseData?.stateId)
+            Pref.setValue(this, PrefConstants.STATE_ID, model.profileDomain.responseData?.stateId!!)
+        else
+            Pref.setValue(this, PrefConstants.STATE_ID, "")
         presenter.presentState(ProfilePresenter.MainView.ViewState.IDLE)
     }
 
@@ -193,24 +209,14 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
     }
 
     private fun attemptUpdate() {
-        /* if (mAuthTask != null) {
-             return
-         }*/
-        // Reset errors.
         edt_email.error = null
         edt_phone_no.error = null
         val emailStr = edt_email.text.toString()
-        val passwordStr = edt_phone_no.text.toString()
         var check = if (!checkbox_promotions_account.isChecked) "0" else "1"
         var cancel = false
         var focusView: View? = null
-        if (!TextUtils.isEmpty(passwordStr) && !isPhoneNumber(passwordStr)) {
-            edt_phone_no.error = getString(R.string.error_field_required)
-            focusView = edt_phone_no
-            cancel = true
-        }
         if (TextUtils.isEmpty(emailStr)) {
-            edt_email.error = getString(R.string.error_field_required)
+            edt_email.error = getString(R.string.error_field_required_email)
             focusView = edt_email
             cancel = true
         } else if (!Utility.isEmailValid(emailStr)) {
@@ -226,24 +232,20 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
         } else {
             showProgress(true)
             presenter.callAPIUpdateProfile(
-                Pref.getValue(this, PrefConstants.USER_ID, "0").toString(),
+                Pref.getValue(this, PrefConstants.USER_ID, "0")!!,
                 edt_email.text.toString(),
                 edt_first_name.text.toString(),
                 edt_last_name.text.toString(),
                 edt_phone_no.text.toString(),
-                edt_home_airport.text.toString(),
-                edt_time_zone.text.toString(),
-                Pref.getValue(this, PrefConstants.PROFILE_COUNTRY_ID, "").toString(),
-                Pref.getValue(this, PrefConstants.STATE_ID, "").toString(),
-                Pref.getValue(this, PrefConstants.CITY_ID, "").toString(),
-                Pref.getValue(this, PrefConstants.PROFILE_LANGUAGE_ID, "").toString(),
+                Pref.getValue(this, PrefConstants.PROFILE_AIRPORT_ID, "")!!,
+                Pref.getValue(this, PrefConstants.PROFILE_COUNTRY_ID, "")!!,
+                Pref.getValue(this, PrefConstants.STATE_ID, "")!!,
+                Pref.getValue(this, PrefConstants.PROFILE_TIMEZONE_ID, "")!!,
+                Pref.getValue(this, PrefConstants.CITY_ID, "")!!,
+                Pref.getValue(this, PrefConstants.PROFILE_LANGUAGE_ID, "")!!,
                 check
             )
         }
-    }
-
-    private fun isPhoneNumber(password: String): Boolean {
-        return password.length > 8
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -289,7 +291,51 @@ class PersonalInfoActivity : BaseActivity(), ProfilePresenter.MainView, Dashboar
                     )
                 }
             }
+            AIRPORT_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    edt_home_airport.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME).toString())
+                    Pref.setValue(
+                        this,
+                        PrefConstants.PROFILE_AIRPORT_ID,
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_ID)!!
+                    )
+                }
+            }
+            TIMEZONE_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    edt_time_zone.setText(data?.getStringExtra(PrefConstants.SELECTED_ITEMS_NAME).toString())
+                    Pref.setValue(
+                        this,
+                        PrefConstants.PROFILE_TIMEZONE_ID,
+                        data?.getStringExtra(PrefConstants.SELECTED_ITEMS_ID)!!
+                    )
+                }
+            }
         }
+    }
+
+    private fun openSearchActivityTimeZones(
+        arrayListTimeZones: ArrayList<DashboardViewModel.TimeZoneResponse.ResponseData>,
+        title: String,
+        timeZonesSelectionRequest: Int
+    ) {
+
+        val intent = Intent(this, CommonSearchActivity::class.java)
+        intent.putParcelableArrayListExtra(Constant.Path.TIMEZONE_LIST_PROFILE, arrayListTimeZones)
+        intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
+        startActivityForResult(intent, timeZonesSelectionRequest)
+    }
+
+    private fun openSearchActivityAirport(
+        arrayListAirport: ArrayList<DashboardViewModel.AirportDataResponse.ResponseData>,
+        title: String,
+        airportSelectionRequest: Int
+    ) {
+
+        val intent = Intent(this, CommonSearchActivity::class.java)
+        intent.putParcelableArrayListExtra(Constant.Path.AIRPORT_LIST_PROFILE, arrayListAirport)
+        intent.putExtra(Constant.Path.ACTIVITY_TITLE, title)
+        startActivityForResult(intent, airportSelectionRequest)
     }
 
     private fun openSearchActivityCountry(

@@ -28,84 +28,95 @@ class ProfileViewModel(var context: Context?) {
         val status: String?
     ) {
         data class ResponseData(
-            @Nullable @SerializedName("city")
-            val city: String?,
-            @Nullable @SerializedName("country")
-            val country: String?,
-            @Nullable @SerializedName("currency")
-            val currency: String?,
-            @Nullable @SerializedName("email")
-            val email: String?,
-            @Nullable @SerializedName("firstName")
-            val firstName: String?,
-            @Nullable @SerializedName("homeAirPort")
-            val homeAirPort: String?,
-            @Nullable @SerializedName("language")
-            val language: String?,
-            @Nullable @SerializedName("lastName")
-            val lastName: String?,
-            @Nullable @SerializedName("phoneNumber")
-            val phoneNumber: String?,
-            @Nullable @SerializedName("state")
-            val state: String?,
-            @Nullable @SerializedName("timeZone")
-            val timeZone: String?,
-            @Nullable @SerializedName("dNo")
-            val dNo: DNo?,
-            @Nullable @SerializedName("deviceId")
-            val deviceId: String?,
-            @Nullable @SerializedName("countryId")
-            val countryId: String?,
-            @Nullable @SerializedName("stateId")
-            val stateId: String?,
-            @Nullable @SerializedName("cityId")
-            val cityId: String?,
-            @Nullable @SerializedName("userId")
-            val userId: Int?,
             @Nullable
-            @SerializedName("promoChecked")
-            val promoChecked: Int?,
+            @SerializedName("city")
+            val city: String,
             @Nullable
-            @SerializedName("sqUserdetails")
-            val sqUserdetails: SqUserdetails?
-        ) {
-            data class DNo(
-                @Nullable @SerializedName("dname")
-                val dname: String?,
-                @Nullable @SerializedName("dno")
-                val dno: Int
-            )
-        }
-
-        data class SqUserdetails(
+            @SerializedName("cityId")
+            val cityId: Int,
+            @Nullable
+            @SerializedName("country")
+            val country: String,
             @Nullable
             @SerializedName("countryId")
-            val countryId: Int,
+            val countryId: String ?,
             @Nullable
-            @SerializedName("countryName")
-            val countryName: String?,
-            @Nullable
-            @SerializedName("currencyName")
-            val currencyName: String?,
+            @SerializedName("dNo")
+            val dNo: DNo,
             @Nullable
             @SerializedName("deviceId")
-            val deviceId: String?,
+            val deviceId: String,
+            @Nullable
+            @SerializedName("email")
+            val email: String,
+            @Nullable
+            @SerializedName("firstName")
+            val firstName: String,
+            @Nullable
+            @SerializedName("homeAirport")
+            val homeAirport: String,
+            @Nullable
+            @SerializedName("language")
+            val language: String,
             @Nullable
             @SerializedName("languageId")
             val languageId: Int,
             @Nullable
-            @SerializedName("languageName")
-            val languageName: String?,
+            @SerializedName("lastName")
+            val lastName: String,
             @Nullable
-            @SerializedName("latestCurrencyId")
-            val latestCurrencyId: String?,
+            @SerializedName("phoneNumber")
+            val phoneNumber: String,
             @Nullable
-            @SerializedName("userDetailsId")
-            val userDetailsId: Int,
+            @SerializedName("promoChecked")
+            val promoChecked: Int,
+            @Nullable
+            @SerializedName("sqUserdetails")
+            val sqUserdetails: SqUserdetails,
+            @Nullable
+            @SerializedName("state")
+            val state: String,
+            @Nullable
+            @SerializedName("stateId")
+            val stateId: String ?,
+            @Nullable
+            @SerializedName("timezone")
+            val timezone: String,
+            @Nullable
+            @SerializedName("timezoneId")
+            val timezoneId: Int,
             @Nullable
             @SerializedName("userId")
             val userId: Int
-        )
+        ) {
+            data class DNo(
+                @SerializedName("dname")
+                val dname: String,
+                @SerializedName("dno")
+                val dno: Int
+            )
+
+            data class SqUserdetails(
+                @SerializedName("countryId")
+                val countryId: Int,
+                @SerializedName("countryName")
+                val countryName: String,
+                @SerializedName("currencyName")
+                val currencyName: String,
+                @SerializedName("deviceId")
+                val deviceId: String,
+                @SerializedName("languageId")
+                val languageId: Int,
+                @SerializedName("languageName")
+                val languageName: String,
+                @SerializedName("latestCurrencyId")
+                val latestCurrencyId: String,
+                @SerializedName("userDetailsId")
+                val userDetailsId: Int,
+                @SerializedName("userId")
+                val userId: Int
+            )
+        }
     }
 
     data class SettingsResponse(

@@ -32,22 +32,18 @@ class LoginViewModel(var context: Context?) {
     )
 
     data class ResponseData(
-        val city: String,
         val country: String,
         val deviceId: String,
         val dno: Any,
         val email: String,
         val firstname: String,
         val homeairport: String,
-        val language: String,
         val lastname: String,
         val otp: String,
         val otpFlag: Int,
         val password: String,
         val phonenumber: String,
         val state: String,
-        val timezone: String,
-        val timezoneid: Any,
         val userId: Int
     )
 

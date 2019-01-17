@@ -250,11 +250,11 @@ class DashboardPresenterImpl(
 
     override fun onAPICallGetTimeZoneSucceed(
         route: Enums.APIRoute,
-        responseModel: DashboardViewModel.LanguageResponse
+        responseModel: DashboardViewModel.TimeZoneResponse
     ) {
         when (route) {
             Enums.APIRoute.GET_SAMPLE -> {
-                mView?.doRetrieveModel()?.dashboradLangDomain = responseModel
+                mView?.doRetrieveModel()?.dashboradTimeZoneDomain = responseModel
                 presentState(TIME_ZONE_SUCCESS)
             }
         }
@@ -262,11 +262,11 @@ class DashboardPresenterImpl(
 
     override fun onAPICallGetAirportsSucceed(
         route: Enums.APIRoute,
-        responseModel: DashboardViewModel.LanguageResponse
+        responseModel: DashboardViewModel.AirportDataResponse
     ) {
         when (route) {
             Enums.APIRoute.GET_SAMPLE -> {
-                mView?.doRetrieveModel()?.dashboradLangDomain = responseModel
+                mView?.doRetrieveModel()?.dashboradAirportDomain = responseModel
                 presentState(AIRPORTS_SUCCESS)
             }
         }

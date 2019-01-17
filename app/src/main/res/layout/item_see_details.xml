@@ -4,9 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginRight="@dimen/activity_vertical_margin"
-              android:layout_marginLeft="@dimen/activity_vertical_margin"
-              android:layout_marginTop="@dimen/activity_vertical_margin">
+              android:layout_margin="@dimen/activity_vertical_margin">
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:gravity="center_vertical"
@@ -52,38 +50,48 @@
                 android:weightSum="1"
         >
             <LinearLayout
-                    android:layout_weight=".45"
-                    android:layout_width="wrap_content"
+                    android:layout_weight=".4"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
             >
 
                 <TextView android:id="@+id/tv_destination"
-                          style="@style/CustomLargeTextView"
+                          style="@style/CustomMediumTextView"
                           android:layout_marginBottom="@dimen/activity_vertical_margin_half"
-                          tools:text="BOM  2.14am"
+                          tools:text="BOM  2.14  AM"
                           android:maxLines="2"
                 />
                 <TextView android:id="@+id/tv_date"
                           style="@style/CustomSmallTextView"
                           tools:text="2.14am - 4.25am"
                           android:textColor="@color/slate_grey"
+                          android:layout_marginBottom="@dimen/margin_2dp"
                           android:maxLines="2"
                 />
                 <TextView android:id="@+id/tv_location"
                           style="@style/CustomSmallTextView"
+                          android:textAlignment="center"
                           android:textColor="@color/slate_grey"
-                          tools:text="Spice jet"
+                          tools:text="Pune Airport"
+                          android:maxLines="3"
+                />
+                <TextView android:id="@+id/tv_city"
+                          style="@style/CustomSmallTextView"
+                          android:textAlignment="center"
+                          android:textColor="@color/slate_grey"
+                          tools:text="Pune"
                           android:maxLines="2"
                 />
             </LinearLayout>
 
             <LinearLayout
-                    android:layout_weight=".1"
-                    android:layout_width="wrap_content"
+                    android:layout_weight=".2"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_2dp"
+                    android:layout_marginLeft="@dimen/margin_2dp"
+                    android:layout_marginRight="@dimen/margin_2dp"
                     android:layout_gravity="center"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
@@ -92,44 +100,62 @@
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:layout_margin="@dimen/margin_2dp"
-                        android:src="@android:drawable/ic_lock_idle_alarm"/>
+                        android:src="@drawable/clock"/>
                 <TextView
-                        android:id="@+id/tv_duration"
+                        android:id="@+id/tv_waiting_duration"
                         style="@style/CustomSmallTextView"
                         android:layout_width="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="( 2hr 5min )"
-                        android:layout_marginBottom="@dimen/margin_4dp"
+                        android:textColor="@color/slate_grey"
+                        tools:text="( 2hr 5min )"
                 />
             </LinearLayout>
             <LinearLayout
-                    android:layout_weight=".45"
-                    android:layout_width="wrap_content"
+                    android:layout_weight=".4"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
             >
 
                 <TextView android:id="@+id/tv_out_bound_destination"
-                          style="@style/CustomLargeTextView"
+                          style="@style/CustomMediumTextView"
                           android:layout_marginBottom="@dimen/activity_vertical_margin_half"
-                          android:text="BOM-PNQ "
+                          android:text="PNQ 2.14  AM "
                           android:maxLines="2"
                 />
                 <TextView android:id="@+id/tv_out_bound_date"
                           style="@style/CustomSmallTextView"
+                          android:layout_marginBottom="@dimen/margin_2dp"
                           android:text="2.14am - 4.25am"
                           android:textColor="@color/slate_grey"
                           android:maxLines="2"
                 />
                 <TextView android:id="@+id/tv_out_bound_location"
                           style="@style/CustomSmallTextView"
-                          android:text="Spice jet"
+                          tools:text="Spice jet"
                           android:textColor="@color/slate_grey"
+                          android:textAlignment="center"
+                          android:maxLines="3"
+                />
+                <TextView android:id="@+id/tv_out_bound_city"
+                          style="@style/CustomSmallTextView"
+                          android:textAlignment="center"
+                          android:textColor="@color/slate_grey"
+                          tools:text="Pune"
                           android:maxLines="2"
                 />
             </LinearLayout>
+
         </LinearLayout>
+        <TextView
+                android:id="@+id/tv_layover"
+                style="@style/CustomSmallTextView"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                tools:text="Layover-2hr 5min"
+                android:layout_marginBottom="@dimen/margin_2dp"
+        />
     </LinearLayout>
     <View
             style="@style/Divider"

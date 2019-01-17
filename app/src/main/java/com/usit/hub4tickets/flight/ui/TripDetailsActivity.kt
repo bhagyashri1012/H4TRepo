@@ -11,6 +11,7 @@ import com.usit.hub4tickets.utils.Constant
 import com.usit.hub4tickets.utils.webview.WebViewActivity
 import kotlinx.android.synthetic.main.activity_trip_details.*
 import kotlinx.android.synthetic.main.common_toolbar.*
+import kotlin.math.roundToInt
 
 class TripDetailsActivity : BaseActivity() {
 
@@ -41,7 +42,8 @@ class TripDetailsActivity : BaseActivity() {
             tv_details_class.text = intent.extras.getString(Constant.Path.CABIN_CLASS)
             tv_details_price.text = (intent.extras.getParcelable(Constant.Path.FLIGHT_DETAILS) as FlightViewModel.FlightListResponse.ResponseData).currency +
                     " " +
-                    (intent.extras.getParcelable(Constant.Path.FLIGHT_DETAILS) as FlightViewModel.FlightListResponse.ResponseData).price.toString()
+                    intent.extras.getString(Constant.Path.PRICE)
+            tv_total_deals.text = "1 Deal from " + response?.currency + " " + intent.extras.getString(Constant.Path.PRICE)
         }
         btn_continue_booking.setOnClickListener {
             // val intent = Intent(baseContext, TripProvidersListActivity::class.java)
@@ -81,7 +83,7 @@ class TripDetailsActivity : BaseActivity() {
                         flightDetails?.startAirPortName,
                         flightDetails?.startDate,
                         flightDetails?.startTime,
-                        flightDetails?.stopCount,
+                        flightDetails?.stopCount?.toString(),
                         flightDetails?.stopDetails,
                         null,
                         flightDetails?.toCity
@@ -95,7 +97,7 @@ class TripDetailsActivity : BaseActivity() {
                         flightDetailsOutBound?.airline,
                         flightDetailsOutBound.currency,
                         flightDetailsOutBound.duration,
-                        dataListAll[i].price.toString(),
+                        dataListAll[i].price?.roundToInt().toString(),
                         flightDetailsOutBound?.endAirPortName,
                         flightDetailsOutBound?.endDate,
                         flightDetailsOutBound?.endTime,
@@ -105,7 +107,7 @@ class TripDetailsActivity : BaseActivity() {
                         flightDetailsOutBound?.startAirPortName,
                         flightDetailsOutBound?.startDate,
                         flightDetailsOutBound?.startTime,
-                        flightDetailsOutBound?.stopCount,
+                        flightDetailsOutBound?.stopCount?.toString(),
                         null,
                         flightDetailsOutBound?.stopDetails,
                         flightDetailsOutBound?.toCity

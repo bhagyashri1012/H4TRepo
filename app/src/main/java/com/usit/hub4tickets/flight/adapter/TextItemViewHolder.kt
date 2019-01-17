@@ -11,6 +11,7 @@ import com.usit.hub4tickets.R
 import com.usit.hub4tickets.flight.model.FlightViewModel
 import com.usit.hub4tickets.flight.ui.SeeDetailsActivity
 import com.usit.hub4tickets.utils.Constant
+import kotlin.math.roundToInt
 
 class TextItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val textView: TextView = itemView.findViewById(R.id.list_item) as TextView
@@ -45,14 +46,19 @@ class TextItemViewForTripDetailsHolder(itemView: View) : RecyclerView.ViewHolder
     //private val rvStopDetails: RecyclerView = itemView.findViewById(R.id.recycler_view_stop_details) as RecyclerView
     fun bind(tripDetailsResponse: FlightViewModel.TripAllDetails, context: Context?) {
         if (null != tripDetailsResponse) {
-            tripTitle.text = tripDetailsResponse?.startAirPortName + " - " +
-                    tripDetailsResponse?.endAirPortName
+            tripTitle.text = tripDetailsResponse?.fromCity + " - " +
+                    tripDetailsResponse?.toCity
             tripDate.text = tripDetailsResponse?.startDate
             tripTime.text = tripDetailsResponse?.startTime + " - " +
                     tripDetailsResponse?.endTime
-            tripDestinatn.text = tripDetailsResponse?.fromCity + " - " +
-                    tripDetailsResponse?.toCity
-            stopCount.text = tripDetailsResponse?.stopCount + " Stop "
+            tripDestinatn.text = tripDetailsResponse?.startAirPortName + " - " +
+                    tripDetailsResponse?.endAirPortName
+            if (tripDetailsResponse?.stopCount.equals("0"))
+                stopCount.text = "Direct"
+            else if (tripDetailsResponse?.stopCount.equals("1"))
+                stopCount.text = tripDetailsResponse?.stopCount.toString() + " Stop"
+            else
+                stopCount.text = tripDetailsResponse?.stopCount.toString() + " Stops"
             // tripDuration.text = tripDetailsResponse?.duration
             tripAirline.text = tripDetailsResponse.airline
             firstStop.text = tripDetailsResponse.startTime
@@ -63,12 +69,12 @@ class TextItemViewForTripDetailsHolder(itemView: View) : RecyclerView.ViewHolder
                 .into(imageFirstStop)
             if (null != tripDetailsResponse.stopDetailsOutBound) {
                 Glide.with(itemView.context)
-                    .load(tripDetailsResponse.stopDetailsOutBound.get(tripDetailsResponse.stopDetailsOutBound.lastIndex).imgUrl)
+                    .load(tripDetailsResponse.stopDetailsOutBound.get(tripDetailsResponse.stopDetailsOutBound.lastIndex)?.imgUrl)
                     .into(imageLastStop)
             } else
                 if (null != tripDetailsResponse.stopDetailsInBound) {
                     Glide.with(itemView.context)
-                        .load(tripDetailsResponse.stopDetailsInBound.get(tripDetailsResponse.stopDetailsInBound.lastIndex).imgUrl)
+                        .load(tripDetailsResponse.stopDetailsInBound.get(tripDetailsResponse.stopDetailsInBound.lastIndex)?.imgUrl)
                         .into(imageLastStop)
                 }
 
@@ -91,20 +97,31 @@ class TextItemViewForStopDetailsHolder(itemView: View) : RecyclerView.ViewHolder
     private val tvOutBoundDestination: TextView = itemView.findViewById(R.id.tv_out_bound_destination) as TextView
     private val tvDate: TextView = itemView.findViewById(R.id.tv_date) as TextView
     private val tvOutBoundDate: TextView = itemView.findViewById(R.id.tv_out_bound_date) as TextView
+    private val tvStopDuration: TextView = itemView.findViewById(R.id.tv_waiting_duration) as TextView
+    private val tvLayover: TextView = itemView.findViewById(R.id.tv_layover) as TextView
+    private val tvOutBoundCity: TextView = itemView.findViewById(R.id.tv_out_bound_city) as TextView
+    private val tvCity: TextView = itemView.findViewById(R.id.tv_city) as TextView
     fun bindStopDetails(stopDetail: FlightViewModel.StopDetail?) {
         if (null != stopDetail) {
-            //        tvStopDuration.text = outBoundStopDetail?.startTime
             Glide.with(itemView.context)
                 .load(stopDetail.imgUrl)
                 .into(imvAirline)
             txtAirline.text = "operated by " + stopDetail.airline
-            tripTitle.text = "Flight No " +stopDetail.flightNo
-            tvDestination.text = stopDetail.startAirPortName + " " + stopDetail.startTime
-            tvOutBoundDestination.text = stopDetail.endAirPortName + " " + stopDetail.endTime
-            tvDate.text = stopDetail.startTime
-            tvOutBoundDate.text = stopDetail.endTime
+            tripTitle.text = "Flight No " + stopDetail.flightNo
+            tvDestination.text = stopDetail.startAirportShortName + " " + stopDetail.startTime
+            tvOutBoundDestination.text = stopDetail.endAirportShortName + " " + stopDetail.endTime
+            tvDate.text = stopDetail.startDate
+            tvOutBoundDate.text = stopDetail.endDate
             tvLocation.text = stopDetail.startAirPortName
             tvOutBoundLocation.text = stopDetail.endAirPortName
+            tvOutBoundCity.text = stopDetail.toCity
+            tvCity.text = stopDetail.fromCity
+            tvStopDuration.text = stopDetail?.duration
+            if (stopDetail.waitingDuration != "") {
+                tvLayover.visibility = View.VISIBLE
+                tvLayover.text = "Layover : " + stopDetail?.waitingDuration
+            } else
+                tvLayover.visibility = View.GONE
         }
     }
 }
@@ -117,6 +134,8 @@ class TextItemViewHolderForArray(itemView: View) : RecyclerView.ViewHolder(itemV
     private val tvDurationOutBound: TextView = itemView.findViewById(R.id.tv_out_bound_duration) as TextView
     private val tvTimeOutBound: TextView = itemView.findViewById(R.id.tv_out_bound_time) as TextView
     private val tvDestinationOutBound: TextView = itemView.findViewById(R.id.tv_out_bound_destination) as TextView
+    private val tvStopCountOutBound: TextView = itemView.findViewById(R.id.stop_count_outbound) as TextView
+    private val tvStopCount: TextView = itemView.findViewById(R.id.stop_count) as TextView
     private val imvInBound: ImageView = itemView.findViewById(R.id.imv_inbound) as ImageView
     private val imvOutBound: ImageView = itemView.findViewById(R.id.imv_out_bound) as ImageView
 
@@ -129,9 +148,14 @@ class TextItemViewHolderForArray(itemView: View) : RecyclerView.ViewHolder(itemV
             tvDestinationOutBound.text = responseData.outbondFlightDetails?.startAirPortName + " - " +
                     responseData.outbondFlightDetails?.endAirPortName + " , " +
                     responseData.outbondFlightDetails?.airline
+            if (responseData.outbondFlightDetails?.stopCount == 0)
+                tvStopCountOutBound.text = "Direct"
+            else if (responseData.outbondFlightDetails?.stopCount == 1)
+                tvStopCountOutBound.text = responseData.outbondFlightDetails?.stopCount.toString() + " Stop"
+            else
+                tvStopCountOutBound.text = responseData.outbondFlightDetails?.stopCount.toString() + " Stops"
             Glide.with(itemView.context).load(responseData.outbondFlightDetails?.imgUrl).into(imvOutBound)
-
-            textView.text = responseData.currency + " " + responseData.price?.toString()
+            textView.text = responseData.currency + " - " + responseData.price?.roundToInt()
         }
         if (null != responseData.inbondFlightDetails) {
             tvTime.text = responseData.inbondFlightDetails?.startTime + " - " +
@@ -139,12 +163,20 @@ class TextItemViewHolderForArray(itemView: View) : RecyclerView.ViewHolder(itemV
             tvDestination.text = responseData.inbondFlightDetails?.startAirPortName + " - " +
                     responseData.inbondFlightDetails?.endAirPortName + " , " + responseData.inbondFlightDetails?.airline
             tvDuration.text = responseData.inbondFlightDetails?.duration
+            if (responseData.inbondFlightDetails?.stopCount == 0)
+                tvStopCount.text = "Direct"
+            else if (responseData.inbondFlightDetails?.stopCount == 1)
+                tvStopCount.text = responseData.inbondFlightDetails?.stopCount.toString() + " Stop"
+            else
+                tvStopCount.text = responseData.inbondFlightDetails?.stopCount.toString() + " Stops"
+
             Glide.with(itemView.context).load(responseData.inbondFlightDetails?.imgUrl).into(imvInBound)
         } else {
             tvTime.visibility = View.GONE
             tvDestination.visibility = View.GONE
             tvDuration.visibility = View.GONE
             imvInBound.visibility = View.GONE
+            tvStopCount.visibility = View.GONE
         }
     }
 }

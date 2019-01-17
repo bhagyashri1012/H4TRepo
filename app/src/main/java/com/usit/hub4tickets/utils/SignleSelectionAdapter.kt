@@ -34,7 +34,6 @@ class SignleSelectionAdapter(
 
     override fun onBindViewHolder(holder: SignleSelectionAdapter.MyViewHolder, position: Int) {
         val data = dataList[position]
-
         holder.checkBox.isChecked = dataList[position].isSelected == true
         holder.checkBox.text = dataList[position].itemsName
         holder.checkBox.setOnClickListener {
@@ -44,14 +43,10 @@ class SignleSelectionAdapter(
             notifyDataSetChanged()
             listener.onListItemClick(dataList, position)
         }
-
     }
 
     interface OnClickListener {
-        fun onListItemClick(
-            commonSelectorPojo: ArrayList<CommonSelectorPojo>,
-            position: Int
-        )
+        fun onListItemClick(commonSelectorPojo: ArrayList<CommonSelectorPojo>, position: Int)
     }
 
     override fun getItemCount(): Int {
@@ -59,9 +54,6 @@ class SignleSelectionAdapter(
     }
 
     inner class MyViewHolder(itemView: View) : ViewHolder(itemView) {
-
         var checkBox: CheckedTextView = itemView.findViewById(R.id.checked_text_item) as CheckedTextView
-
     }
-
 }

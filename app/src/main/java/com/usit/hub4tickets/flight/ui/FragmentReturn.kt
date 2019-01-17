@@ -2,6 +2,7 @@ package com.usit.hub4tickets.flight.ui
 
 
 import android.app.Activity
+import android.app.FragmentTransaction
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -27,6 +28,7 @@ import kotlinx.android.synthetic.main.search_layout.*
 import kotlinx.android.synthetic.main.sort_by_dialog.view.*
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 /**
  * Created by Bhagyashri Burade
@@ -93,8 +95,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                 )
             }
             FLIGHT_DETAILS_SUCCESS -> {
-
-                setDataToRecyclerViewAdapter(model.flightListViewModel.responseData)
+                setDataToRecyclerViewAdapter(model.flightListViewModel.responseData as List<FlightViewModel.FlightListResponse.ResponseData>?)
             }
             ERROR
             -> {
@@ -118,7 +119,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         edt_from.addTextChangedListener(object : TextWatcherExtended() {
             override fun afterTextChanged(s: Editable, backSpace: Boolean) {
                 if (!backSpace) {
-                    if (s.length > 2)
+                    if (s.length > 1)
                         if (!isItemClicked && isVisible) {
                             callAPIAirportData(Constant.Path.FROM, s.toString())
                         }
@@ -136,7 +137,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
             object : TextWatcherExtended() {
                 override fun afterTextChanged(s: Editable, backSpace: Boolean) {
                     if (!backSpace) {
-                        if (s.length > 2) {
+                        if (s.length > 1) {
                             if (!isItemClickedTo && isVisible) {
                                 callAPIAirportData(Constant.Path.TO, s.toString())
                             }
@@ -220,6 +221,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
     ) {
         val intent = Intent(activity?.baseContext, TripDetailsActivity::class.java)
         intent.putExtra(Constant.Path.FLIGHT_DETAILS, responseData)
+        intent.putExtra(Constant.Path.PRICE, responseData.price?.roundToInt().toString())
         intent.putExtra(Constant.Path.TOTAL_PASSENGERS, totalPassengers)
         intent.putExtra(Constant.Path.CABIN_CLASS, travelClass)
         startActivity(intent)
@@ -329,7 +331,7 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                 Pref.getValue(context, PrefConstants.USER_ID, "0").toString(),
                 adults!!,
                 travelClassCode.toString(),//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
-                childrens!!,
+                children!!,
                 tv_departure.text.toString(),
                 getString(R.string.flight_return),
                 fromCode.toString(),
@@ -357,6 +359,47 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
                     position: Int
                 ) {
                     sortByCode = dataList[position].code
+                    if (null != sortByCode) {
+                        when (sortByCode) {
+                            resources.getString(R.string.price_code) -> {
+                                val sortedList: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? =
+                                    ArrayList()
+                                sortedList?.addAll(dataListAll!!)
+                                sortedList?.sortBy { it.price }
+                                setDataToRecyclerViewAdapter(sortedList)
+                            }
+
+                            resources.getString(R.string.outbound_takeoff_time_code) -> {
+                                val sortedList: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? =
+                                    ArrayList()
+                                sortedList?.addAll(dataListAll!!)
+                                sortedList?.sortBy { it.outbondFlightDetails?.sortingStartTime }
+                                setDataToRecyclerViewAdapter(sortedList)
+                            }
+
+                            resources.getString(R.string.outbound_landing_time_code) -> {
+                                val sortedList: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? =
+                                    ArrayList()
+                                sortedList?.addAll(dataListAll!!)
+                                sortedList?.sortBy { it.outbondFlightDetails?.sortingEndTime }
+                                setDataToRecyclerViewAdapter(sortedList)
+                            }
+                            resources.getString(R.string.inbound_takeoff_time_code) -> {
+                                val sortedList: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? =
+                                    ArrayList()
+                                sortedList?.addAll(dataListAll!!)
+                                sortedList?.sortBy { it.inbondFlightDetails?.sortingStartTime }
+                                setDataToRecyclerViewAdapter(sortedList)
+                            }
+                            resources.getString(R.string.inbound_landing_time_code) -> {
+                                val sortedList: ArrayList<FlightViewModel.FlightListResponse.ResponseData>? =
+                                    ArrayList()
+                                sortedList?.addAll(dataListAll!!)
+                                sortedList?.sortBy { it.inbondFlightDetails?.sortingEndTime }
+                                setDataToRecyclerViewAdapter(sortedList)
+                            }
+                        }
+                    }
                     dialogBuilder.dismiss()
                 }
             })
@@ -364,11 +407,10 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         dialogBuilder.setView(dialogView)
         dialogBuilder.setCanceledOnTouchOutside(true)
         dialogBuilder.show()
-
     }
 
     private var adults: String? = "1"
-    private var childrens: String? = "0"
+    private var children: String? = "0"
     private var infants: String? = "0"
     private fun selectTravelClass() {
         val dialogBuilder = AlertDialog.Builder(this.context!!).create()
@@ -379,35 +421,46 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         dialogView.tv_dialog_header.text = getString(R.string.passenger_information)
         dialogView.tv_dialog_header_rcv.text = getString(R.string.cabin_class)
         dialogView.tv_quantity_adult.text = adults
-        dialogView.tv_quantity_children.text = childrens
+        dialogView.tv_quantity_children.text = children
         dialogView.tv_quantity_infants.text = infants
 
         dialogView.imv_minus_adult.setOnClickListener {
-            Utility.onMinusClick(dialogView.tv_quantity_adult, true, false)
+            Utility.onMinusClick(dialogView.tv_quantity_adult, true, false, "")
         }
         dialogView.imv_plus_adult.setOnClickListener {
-            Utility.onAddClick(dialogView.tv_quantity_adult, true, false)
+            Utility.onAddClick(dialogView.tv_quantity_adult, true, false, "")
         }
         dialogView.imv_minus_children.setOnClickListener {
-            Utility.onMinusClick(dialogView.tv_quantity_children, false, false)
+            Utility.onMinusClick(dialogView.tv_quantity_children, false, false, "")
         }
         dialogView.imv_plus_children.setOnClickListener {
-            Utility.onAddClick(dialogView.tv_quantity_children, false, false)
+            Utility.onAddClick(dialogView.tv_quantity_children, false, false, "")
         }
         dialogView.imv_minus_infants.setOnClickListener {
-            Utility.onMinusClick(dialogView.tv_quantity_infants, false, true)
+            Utility.onMinusClick(
+                dialogView.tv_quantity_infants,
+                false,
+                true,
+                dialogView.tv_quantity_adult.text.toString()
+            )
         }
         dialogView.imv_plus_infants.setOnClickListener {
-            Utility.onAddClick(dialogView.tv_quantity_infants, false, true)
+            Utility.onAddClick(
+                dialogView.tv_quantity_infants,
+                false,
+                true,
+                dialogView.tv_quantity_adult.text.toString()
+            )
         }
         dialogView.button_dialog_apply.setOnClickListener {
             adults = dialogView.tv_quantity_adult.text.toString()
-            childrens = dialogView.tv_quantity_children.text.toString()
+            children = dialogView.tv_quantity_children.text.toString()
             infants = dialogView.tv_quantity_infants.text.toString()
             btn_passengers.text = dialogView.tv_quantity_adult.text.toString() + " Adult " +
                     dialogView.tv_quantity_children.text.toString() + " Children " +
                     dialogView.tv_quantity_infants.text.toString() + " Infants "
             btn_class.text = travelClass
+            attemptSearch()
             dialogBuilder.dismiss()
         }
         dialogView.button_dialog_cancel.setOnClickListener {
@@ -460,32 +513,30 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
         dataListSortBy?.add(
             CommonSelectorPojo(
                 "3",
-                getString(R.string.morning_arrival_text),
-                getString(R.string.morning_arr_code),
+                getString(R.string.outbound_takeoff_time),
+                getString(R.string.outbound_takeoff_time_code),
                 false
             )
         )
         dataListSortBy?.add(
             CommonSelectorPojo(
                 "4",
-                getString(R.string.morning_departure_text),
-                getString(R.string.morning_departure_code),
+                getString(R.string.outbound_landing_time),
+                getString(R.string.outbound_landing_time_code),
                 false
             )
         )
         dataListSortBy?.add(
             CommonSelectorPojo(
-                "5",
-                getString(R.string.evening_departure_text),
-                getString(R.string.evening_departure_code),
+                "5", getString(R.string.inbound_takeoff_time),
+                getString(R.string.inbound_takeoff_time_code),
                 false
             )
         )
         dataListSortBy?.add(
             CommonSelectorPojo(
-                "6",
-                getString(R.string.evening_arrival_text),
-                getString(R.string.evening_arrival_code),
+                "6", getString(R.string.inbound_landing_time),
+                getString(R.string.inbound_landing_time_code),
                 false
             )
         )
@@ -526,48 +577,63 @@ class FragmentReturn : RootFragment(), RecyclerViewAdapter.OnItemClickListener, 
 
     private fun setDataAndListeners(v: View) {
         tv_departure.text = Utility.getCurrentDateNow()
-        tv_return.text = Utility.getCurrentDateNow()
+      //  tv_return.text = Utility.getCurrentDateNow()
         recyclerView = v?.findViewById(R.id.recycler_view) as RecyclerView
         val layoutManager = LinearLayoutManager(context)
         recyclerView!!.layoutManager = layoutManager as RecyclerView.LayoutManager?
-        btn_sort.setOnClickListener {
-            sortBy()
-            if (null != sortByCode) {
-                when (sortByCode) {
-                    "price" -> {
-                        val sortedList = dataListAll?.sortedWith(
-                            compareBy(
-                                FlightViewModel.FlightListResponse.ResponseData::price,
-                                FlightViewModel.FlightListResponse.ResponseData::price
-                            )
-                        )
-                        adapter?.notifyDataSetChanged()
-                    }
-                }
-            }
-        }
+        btn_sort.setOnClickListener { sortBy() }
         tv_departure.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_departure, 0) }
         tv_return.setOnClickListener { Utility.dateDialogWithMinMaxDate(c, activity, tv_return, 0) }
         btn_class.setOnClickListener { selectTravelClass() }
         btn_class.text = travelClass
         btn_passengers.text = adults + " Adult " +
-                childrens + " Children " +
+                children + " Children " +
                 infants + " Infants "
         btn_passengers.setOnClickListener { selectTravelClass() }
-        im_btn_search.setOnClickListener {
-            attemptSearch()
+        im_btn_search.setOnClickListener { attemptSearch() }
+        btn_filter.setOnClickListener {
+            //openFilter()
         }
     }
 
-    var totalPassengers: String = ""
+    private fun openFilter() {
+        val newFragment = FilterFragment()
+        val transaction = fragmentManager?.beginTransaction()
+        transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        transaction?.add(android.R.id.content, newFragment)?.addToBackStack(null)?.commit()
+    }
+
+    private var totalPassengers: String = ""
     private fun setDataToRecyclerViewAdapter(responseData: List<FlightViewModel.FlightListResponse.ResponseData>?) {
         dataListAll?.clear()
         if (responseData != null) {
-            totalPassengers = btn_passengers.text.toString()
+            totalPassengers = showPassengersAdult(adults).toString() + showPassengersChildren(children).toString() +
+                    showPassengersInfants(infants).toString()
             dataListAll?.addAll(responseData)
         }
         adapter = RecyclerViewAdapter(dataListAll!!, this, totalPassengers)
         recyclerView!!.adapter = adapter
+    }
+
+    private fun showPassengersAdult(adults: String?): CharSequence? {
+        return if (!adults.equals("0"))
+            "$adults Adult "
+        else
+            ""
+    }
+
+    private fun showPassengersChildren(children: String?): CharSequence? {
+        return if (!children.equals("0"))
+            "$children Children "
+        else
+            ""
+    }
+
+    private fun showPassengersInfants(infants: String?): CharSequence? {
+        return if (!infants.equals("0"))
+            "$infants Infants "
+        else
+            ""
     }
 
     abstract inner class TextWatcherExtended : TextWatcher {

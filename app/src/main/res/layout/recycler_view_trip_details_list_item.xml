@@ -208,6 +208,7 @@
                     android:gravity="end|right"
                     android:textAlignment="viewEnd"
                     android:layout_weight="1"
+                    android:textColor="@color/colorPrimary"
                     style="@style/CustomRegularTextView"/>
         </LinearLayout>
     </LinearLayout>
