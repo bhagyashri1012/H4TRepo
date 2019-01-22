@@ -1,95 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                                    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:background="@color/white"
-                                    android:backgroundTint="@color/white"
-                                    android:touchscreenBlocksFocus="true"
-                                    app:barrierAllowsGoneWidgets="true"
-                                    app:cardUseCompatPadding="true">
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/activity_vertical_margin"
-            android:orientation="vertical"
-            android:background="@color/white"
-            android:gravity="center_horizontal">
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      android:id="@+id/ll_settings_country">
-            <TextView
-                    android:layout_gravity="left"
-                    android:text="@string/country"
-                    android:layout_marginBottom="@dimen/margin_4dp"
-                    style="@style/CustomRegularTextView"/>
-            <TextView
-                    android:id="@+id/tv_settings_country_name"
-                    android:layout_gravity="left"
-                    tools:text="India"
-                    android:textColor="@color/slate_grey"
-                    style="@style/CustomRegularTextView"/>
-        </LinearLayout>
-        <View android:layout_width="match_parent"
-              android:layout_height="1dp"
-              android:layout_marginBottom="@dimen/activity_vertical_margin"
-              android:layout_marginTop="@dimen/activity_vertical_margin" android:background="@color/black_20"/>
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      android:id="@+id/ll_settings_currency">
-            <TextView
-                    android:id="@+id/tv_settings_currency"
-                    android:text="@string/currency"
-                    android:layout_gravity="left"
-                    android:layout_marginBottom="@dimen/margin_4dp"
-                    style="@style/CustomRegularTextView"/>
-            <TextView
-                    android:id="@+id/tv_settings_currency_name"
-                    android:layout_gravity="left"
-                    tools:text="Rupees"
-                    android:textColor="@color/slate_grey"
-                    style="@style/CustomRegularTextView"/>
-        </LinearLayout>
-        <View android:layout_width="match_parent"
-              android:layout_height="1dp"
-              android:layout_marginBottom="@dimen/activity_vertical_margin"
-              android:layout_marginTop="@dimen/activity_vertical_margin"
-              android:background="@color/black_20"/>
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      android:id="@+id/ll_settings_language">
-            <TextView
-                    android:id="@+id/tv_settings_language"
-                    android:layout_gravity="left"
-                    android:text="@string/language_settings"
-                    android:layout_marginBottom="@dimen/margin_4dp"
-                    style="@style/CustomRegularTextView"/>
-            <TextView
-                    android:id="@+id/tv_settings_language_name"
-                    android:layout_gravity="left"
-                    tools:text="English"
-                    android:textColor="@color/slate_grey"
-                    style="@style/CustomRegularTextView"/>
-        </LinearLayout>
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="@dimen/margin_32"
-                      android:orientation="horizontal">
-            <Button
-                    android:id="@+id/cancel_button"
-                    style="@style/CustomButton"
-                    android:layout_weight="1"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:text="@string/cancel"/>
-            <Button
-                    android:id="@+id/settings_apply_button"
-                    style="@style/CustomButton"
-                    android:layout_weight="1"
-                    android:text="@string/apply"/>
-        </LinearLayout>
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+<?xml version="1.0" encoding="utf-8"?><android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"                                    xmlns:app="http://schemas.android.com/apk/res-auto"                                    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"                                    android:layout_height="wrap_content"                                    android:orientation="horizontal"                                    android:background="@color/white"                                    android:backgroundTint="@color/white"                                    android:touchscreenBlocksFocus="true"                                    app:barrierAllowsGoneWidgets="true"                                    app:cardUseCompatPadding="true">    <LinearLayout            android:layout_width="match_parent"            android:layout_height="match_parent"            android:padding="@dimen/activity_vertical_margin"            android:orientation="vertical"            android:background="@color/white"            android:gravity="center_horizontal">        <LinearLayout android:layout_width="match_parent"                      android:layout_height="wrap_content"                      android:orientation="vertical"                      android:id="@+id/ll_settings_country">            <TextView                    android:layout_gravity="left"                    android:text="@string/country"                    android:layout_marginBottom="@dimen/margin_4dp"                    style="@style/CustomRegularTextView"/>            <TextView                    android:id="@+id/tv_settings_country_name"                    android:layout_gravity="left"                    tools:text="India"                    android:textColor="@color/slate_grey"                    style="@style/CustomRegularTextView"/>        </LinearLayout>        <View android:layout_width="match_parent"              android:layout_height="1dp"              android:layout_marginBottom="@dimen/activity_vertical_margin"              android:layout_marginTop="@dimen/activity_vertical_margin" android:background="@color/black_20"/>        <LinearLayout android:layout_width="match_parent"                      android:layout_height="wrap_content"                      android:orientation="vertical"                      android:id="@+id/ll_settings_currency">            <TextView                    android:id="@+id/tv_settings_currency"                    android:text="@string/currency"                    android:layout_gravity="left"                    android:layout_marginBottom="@dimen/margin_4dp"                    style="@style/CustomRegularTextView"/>            <TextView                    android:id="@+id/tv_settings_currency_name"                    android:layout_gravity="left"                    tools:text="Rupees"                    android:textColor="@color/slate_grey"                    style="@style/CustomRegularTextView"/>        </LinearLayout>        <View android:layout_width="match_parent"              android:layout_height="1dp"              android:layout_marginBottom="@dimen/activity_vertical_margin"              android:layout_marginTop="@dimen/activity_vertical_margin"              android:background="@color/black_20"/>        <LinearLayout android:layout_width="match_parent"                      android:layout_height="wrap_content"                      android:orientation="vertical"                      android:id="@+id/ll_settings_language">            <TextView                    android:id="@+id/tv_settings_language"                    android:layout_gravity="left"                    android:text="@string/language_settings"                    android:layout_marginBottom="@dimen/margin_4dp"                    style="@style/CustomRegularTextView"/>            <TextView                    android:id="@+id/tv_settings_language_name"                    android:layout_gravity="left"                    tools:text="English"                    android:textColor="@color/slate_grey"                    style="@style/CustomRegularTextView"/>        </LinearLayout>        <LinearLayout android:layout_width="match_parent"                      android:layout_height="wrap_content"                      android:layout_marginTop="@dimen/margin_32"                      android:orientation="horizontal">            <Button                    android:id="@+id/cancel_button"                    style="@style/CustomButton"                    android:layout_weight="1"                    android:layout_marginRight="@dimen/activity_horizontal_margin"                    android:text="@string/cancel"/>            <Button                    android:id="@+id/settings_apply_button"                    style="@style/CustomButton"                    android:layout_weight="1"                    android:text="@string/apply"/>        </LinearLayout>    </LinearLayout></android.support.v7.widget.CardView>
