@@ -1,29 +1,1 @@
-package com.usit.hub4tickets.flight.ui
-
-import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.usit.hub4tickets.R
-import com.usit.hub4tickets.flight.adapter.OneWayRecyclerViewAdapter
-
-class FragmentMultiCity : RootFragment() {
-
-    private lateinit var recyclerView: RecyclerView
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val items = resources.getStringArray(R.array.tab_A)
-        val adapter = OneWayRecyclerViewAdapter(items, items)
-        recyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
-        val layoutManager = LinearLayoutManager(context)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = adapter
-    }
-}
+package com.usit.hub4tickets.flight.uiimport android.os.Bundleimport android.support.v7.widget.LinearLayoutManagerimport android.view.LayoutInflaterimport android.view.Viewimport android.view.ViewGroupimport com.usit.hub4tickets.Rimport com.usit.hub4tickets.addremovelist.ListAdapterimport com.usit.hub4tickets.common.RootFragmentimport kotlinx.android.synthetic.main.fragment.*class FragmentMultiCity : RootFragment() {    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {        return inflater.inflate(R.layout.fragment_multicity, container, false)    }    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {        super.onViewCreated(view, savedInstanceState)        var list: ArrayList<String>? = ArrayList()        list?.add("")        list?.add("")        val listAdapter = ListAdapter(list!!, context!!)        val layoutManager = LinearLayoutManager(context)        recycler_view.layoutManager = layoutManager        recycler_view.adapter = listAdapter    }}
