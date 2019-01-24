@@ -11,7 +11,7 @@ class FilterModel {
         var dtime_to: String,
         var atime_from: String,
         var atime_to: String,
-        var max_stopovers: String
+        var max_stopovers: List<String>
     ) : Parcelable {
         constructor(source: Parcel) : this(
             source.readString(),
@@ -20,7 +20,7 @@ class FilterModel {
             source.readString(),
             source.readString(),
             source.readString(),
-            source.readString()
+            source.readArrayList(null) as ArrayList<String>
         )
 
         override fun describeContents() = 0
@@ -32,7 +32,7 @@ class FilterModel {
             writeString(dtime_to)
             writeString(atime_from)
             writeString(atime_to)
-            writeString(max_stopovers)
+            writeList(max_stopovers)
         }
 
         companion object {
