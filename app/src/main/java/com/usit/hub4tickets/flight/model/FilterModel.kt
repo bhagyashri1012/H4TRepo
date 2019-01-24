@@ -5,12 +5,12 @@ import android.os.Parcelable
 
 class FilterModel {
     data class Filter(
-        val price_from: String,
-        val price_to: String,
-        val dtime_from: String,
-        val dtime_to: String,
-        val atime_from: String,
-        val atime_to: String,
+        var price_from: String,
+        var price_to: String,
+        var dtime_from: String,
+        var dtime_to: String,
+        var atime_from: String,
+        var atime_to: String,
         var max_stopovers: String
     ) : Parcelable {
         constructor(source: Parcel) : this(
