@@ -35,6 +35,10 @@ class FilterActivity : AppCompatActivity() {
             if (null != filterData)
                 init()
         }
+        if (activityTitle.equals("FragmentOneWay")) {
+            ll_inbound.visibility = View.GONE
+
+        }
         setRangeSeekbarForPrice()
         setRangeSeekbarForDuration()
         setRangeSeekbarForaOutstanding()
@@ -48,33 +52,33 @@ class FilterActivity : AppCompatActivity() {
         range_seekbar_price.setMinValue(0f).setMaxValue(100000f).setMinStartValue(minValuePrice.toFloat())
             .setMaxStartValue(maxValuePrice.toFloat()).apply()
 
-        if (activityTitle?.equals("FragmentOneWay")!!) {
+        if (activityTitle.equals("FragmentOneWay")) {
             ll_inbound.visibility = View.GONE
 
         } else {
             ll_inbound.visibility = View.VISIBLE
             textMin.text = removePadValues(nullDefaultValues(filterData?.dtime_from, "0"))
-            textMax.text = removePadValues(nullDefaultValues(filterData?.dtime_to, "24"))
+            textMax.text = removePadValues(nullDefaultValues(filterData?.dtime_to, "100"))
             minValueDuration = removePadValues(filterData?.dtime_from.toString())
             maxValueDuration = removePadValues(filterData?.dtime_to.toString())
-            range_seekbar_duration.setMinValue(1f).setMaxValue(24f)
+            range_seekbar_duration.setMinValue(0f).setMaxValue(24f)
                 .setMinStartValue(minValueDuration.toFloat())
                 .setMaxStartValue(zeroCheck(maxValueDuration).toFloat())
                 .apply()
         }
 
         textMin_outbound.text = removePadValues(nullDefaultValues(filterData?.atime_from, "0"))
-        textMax_outbound.text = removePadValues(nullDefaultValues(filterData?.atime_to, "24"))
+        textMax_outbound.text = removePadValues(nullDefaultValues(filterData?.atime_to, "100"))
         minValueOutbound = removePadValues(filterData?.atime_from.toString())
         maxValueOutbound = removePadValues(filterData?.atime_to.toString())
-        range_seekbar_outbound_trip.setMinValue(1f).setMaxValue(24f)
+        range_seekbar_outbound_trip.setMinValue(0f).setMaxValue(24f)
             .setMinStartValue(minValueOutbound.toFloat())
             .setMaxStartValue(zeroCheck(maxValueOutbound).toFloat())
             .apply()
 
-        switchButton_direct.isChecked = filterData?.max_stopovers?.contains(1)!!
-        switchButton_1stop.isChecked = filterData?.max_stopovers?.contains(2)!!
-        switchButton_2stops.isChecked = filterData?.max_stopovers?.contains(3)!!
+        switchButton_direct.isChecked = filterData?.max_stopovers?.contains(0)!!
+        switchButton_1stop.isChecked = filterData?.max_stopovers?.contains(1)!!
+        switchButton_2stops.isChecked = filterData?.max_stopovers?.contains(2)!!
     }
 
     private fun zeroCheck(maxDuration: String): String {
@@ -108,51 +112,64 @@ class FilterActivity : AppCompatActivity() {
     private fun setOtherListeners() {
 
         var maxStopovers: ArrayList<Int> = ArrayList()
-        button_dialog_cancel.setOnClickListener { finish() }
+        button_dialog_cancel.setOnClickListener { onBackPressed() }
 
         if (switchButton_direct.isChecked)
-            maxStopovers.add(1)
+            maxStopovers.add(0)
+        else
+            maxStopovers.remove(0)
+
         if (switchButton_1stop.isChecked)
-            maxStopovers.add(2)
+            maxStopovers.add(1)
+        else
+            maxStopovers.remove(1)
         if (switchButton_2stops.isChecked)
-            maxStopovers.add(3)
+            maxStopovers.add(2)
+        else
+            maxStopovers.remove(2)
 
         switchButton_direct?.setOnCheckedChangeListener { _, isChecked ->
+            maxStopovers.remove(0)
+            if (isChecked)
+                maxStopovers.add(0)
+            else {
+                if (!switchButton_1stop.isChecked && !switchButton_2stops.isChecked) {
+                    maxStopovers.add(0)
+                    switchButton_direct.isChecked = true
+
+                } else
+                    maxStopovers.remove(0)
+            }
+        }
+        switchButton_1stop?.setOnCheckedChangeListener { _, isChecked ->
+            maxStopovers.remove(1)
             if (isChecked)
                 maxStopovers.add(1)
             else {
-                if (!switchButton_1stop.isChecked && !switchButton_2stops.isChecked) {
-                    switchButton_direct.isChecked = true
+                if (!switchButton_direct.isChecked && !switchButton_2stops.isChecked) {
                     maxStopovers.add(1)
+                    switchButton_1stop.isChecked = true
+
                 } else
                     maxStopovers.remove(1)
             }
         }
-        switchButton_1stop?.setOnCheckedChangeListener { _, isChecked ->
+        switchButton_2stops?.setOnCheckedChangeListener { _, isChecked ->
+            maxStopovers.remove(2)
+
             if (isChecked)
                 maxStopovers.add(2)
             else {
-                if (!switchButton_direct.isChecked && !switchButton_2stops.isChecked) {
-                    switchButton_1stop.isChecked = true
+                if (!switchButton_direct.isChecked && !switchButton_1stop.isChecked) {
                     maxStopovers.add(2)
+                    switchButton_2stops.isChecked = true
                 } else
                     maxStopovers.remove(2)
             }
         }
-        switchButton_2stops?.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
-                maxStopovers.add(3)
-            else {
-                if (!switchButton_direct.isChecked && !switchButton_1stop.isChecked) {
-                    switchButton_2stops.isChecked = true
-                    maxStopovers.add(3)
-                } else
-                    maxStopovers.remove(3)
-            }
-        }
 
         button_dialog_apply.setOnClickListener {
-            if (activityTitle.equals("OneWay")) {
+            if (activityTitle.equals("FragmentOneWay")) {
                 val filterModel: FilterModel.Filter = FilterModel.Filter(
                     minValuePrice,
                     maxValuePrice,
@@ -197,10 +214,6 @@ class FilterActivity : AppCompatActivity() {
             textMax.text = maxValue.toString()
         }
         range_seekbar_duration.setOnRangeSeekbarFinalValueListener { minValue, maxValue ->
-            Log.d(
-                "CRS=>",
-                minValue.toString() + " : " + maxValue.toString()
-            )
             minValueDuration = minValue.toString()
             maxValueDuration = maxValue.toString()
         }
@@ -212,12 +225,7 @@ class FilterActivity : AppCompatActivity() {
             textMin_price.text = minValue.toString()
             textMax_price.text = maxValue.toString()
         }
-        // set final value listener
         range_seekbar_price.setOnRangeSeekbarFinalValueListener { minValue, maxValue ->
-            Log.d(
-                "CRS=>",
-                minValue.toString() + " : " + maxValue.toString()
-            )
             minValuePrice = minValue.toString()
             maxValuePrice = maxValue.toString()
         }
@@ -232,10 +240,10 @@ class FilterActivity : AppCompatActivity() {
         }
 
         range_seekbar_outbound_trip.setOnRangeSeekbarFinalValueListener { minValue, maxValue ->
-            Log.d(
+            /*Log.d(
                 "CRS=>",
                 minValue.toString() + " : " + maxValue.toString()
-            )
+            )*/
             minValueOutbound = minValue.toString()
             maxValueOutbound = maxValue.toString()
         }
