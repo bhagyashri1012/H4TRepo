@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_filter.*
 
 class FilterActivity : AppCompatActivity() {
     private var minValuePrice: String = "0"
-    private var maxValuePrice: String = "100000"
+    private var maxValuePrice: String = "1000000"
     private var minValueDuration: String = "0"
     private var maxValueDuration: String = "0"
     private var minValueOutbound: String = "0"
@@ -49,7 +49,7 @@ class FilterActivity : AppCompatActivity() {
         textMax_price.text = filterData?.price_to
         minValuePrice = filterData?.price_from.toString()
         maxValuePrice = filterData?.price_to.toString()
-        range_seekbar_price.setMinValue(0f).setMaxValue(100000f).setMinStartValue(minValuePrice.toFloat())
+        range_seekbar_price.setMinValue(0f).setMaxValue(1000000f).setMinStartValue(minValuePrice.toFloat())
             .setMaxStartValue(maxValuePrice.toFloat()).apply()
 
         if (activityTitle.equals("FragmentOneWay")) {
