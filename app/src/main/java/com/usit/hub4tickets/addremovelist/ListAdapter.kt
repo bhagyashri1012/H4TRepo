@@ -2,6 +2,8 @@ package com.usit.hub4tickets.addremovelist
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +11,9 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.flight.model.FlightViewModel
 import com.usit.hub4tickets.utils.Utility
-import java.util.*
+
 
 /**
  * Created by Bhagyashri Burade
@@ -18,13 +21,11 @@ import java.util.*
  * Email: bhagyashri.burade@usit.net.in
  */
 class ListAdapter(
-    steps: ArrayList<String>,
-    internal var context: Context,
+    var stepList: ArrayList<FlightViewModel.MultiCitiesForSearch>?,
+    var context: Context,
     val listener: OnItemClickListener?
 ) :
     RecyclerView.Adapter<ListAdapter.ViewHolder>() {
-    var stepList: ArrayList<String>
-        internal set
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var plus: ImageButton = itemView.findViewById<View>(R.id.plus) as ImageButton
@@ -48,19 +49,14 @@ class ListAdapter(
     }
 
 
-    init {
-        this.stepList = steps
-    }
-
-
     override fun getItemCount(): Int {
-        return stepList.size
+        return stepList!!.size
     }
 
     interface OnItemClickListener {
         fun onDepartureDateClick()
-        fun onFromClick(edtFrom: EditText, edtFrom1: EditText)
-        fun onToClick(edtTo: EditText, edtFrom: EditText)
+        fun onFromClick(edtFrom: EditText, edtFrom1: EditText, position: Int)
+        fun onToClick(edtTo: EditText, edtFrom: EditText, position: Int)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ListAdapter.ViewHolder {
@@ -69,11 +65,18 @@ class ListAdapter(
         return ViewHolder(v)
     }
 
+    var defalutViewHolder: ListAdapter.ViewHolder? = null
+
+//    private val multiCitiesForSearch: FlightViewModel.MultiCitiesForSearch? =
+//        FlightViewModel.MultiCitiesForSearch("", "", "")
 
     override fun onBindViewHolder(holder: ListAdapter.ViewHolder, position: Int) {
+        val multiCitiesForSearch: FlightViewModel.MultiCitiesForSearch =
+            FlightViewModel.MultiCitiesForSearch("", "", "")
+        defalutViewHolder = holder
         holder.tvDeparture.setOnClickListener { listener?.onDepartureDateClick() }
-        holder.edtFrom.setOnClickListener { listener?.onFromClick(holder.edtTo,holder.edtFrom) }
-        holder.edtTo.setOnClickListener { listener?.onToClick(holder.edtTo,holder.edtFrom) }
+        holder.edtFrom.setOnClickListener { listener?.onFromClick(holder.edtTo, holder.edtFrom, position) }
+        holder.edtTo.setOnClickListener { listener?.onToClick(holder.edtTo, holder.edtFrom, position) }
 
         if (position == 0)
             holder.plus.visibility = View.GONE
@@ -91,14 +94,14 @@ class ListAdapter(
 
         holder.minus.setOnClickListener {
             try {
-                stepList.removeAt(position)
+                stepList?.removeAt(position)
                 notifyItemRemoved(position)
             } catch (e: ArrayIndexOutOfBoundsException) {
                 e.printStackTrace()
             }
-            if (position == 0 && stepList.size in 0..1 || position == 1 && stepList.size in 0..1) {
-                stepList.removeAt(position)
-                notifyItemRemoved(position)
+            if (position == 0 && stepList?.size in 0..1 || position == 1 && stepList?.size in 0..1) {
+                stepList?.add(position, FlightViewModel.MultiCitiesForSearch("", "", ""))
+                notifyItemInserted(position)
             }
             holder.edtFrom.setText("")
             holder.edtTo.setText("")
@@ -107,16 +110,42 @@ class ListAdapter(
 
         holder.plus.setOnClickListener {
             try {
-                stepList.add(position + 1, "")
+                stepList?.add(position + 1, FlightViewModel.MultiCitiesForSearch("", "", ""))
                 notifyItemInserted(position + 1)
             } catch (e: ArrayIndexOutOfBoundsException) {
                 e.printStackTrace()
             }
-            if (position == 0 && stepList.size in 0..1 || position == 1 && stepList.size in 0..1) {
-                stepList.add(position + 1, "")
+            if (position == 0 && stepList?.size in 0..1 || position == 1 && stepList?.size in 0..1) {
+                stepList?.add(position + 1, FlightViewModel.MultiCitiesForSearch("", "", ""))
                 notifyItemInserted(position + 1)
             }
             createView(position, holder.plus, holder.minus)
         }
+
+        holder.edtFrom.addTextChangedListener(object : TextWatcher {
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                multiCitiesForSearch.fly_from = s.toString().substringAfter("(").substringBefore(")")
+            }
+
+            override fun afterTextChanged(s: Editable) {}
+        })
+        holder.edtTo.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                multiCitiesForSearch.fly_to = s.toString().substringAfter("(").substringBefore(")")
+            }
+
+            override fun afterTextChanged(s: Editable) {}
+        })
+        multiCitiesForSearch.date_from = holder.tvDeparture.text.toString()
+        stepList?.set(position, multiCitiesForSearch)
+    }
+
+    fun getSearchParamList(): ArrayList<FlightViewModel.MultiCitiesForSearch> {
+        return stepList!!
     }
 }
