@@ -99,27 +99,34 @@ class ListAdapter(
             } catch (e: ArrayIndexOutOfBoundsException) {
                 e.printStackTrace()
             }
-            if (position == 0 && stepList?.size in 0..1 || position == 1 && stepList?.size in 0..1) {
-                stepList?.set(position, FlightViewModel.MultiCitiesForSearch("", "", ""))
-                notifyItemInserted(position)
-            }
+
             holder.edtFrom.setText("")
             holder.edtTo.setText("")
             createView(position, holder.plus, holder.minus)
+
+            if (position == 0 && stepList?.size in 0..1 || position == 1 && stepList?.size in 0..1) {
+                stepList?.add(position, FlightViewModel.MultiCitiesForSearch("", "", ""))
+                notifyItemInserted(position)
+            }
+
         }
 
         holder.plus.setOnClickListener {
-            try {
-                stepList?.set(position + 1, FlightViewModel.MultiCitiesForSearch("", "", ""))
-                notifyItemInserted(position + 1)
-            } catch (e: ArrayIndexOutOfBoundsException) {
-                e.printStackTrace()
+            if (stepList?.size in 0..5) {
+                try {
+                    stepList?.add(position + 1, FlightViewModel.MultiCitiesForSearch("", "", ""))
+                    notifyItemInserted(position + 1)
+                } catch (e: ArrayIndexOutOfBoundsException) {
+                    e.printStackTrace()
+                }
             }
+            createView(position, holder.plus, holder.minus)
+
             if (position == 0 && stepList?.size in 0..1 || position == 1 && stepList?.size in 0..1) {
                 stepList?.set(position + 1, FlightViewModel.MultiCitiesForSearch("", "", ""))
                 notifyItemInserted(position + 1)
             }
-            createView(position, holder.plus, holder.minus)
+
         }
 
         holder.edtFrom.addTextChangedListener(object : TextWatcher {
@@ -142,7 +149,7 @@ class ListAdapter(
             override fun afterTextChanged(s: Editable) {}
         })
 
-        //multiCitiesForSearch.date_from = holder.tvDeparture.text.toString()
+        multiCitiesForSearch.date_from = holder.tvDeparture.text.toString()
 
         holder.tvDeparture.setOnClickListener {
             Utility.dateDialogWithMinMaxDate(Calendar.getInstance(), context.activity, holder.tvDeparture, 0)

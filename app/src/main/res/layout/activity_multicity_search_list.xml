@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="match_parent"
-        android:layout_width="match_parent" android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:orientation="vertical">
 
+    <include layout="@layout/common_toolbar"/>
+
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="@dimen/margin_2dp"
+                  android:orientation="horizontal"
+                  android:layout_gravity="right"
+    >
+        <Button android:id="@+id/btn_sort"
+                style="@style/CustomSmallTextView"
+                android:minHeight="@dimen/margin_32"
+                android:layout_toRightOf="@id/btn_class"
+                android:layout_marginRight="@dimen/margin_2dp"
+                android:text="@string/sort"
+                android:background="@null"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimary"
+        />
+
+        <Button android:id="@+id/btn_filter"
+                style="@style/CustomSmallTextView"
+                android:minHeight="@dimen/margin_32"
+                android:layout_toRightOf="@+id/btn_sort"
+                android:text="@string/filter"
+                android:textAllCaps="false"
+                android:layout_marginRight="@dimen/margin_2dp"
+                android:background="@null"
+                android:textColor="@color/colorPrimary"
+        />
+    </LinearLayout>
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin_half"
     />
     <RelativeLayout
             android:id="@+id/rl_flight_not_found"
