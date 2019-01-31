@@ -41,12 +41,18 @@ class ListAdapter(
             plus.visibility = View.GONE
             minus.visibility = View.VISIBLE
         }
+        if(position < itemCount ) {
+            plus.visibility = View.GONE
+            minus.visibility = View.VISIBLE
+        }
         if (position == itemCount) {
             plus.visibility = View.VISIBLE
             minus.visibility = View.GONE
-
+            //notifyItemChanged(position)
+            notifyDataSetChanged()
         }
-        notifyDataSetChanged()
+
+        //notifyDataSetChanged()
     }
 
 
@@ -93,38 +99,50 @@ class ListAdapter(
         holder.tvDeparture.text = Utility.getCurrentDateNow()
 
         holder.minus.setOnClickListener {
-            try {
-                stepList?.removeAt(position)
-                notifyItemRemoved(position)
-            } catch (e: ArrayIndexOutOfBoundsException) {
-                e.printStackTrace()
+            if (stepList?.size in 3..6) {
+                try {
+                    stepList?.removeAt(position)
+                    notifyItemRemoved(position)
+                } catch (e: ArrayIndexOutOfBoundsException) {
+                    e.printStackTrace()
+                }
+                createView(position, holder.plus, holder.minus)
             }
+            if (stepList?.size in 1..2) {
+                if (stepList?.size == 2 && position == 2) {
 
+                } else {
+                    try {
+                        stepList?.set(
+                            position,
+                            FlightViewModel.MultiCitiesForSearch(
+                                "",
+                                "",
+                                ""
+                            )
+                        )
+                        notifyItemChanged(position)
+                    } catch (e: ArrayIndexOutOfBoundsException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            if(holder.edtFrom.text.isEmpty())
             holder.edtFrom.setText("")
+            if(holder.edtTo.text.isEmpty())
             holder.edtTo.setText("")
-            createView(position, holder.plus, holder.minus)
-
-            if (position == 0 && stepList?.size in 0..1 || position == 1 && stepList?.size in 0..1) {
-                stepList?.add(position, FlightViewModel.MultiCitiesForSearch("", "", ""))
-                notifyItemInserted(position)
-            }
-
+holder
         }
 
         holder.plus.setOnClickListener {
-            if (stepList?.size in 0..5) {
+            if (stepList?.size in 2..5) {
                 try {
-                    stepList?.add(position + 1, FlightViewModel.MultiCitiesForSearch("", "", ""))
+                    stepList?.add(FlightViewModel.MultiCitiesForSearch("", "", ""))
                     notifyItemInserted(position + 1)
                 } catch (e: ArrayIndexOutOfBoundsException) {
                     e.printStackTrace()
                 }
-            }
-            createView(position, holder.plus, holder.minus)
-
-            if (position == 0 && stepList?.size in 0..1 || position == 1 && stepList?.size in 0..1) {
-                stepList?.set(position + 1, FlightViewModel.MultiCitiesForSearch("", "", ""))
-                notifyItemInserted(position + 1)
+                createView(position, holder.plus, holder.minus)
             }
 
         }
@@ -166,6 +184,7 @@ class ListAdapter(
         })
 
         stepList?.set(position, multiCitiesForSearch)
+
     }
 
     fun getSearchParamList(): ArrayList<FlightViewModel.MultiCitiesForSearch> {
