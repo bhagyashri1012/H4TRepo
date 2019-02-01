@@ -40,19 +40,19 @@ class ListAdapter(
         if (position == 0) {
             plus.visibility = View.GONE
             minus.visibility = View.VISIBLE
+            notifyDataSetChanged()
         }
-        if(position < itemCount ) {
+        if (position < itemCount) {
             plus.visibility = View.GONE
             minus.visibility = View.VISIBLE
         }
         if (position == itemCount) {
             plus.visibility = View.VISIBLE
             minus.visibility = View.GONE
-            //notifyItemChanged(position)
-            notifyDataSetChanged()
+            notifyItemChanged(position)
+            //notifyDataSetChanged()
         }
 
-        //notifyDataSetChanged()
     }
 
 
@@ -99,50 +99,93 @@ class ListAdapter(
         holder.tvDeparture.text = Utility.getCurrentDateNow()
 
         holder.minus.setOnClickListener {
-            if (stepList?.size in 3..6) {
+            if (position in 2..5) {
                 try {
                     stepList?.removeAt(position)
                     notifyItemRemoved(position)
+                    notifyItemChanged(position, itemCount)
+                    holder.edtTo.setText(stepList!![position].fly_to)
+                    holder.edtFrom.setText(stepList!![position].fly_from)
+                    holder.tvDeparture.text = stepList!![position].date_from
+
+                    //stepList!![position] = multiCitiesForSearch
+
                 } catch (e: ArrayIndexOutOfBoundsException) {
                     e.printStackTrace()
                 }
                 createView(position, holder.plus, holder.minus)
             }
-            if (stepList?.size in 1..2) {
-                if (stepList?.size == 2 && position == 2) {
-
-                } else {
-                    try {
-                        stepList?.set(
-                            position,
-                            FlightViewModel.MultiCitiesForSearch(
-                                "",
-                                "",
-                                ""
-                            )
-                        )
-                        notifyItemChanged(position)
-                    } catch (e: ArrayIndexOutOfBoundsException) {
-                        e.printStackTrace()
-                    }
+            if (position in 0..1) {
+                try {
+                    if (stepList?.size == 1 || position == 0) {
+                        stepList?.removeAt(position)
+                        notifyItemRemoved(position)
+                        stepList!![position].fly_to = ""
+                        stepList!![position].fly_from = ""
+                        holder.edtTo.setText(stepList!![position].fly_to)
+                        holder.edtFrom.setText(stepList!![position].fly_from)
+                        holder.tvDeparture.text = stepList!![position].date_from
+                        stepList?.add(FlightViewModel.MultiCitiesForSearch("", "", ""))
+                        notifyItemInserted(position)
+                        notifyItemRangeInserted(position, itemCount)
+                    } else
+                        if (stepList?.size == 1 && position == 1) {
+                            stepList?.removeAt(position - 1)
+                            notifyItemRemoved(position - 1)
+                            stepList!![position].fly_to = ""
+                            stepList!![position].fly_from = ""
+                            holder.edtTo.setText(stepList!![position].fly_to)
+                            holder.edtFrom.setText(stepList!![position].fly_from)
+                            holder.tvDeparture.text = stepList!![position].date_from
+                            stepList?.add(FlightViewModel.MultiCitiesForSearch("", "", ""))
+                            notifyItemInserted(position + 1)
+                            notifyItemRangeInserted(position + 1, itemCount)
+                        } else if (stepList?.size == 2 && position == 2) {
+                            stepList?.removeAt(position)
+                            notifyItemRemoved(position)
+                            stepList?.add(FlightViewModel.MultiCitiesForSearch("", "", ""))
+                            notifyItemInserted(position + 1)
+                            notifyItemRangeInserted(position + 1, itemCount)
+                        } else {
+                            stepList!![position].fly_to = ""
+                            stepList!![position].fly_from = ""
+                            holder.edtTo.setText(stepList!![position].fly_to)
+                            holder.edtFrom.setText(stepList!![position].fly_from)
+                            holder.tvDeparture.text = stepList!![position].date_from
+                            stepList?.removeAt(position)
+                            notifyItemRemoved(position)
+                            notifyItemChanged(position, itemCount - 1)
+                        }
+                } catch (e: ArrayIndexOutOfBoundsException) {
+                    e.printStackTrace()
                 }
+                createView(position, holder.plus, holder.minus)
             }
-            if(holder.edtFrom.text.isEmpty())
-            holder.edtFrom.setText("")
-            if(holder.edtTo.text.isEmpty())
+
+            multiCitiesForSearch.fly_to = stepList!![position].fly_to
+            multiCitiesForSearch.fly_from = stepList!![position].fly_from
+            multiCitiesForSearch.date_from = stepList!![position].date_from
+
+            stepList!![position].fly_to = ""
+            stepList!![position].fly_from = ""
             holder.edtTo.setText("")
-holder
+            holder.edtFrom.setText("")
         }
 
         holder.plus.setOnClickListener {
-            if (stepList?.size in 2..5) {
-                try {
-                    stepList?.add(FlightViewModel.MultiCitiesForSearch("", "", ""))
-                    notifyItemInserted(position + 1)
-                } catch (e: ArrayIndexOutOfBoundsException) {
-                    e.printStackTrace()
+            try {
+                if (position in 1..4) {
+                    try {
+                        stepList?.add(position + 1, FlightViewModel.MultiCitiesForSearch("", "", ""))
+                        notifyItemInserted(position + 1)
+                        notifyItemRangeInserted(position + 1, itemCount)
+                    } catch (e: ArrayIndexOutOfBoundsException) {
+                        e.printStackTrace()
+                    }
+                    createView(position, holder.plus, holder.minus)
                 }
-                createView(position, holder.plus, holder.minus)
+            } catch (e: ArrayIndexOutOfBoundsException) {
+                e.printStackTrace()
             }
 
         }
@@ -152,19 +195,22 @@ holder
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                multiCitiesForSearch.fly_from = s.toString().substringAfter("(").substringBefore(")")
             }
 
-            override fun afterTextChanged(s: Editable) {}
+            override fun afterTextChanged(s: Editable) {
+                multiCitiesForSearch.fly_from = s.toString().substringAfter("(").substringBefore(")")
+
+            }
         })
         holder.edtTo.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                multiCitiesForSearch.fly_to = s.toString().substringAfter("(").substringBefore(")")
             }
 
-            override fun afterTextChanged(s: Editable) {}
+            override fun afterTextChanged(s: Editable) {
+                multiCitiesForSearch.fly_to = s.toString().substringAfter("(").substringBefore(")")
+            }
         })
 
         multiCitiesForSearch.date_from = holder.tvDeparture.text.toString()
@@ -177,10 +223,12 @@ holder
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                multiCitiesForSearch.date_from = s.toString()
             }
 
-            override fun afterTextChanged(s: Editable) {}
+            override fun afterTextChanged(s: Editable) {
+                multiCitiesForSearch.date_from = s.toString()
+
+            }
         })
 
         stepList?.set(position, multiCitiesForSearch)
