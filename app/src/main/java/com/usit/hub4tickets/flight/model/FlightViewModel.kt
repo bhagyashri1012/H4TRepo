@@ -256,7 +256,15 @@ class FlightViewModel(var context: Context?) {
         @SerializedName("responseData")
         val responseData: List<ResponseData?>?,
         @SerializedName("status")
-        val status: String? = ""
+        val status: String? = "",
+        @SerializedName("minPrice")
+        val minPrice: String? = "",
+        @SerializedName("maxPrice")
+        val maxPrice: String? = "",
+        @SerializedName("price_from")
+        val price_from: String? = "",
+        @SerializedName("price_to")
+        val price_to: String? = ""
     ) : Parcelable {
         data class ResponseData(
             @SerializedName("currencySymbol")
@@ -663,17 +671,13 @@ class FlightViewModel(var context: Context?) {
             }
         }
 
-        companion object {
-            @JvmField
-            val CREATOR: Parcelable.Creator<FlightListResponse> = object : Parcelable.Creator<FlightListResponse> {
-                override fun createFromParcel(source: Parcel): FlightListResponse = FlightListResponse(source)
-                override fun newArray(size: Int): Array<FlightListResponse?> = arrayOfNulls(size)
-            }
-        }
-
         constructor(source: Parcel) : this(
             source.readString(),
             source.createTypedArrayList(ResponseData.CREATOR),
+            source.readString(),
+            source.readString(),
+            source.readString(),
+            source.readString(),
             source.readString()
         )
 
@@ -683,6 +687,18 @@ class FlightViewModel(var context: Context?) {
             writeString(message)
             writeTypedList(responseData)
             writeString(status)
+            writeString(minPrice)
+            writeString(maxPrice)
+            writeString(price_from)
+            writeString(price_to)
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<FlightListResponse> = object : Parcelable.Creator<FlightListResponse> {
+                override fun createFromParcel(source: Parcel): FlightListResponse = FlightListResponse(source)
+                override fun newArray(size: Int): Array<FlightListResponse?> = arrayOfNulls(size)
+            }
         }
     }
 

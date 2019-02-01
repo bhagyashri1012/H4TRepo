@@ -4,21 +4,29 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.flight.model.FilterModel
 import com.usit.hub4tickets.utils.Constant
+import com.usit.hub4tickets.utils.Pref
 import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.fragment_filter.*
 
 class FilterActivity : AppCompatActivity() {
     private var minValuePrice: String = "0"
     private var maxValuePrice: String = "1000000"
-    private var minValueDuration: String = "0"
-    private var maxValueDuration: String = "0"
-    private var minValueOutbound: String = "0"
-    private var maxValueOutbound: String = "0"
+    private var minValue: String = "0"
+    private var maxValue: String = "0"
+    private var minValuedef: String = "0"
+    private var maxValuedef: String = "0"
+    private var minValueLanding: String = "0"
+    private var maxValueLanding: String = "0"
+    private var minValueTakeOff: String = "0"
+    private var maxValueTakeOff: String = "0"
+    private var minValueInLanding: String = "0"
+    private var maxValueInLanding: String = "0"
+    private var minValueInTakeOff: String = "0"
+    private var maxValueInTakeOff: String = "0"
     var filterData: FilterModel.Filter? = null
 
     private var activityTitle: String = ""
@@ -30,26 +38,49 @@ class FilterActivity : AppCompatActivity() {
         setToolBar()
         setOtherListeners()
         if (intent.extras != null) {
+            minValue = intent.getStringExtra(Constant.Path.MIN_PRICE)
+            maxValue = intent.getStringExtra(Constant.Path.MAX_PRICE)
             filterData = intent.getParcelableExtra(Constant.Path.FILTER_DATA)
             activityTitle = intent.getStringExtra(Constant.Path.ACTIVITY_TITLE)
             if (null != filterData)
                 init()
+            else
+                setDefaultValues()
         }
         if (activityTitle.equals("FragmentOneWay")) {
             ll_inbound.visibility = View.GONE
-
+            setRangeSeekbarForPrice()
+            setRangeSeekbarForObLanding()
+            setRangeSeekbarObTakeOff()
+        } else {
+            setRangeSeekbarForPrice()
+            setRangeSeekbarForObLanding()
+            setRangeSeekbarObTakeOff()
+            setRangeSeekbarIbTakeOff()
+            setRangeSeekbarForIbLanding()
         }
-        setRangeSeekbarForPrice()
-        setRangeSeekbarForDuration()
-        setRangeSeekbarForaOutstanding()
+
+    }
+
+    private fun setDefaultValues() {
+        textMin_price.text = minValue
+        textMax_price.text = maxValue
+        Pref.setValue(this, Constant.Path.DEF_MAX_PRICE, maxValue)
+        Pref.setValue(this, Constant.Path.DEF_MIN_PRICE, minValue)
+        range_seekbar_price.setMinValue(minValue.toFloat()).setMaxValue(maxValue.toFloat())
+            .setMinStartValue(minValue.toFloat())
+            .setMaxStartValue(maxValue.toFloat()).apply()
     }
 
     private fun init() {
-        textMin_price.text = filterData?.price_from
-        textMax_price.text = filterData?.price_to
+        //textMin_price.text = filterData?.price_from
+        //textMax_price.text = filterData?.price_to
+        minValuedef = Pref.getValue(this, Constant.Path.DEF_MIN_PRICE, "0")!!
+        maxValuedef = Pref.getValue(this, Constant.Path.DEF_MAX_PRICE, "0")!!
         minValuePrice = filterData?.price_from.toString()
         maxValuePrice = filterData?.price_to.toString()
-        range_seekbar_price.setMinValue(0f).setMaxValue(1000000f).setMinStartValue(minValuePrice.toFloat())
+        range_seekbar_price.setMinValue(minValuedef.toFloat()).setMaxValue(maxValuedef.toFloat())
+            .setMinStartValue(minValuePrice.toFloat())
             .setMaxStartValue(maxValuePrice.toFloat()).apply()
 
         if (activityTitle.equals("FragmentOneWay")) {
@@ -57,25 +88,41 @@ class FilterActivity : AppCompatActivity() {
 
         } else {
             ll_inbound.visibility = View.VISIBLE
-            textMin.text = removePadValues(nullDefaultValues(filterData?.dtime_from, "0"))
-            textMax.text = removePadValues(nullDefaultValues(filterData?.dtime_to, "100"))
-            minValueDuration = removePadValues(filterData?.dtime_from.toString())
-            maxValueDuration = removePadValues(filterData?.dtime_to.toString())
-            range_seekbar_duration.setMinValue(0f).setMaxValue(24f)
-                .setMinStartValue(minValueDuration.toFloat())
-                .setMaxStartValue(zeroCheck(maxValueDuration).toFloat())
-                .apply()
-        }
 
-        textMin_outbound.text = removePadValues(nullDefaultValues(filterData?.atime_from, "0"))
-        textMax_outbound.text = removePadValues(nullDefaultValues(filterData?.atime_to, "100"))
-        minValueOutbound = removePadValues(filterData?.atime_from.toString())
-        maxValueOutbound = removePadValues(filterData?.atime_to.toString())
-        range_seekbar_outbound_trip.setMinValue(0f).setMaxValue(24f)
-            .setMinStartValue(minValueOutbound.toFloat())
-            .setMaxStartValue(zeroCheck(maxValueOutbound).toFloat())
+        }
+        textMin_outbound_takeofff.text = removePadValues(nullDefaultValues(filterData?.dtime_from, "0"))
+        textMax_outbound_takeofff.text = removePadValues(nullDefaultValues(filterData?.dtime_to, "23:59"))
+        minValueTakeOff = removePadValues(filterData?.dtime_from.toString())
+        maxValueTakeOff = removePadValues(filterData?.dtime_to.toString())
+        range_seekbar_outbound_trip.setMinValue(0f).setMaxValue(23.59f)
+            .setMinStartValue(minValueTakeOff.toFloat())
+            .setMaxStartValue(zeroCheck(maxValueTakeOff).toFloat())
+            .apply()
+        textMinOblanding.text = removePadValues(nullDefaultValues(filterData?.atime_from, "0"))
+        textMaxOblanding.text = removePadValues(nullDefaultValues(filterData?.atime_to, "23:59"))
+        minValueLanding = removePadValues(filterData?.atime_from.toString())
+        maxValueLanding = removePadValues(filterData?.atime_to.toString())
+        range_seekbar_ob_landing.setMinValue(0f).setMaxValue(23.59f)
+            .setMinStartValue(minValueLanding.toFloat())
+            .setMaxStartValue(zeroCheck(maxValueLanding).toFloat())
             .apply()
 
+        textMin_in_takeoff.text = removePadValues(nullDefaultValues(filterData?.ret_dtime_from, "0"))
+        textMax_in_takeoff.text = removePadValues(nullDefaultValues(filterData?.ret_dtime_to, "23:59"))
+        minValueInTakeOff = removePadValues(filterData?.ret_dtime_from.toString())
+        maxValueInTakeOff = removePadValues(filterData?.ret_dtime_to.toString())
+        range_seekbar_in_takeoff.setMinValue(0f).setMaxValue(23.59f)
+            .setMinStartValue(minValueInTakeOff.toFloat())
+            .setMaxStartValue(zeroCheck(maxValueInTakeOff).toFloat())
+            .apply()
+        textMinOblanding.text = removePadValues(nullDefaultValues(filterData?.ret_atime_from, "0"))
+        textMaxOblanding.text = removePadValues(nullDefaultValues(filterData?.ret_atime_to, "23:59"))
+        minValueInLanding = removePadValues(filterData?.ret_atime_from.toString())
+        maxValueInLanding = removePadValues(filterData?.ret_atime_to.toString())
+        range_seekbar_in_landing.setMinValue(0f).setMaxValue(23.59f)
+            .setMinStartValue(minValueInLanding.toFloat())
+            .setMaxStartValue(zeroCheck(maxValueInLanding).toFloat())
+            .apply()
         switchButton_direct.isChecked = filterData?.max_stopovers?.contains(0)!!
         switchButton_1stop.isChecked = filterData?.max_stopovers?.contains(1)!!
         switchButton_2stops.isChecked = filterData?.max_stopovers?.contains(2)!!
@@ -83,13 +130,13 @@ class FilterActivity : AppCompatActivity() {
 
     private fun zeroCheck(maxDuration: String): String {
         if (maxDuration == "0:00")
-            return "24"
+            return "23.59"
         else if (maxDuration == "0")
-            return "24"
+            return "23.59"
         else if (maxDuration == "00:00")
-            return "24"
+            return "23.59"
         else if (maxDuration == "00")
-            return "24"
+            return "23.59"
         else
             return maxDuration
     }
@@ -173,10 +220,14 @@ class FilterActivity : AppCompatActivity() {
                 val filterModel: FilterModel.Filter = FilterModel.Filter(
                     minValuePrice,
                     maxValuePrice,
+                    minValueTakeOff + ":00".padEnd(2),
+                    maxValueTakeOff + ":00".padEnd(2),
+                    minValueLanding + ":00".padEnd(2),
+                    maxValueLanding + ":00".padEnd(2),
                     "0:00",
                     "0:00",
-                    minValueOutbound + ":00".padEnd(2),
-                    maxValueOutbound + ":00".padEnd(2),
+                    "0:00",
+                    "0:00",
                     maxStopovers
                 )
                 val intent = Intent()
@@ -187,10 +238,14 @@ class FilterActivity : AppCompatActivity() {
                 val filterModel: FilterModel.Filter = FilterModel.Filter(
                     minValuePrice,
                     maxValuePrice,
-                    minValueDuration + ":00".padEnd(2),
-                    maxValueDuration + ":00".padEnd(2),
-                    minValueOutbound + ":00".padEnd(2),
-                    maxValueOutbound + ":00".padEnd(2),
+                    minValueTakeOff + ":00".padEnd(2),
+                    maxValueTakeOff + ":00".padEnd(2),
+                    minValueLanding + ":00".padEnd(2),
+                    maxValueLanding + ":00".padEnd(2),
+                    minValueInTakeOff + ":00".padEnd(2),
+                    maxValueInTakeOff + ":00".padEnd(2),
+                    minValueInLanding + ":00".padEnd(2),
+                    maxValueInLanding + ":00".padEnd(2),
                     maxStopovers
                 )
                 val intent = Intent()
@@ -208,14 +263,63 @@ class FilterActivity : AppCompatActivity() {
         mainToolbar?.setNavigationOnClickListener { finish() }
     }
 
-    private fun setRangeSeekbarForDuration() {
-        range_seekbar_duration.setOnRangeSeekbarChangeListener { minValue, maxValue ->
-            textMin.text = minValue.toString()
-            textMax.text = maxValue.toString()
+    private fun setRangeSeekbarObTakeOff() {
+        range_seekbar_outbound_trip.setOnRangeSeekbarChangeListener { minValue, maxValue ->
+            textMin_outbound_takeofff.text = minValue.toString()
+            textMax_outbound_takeofff.text = maxValue.toString()
+            if (maxValue == 24)
+                textMax_outbound_takeofff.text = "23.59"
         }
-        range_seekbar_duration.setOnRangeSeekbarFinalValueListener { minValue, maxValue ->
-            minValueDuration = minValue.toString()
-            maxValueDuration = maxValue.toString()
+        range_seekbar_outbound_trip.setOnRangeSeekbarFinalValueListener { minValue, maxValue ->
+            /*Log.d(
+                "CRS=>",
+                minValue.toString() + " : " + maxValue.toString()
+            )*/
+            minValueTakeOff = minValue.toString()
+            maxValueTakeOff = maxValue.toString()
+        }
+    }
+
+    private fun setRangeSeekbarForObLanding() {
+        range_seekbar_ob_landing.setOnRangeSeekbarChangeListener { minValue, maxValue ->
+            textMinOblanding.text = minValue.toString()
+            textMaxOblanding.text = maxValue.toString()
+            if (maxValue == 24)
+                textMax_outbound_takeofff.text = "23.59"
+        }
+        range_seekbar_ob_landing.setOnRangeSeekbarFinalValueListener { minValue, maxValue ->
+            minValueLanding = minValue.toString()
+            maxValueLanding = maxValue.toString()
+        }
+    }
+
+    private fun setRangeSeekbarIbTakeOff() {
+        range_seekbar_in_takeoff.setOnRangeSeekbarChangeListener { minValue, maxValue ->
+            textMin_in_takeoff.text = minValue.toString()
+            textMax_in_takeoff.text = maxValue.toString()
+            if (maxValue == 24)
+                textMax_in_takeoff.text = "23.59"
+        }
+        range_seekbar_in_takeoff.setOnRangeSeekbarFinalValueListener { minValue, maxValue ->
+            /*Log.d(
+                "CRS=>",
+                minValue.toString() + " : " + maxValue.toString()
+            )*/
+            minValueInTakeOff = minValue.toString()
+            maxValueInTakeOff = maxValue.toString()
+        }
+    }
+
+    private fun setRangeSeekbarForIbLanding() {
+        range_seekbar_in_landing.setOnRangeSeekbarChangeListener { minValue, maxValue ->
+            textMinInlanding.text = minValue.toString()
+            textMaxInlanding.text = maxValue.toString()
+            if (maxValue == 24)
+                textMax_outbound_takeofff.text = "23.59"
+        }
+        range_seekbar_in_landing.setOnRangeSeekbarFinalValueListener { minValue, maxValue ->
+            minValueInLanding = minValue.toString()
+            maxValueInLanding = maxValue.toString()
         }
     }
 
@@ -224,6 +328,7 @@ class FilterActivity : AppCompatActivity() {
         range_seekbar_price.setOnRangeSeekbarChangeListener { minValue, maxValue ->
             textMin_price.text = minValue.toString()
             textMax_price.text = maxValue.toString()
+
         }
         range_seekbar_price.setOnRangeSeekbarFinalValueListener { minValue, maxValue ->
             minValuePrice = minValue.toString()
@@ -232,22 +337,6 @@ class FilterActivity : AppCompatActivity() {
 
     }
 
-    private fun setRangeSeekbarForaOutstanding() {
-
-        range_seekbar_outbound_trip.setOnRangeSeekbarChangeListener { minValue, maxValue ->
-            textMin_outbound.text = minValue.toString()
-            textMax_outbound.text = maxValue.toString()
-        }
-
-        range_seekbar_outbound_trip.setOnRangeSeekbarFinalValueListener { minValue, maxValue ->
-            /*Log.d(
-                "CRS=>",
-                minValue.toString() + " : " + maxValue.toString()
-            )*/
-            minValueOutbound = minValue.toString()
-            maxValueOutbound = maxValue.toString()
-        }
-    }
 
     /*return fragmentManager?.popBackStackImmediate()!!
     else
