@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="addbuttonone" />
+    <item type="id" name="addbuttontwo" />
+    <item type="id" name="addbuttonthree" />
+    <item type="id" name="addbuttonfour" />
+    <item type="id" name="addbuttonfive" />
+    <item type="id" name="addbuttonsix" />
+    <item type="id" name="linearlayouttwo" />
+    <item type="id" name="linearlayoutthree" />
+    <item type="id" name="linearlayoutfour" />
+    <item type="id" name="linearlayoutfive" />
+    <item type="id" name="linearlayoutsix" />
+    <item type="id" name="edittexttwo" />
+    <item type="id" name="edittextthree" />
+    <item type="id" name="edittextfour" />
+    <item type="id" name="edittextfive" />
+    <item type="id" name="edittextsix" />
+
+
+</resources>

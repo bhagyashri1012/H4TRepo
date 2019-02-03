@@ -3,6 +3,7 @@ package com.usit.hub4tickets.addremovelist
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,10 @@ import com.usit.hub4tickets.R
 import com.usit.hub4tickets.flight.model.FlightViewModel
 import com.usit.hub4tickets.flight.ui.FragmentMultiCity
 import com.usit.hub4tickets.utils.Utility
+import java.lang.Exception
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.math.log
 
 
 /**
@@ -52,9 +56,7 @@ class ListAdapter(
             notifyItemChanged(position)
             //notifyDataSetChanged()
         }
-
     }
-
 
     override fun getItemCount(): Int {
         return stepList!!.size
@@ -72,33 +74,89 @@ class ListAdapter(
         return ViewHolder(v)
     }
 
-    var defalutViewHolder: ListAdapter.ViewHolder? = null
-
-//    private val multiCitiesForSearch: FlightViewModel.MultiCitiesForSearch? =
-//        FlightViewModel.MultiCitiesForSearch("", "", "")
+    var minusClicked:Boolean=false
 
     override fun onBindViewHolder(holder: ListAdapter.ViewHolder, position: Int) {
         val multiCitiesForSearch: FlightViewModel.MultiCitiesForSearch =
             FlightViewModel.MultiCitiesForSearch("", "", "")
-        defalutViewHolder = holder
-        holder.edtFrom.setOnClickListener { listener?.onFromClick(holder.edtTo, holder.edtFrom, position) }
-        holder.edtTo.setOnClickListener { listener?.onToClick(holder.edtTo, holder.edtFrom, position) }
-
         if (position == 0)
             holder.plus.visibility = View.GONE
         else
             holder.plus.visibility = View.VISIBLE
-
         if (position == itemCount - 1)
             holder.minus.visibility = View.GONE
         else {
             holder.plus.visibility = View.GONE
             holder.minus.visibility = View.VISIBLE
         }
-
         holder.tvDeparture.text = Utility.getCurrentDateNow()
+        holder.edtFrom.setOnClickListener {
+            minusClicked=false
+            listener?.onFromClick(holder.edtTo, holder.edtFrom, position) }
+        holder.edtTo.setOnClickListener {
+            minusClicked=false
+            listener?.onToClick(holder.edtTo, holder.edtFrom, position) }
+        holder.edtFrom.addTextChangedListener(object : TextWatcher {
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                Log.d("inTextChange from", s.toString())
+                if(!minusClicked) {
+                    multiCitiesForSearch.fly_from = s.toString()
+                    try {
+                        stepList?.set(position, multiCitiesForSearch)
+                    } catch (e: Exception) {
+                        //multiCitiesForSearch.fly_from = ""
+                    }
+                }
+
+            }
+        })
+        holder.edtTo.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                Log.d("inTextChange to", s.toString());
+                if(!minusClicked) {
+                    multiCitiesForSearch.fly_to = s.toString()
+                    try {
+                        stepList?.set(position, multiCitiesForSearch)
+                    } catch (e: Exception) {
+                        //multiCitiesForSearch.fly_to = ""
+                    }
+                }
+            }
+        })
+        multiCitiesForSearch.date_from = holder.tvDeparture.text.toString()
+        holder.tvDeparture.setOnClickListener {
+            Utility.dateDialogWithMinMaxDate(Calendar.getInstance(), context.activity, holder.tvDeparture, 0)
+        }
+        holder.tvDeparture.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(s: Editable) {
+                try {
+                    if(!minusClicked) {
+                        multiCitiesForSearch.date_from = s.toString()
+                        stepList?.set(position, multiCitiesForSearch)
+                    }
+                } catch (e:Exception){
+                }
+            }
+        })
 
         holder.minus.setOnClickListener {
+            minusClicked=true
+            Log.d("steplist - bfr ",stepList.toString())
             if (position in 2..5) {
                 try {
                     stepList?.removeAt(position)
@@ -106,13 +164,14 @@ class ListAdapter(
                     notifyItemChanged(position, itemCount)
                     holder.edtTo.setText(stepList!![position].fly_to)
                     holder.edtFrom.setText(stepList!![position].fly_from)
-                    holder.tvDeparture.text = stepList!![position].date_from
-
+                    //holder.tvDeparture.text = stepList!![position].date_from
                     //stepList!![position] = multiCitiesForSearch
-
-                } catch (e: ArrayIndexOutOfBoundsException) {
+                } catch (e: IndexOutOfBoundsException) {
                     e.printStackTrace()
-                }
+                    stepList?.add(FlightViewModel.MultiCitiesForSearch("", "", ""))
+                    notifyItemInserted(position + 1)
+                    notifyItemChanged(position+1, itemCount)
+            }
                 createView(position, holder.plus, holder.minus)
             }
             if (position in 0..1) {
@@ -124,118 +183,89 @@ class ListAdapter(
                         stepList!![position].fly_from = ""
                         holder.edtTo.setText(stepList!![position].fly_to)
                         holder.edtFrom.setText(stepList!![position].fly_from)
-                        holder.tvDeparture.text = stepList!![position].date_from
+                        //holder.tvDeparture.text = stepList!![position].date_from
                         stepList?.add(FlightViewModel.MultiCitiesForSearch("", "", ""))
                         notifyItemInserted(position)
-                        notifyItemRangeInserted(position, itemCount)
+                        notifyItemChanged(position, itemCount)
                     } else
                         if (stepList?.size == 1 && position == 1) {
                             stepList?.removeAt(position - 1)
                             notifyItemRemoved(position - 1)
-                            stepList!![position].fly_to = ""
-                            stepList!![position].fly_from = ""
+                            //stepList!![position].fly_to = ""
+                            //stepList!![position].fly_from = ""
                             holder.edtTo.setText(stepList!![position].fly_to)
                             holder.edtFrom.setText(stepList!![position].fly_from)
-                            holder.tvDeparture.text = stepList!![position].date_from
+                            //holder.tvDeparture.text = stepList!![position].date_from
                             stepList?.add(FlightViewModel.MultiCitiesForSearch("", "", ""))
-                            notifyItemInserted(position + 1)
-                            notifyItemRangeInserted(position + 1, itemCount)
+                            notifyItemInserted(position)
+                            notifyItemChanged(position, itemCount)
                         } else if (stepList?.size == 2 && position == 2) {
                             stepList?.removeAt(position)
                             notifyItemRemoved(position)
+                            //stepList!![position].fly_to = ""
+                            //stepList!![position].fly_from = ""
+                            holder.edtTo.setText(stepList!![position].fly_to)
+                            holder.edtFrom.setText(stepList!![position].fly_from)
+                            //holder.tvDeparture.text = stepList!![position].date_from
                             stepList?.add(FlightViewModel.MultiCitiesForSearch("", "", ""))
                             notifyItemInserted(position + 1)
-                            notifyItemRangeInserted(position + 1, itemCount)
+                            notifyItemChanged(position+1, itemCount)
                         } else {
+
                             stepList!![position].fly_to = ""
                             stepList!![position].fly_from = ""
                             holder.edtTo.setText(stepList!![position].fly_to)
                             holder.edtFrom.setText(stepList!![position].fly_from)
-                            holder.tvDeparture.text = stepList!![position].date_from
+                            //holder.tvDeparture.text = stepList!![position].date_from
                             stepList?.removeAt(position)
                             notifyItemRemoved(position)
-                            notifyItemChanged(position, itemCount - 1)
+                            notifyItemChanged(position, itemCount)
                         }
                 } catch (e: ArrayIndexOutOfBoundsException) {
                     e.printStackTrace()
                 }
                 createView(position, holder.plus, holder.minus)
             }
-
-            multiCitiesForSearch.fly_to = stepList!![position].fly_to
-            multiCitiesForSearch.fly_from = stepList!![position].fly_from
-            multiCitiesForSearch.date_from = stepList!![position].date_from
-
-            stepList!![position].fly_to = ""
-            stepList!![position].fly_from = ""
-            holder.edtTo.setText("")
-            holder.edtFrom.setText("")
+            Log.d("step list-aft",stepList.toString())
         }
-
+        stepList!![position].fly_to = holder.edtTo.text.toString()
+        stepList!![position].fly_from = holder.edtFrom.text.toString()
+        stepList!![position].date_from = holder.tvDeparture.text.toString()
         holder.plus.setOnClickListener {
-            try {
-                if (position in 1..4) {
-                    try {
-                        stepList?.add(position + 1, FlightViewModel.MultiCitiesForSearch("", "", ""))
-                        notifyItemInserted(position + 1)
-                        notifyItemRangeInserted(position + 1, itemCount)
-                    } catch (e: ArrayIndexOutOfBoundsException) {
-                        e.printStackTrace()
+            minusClicked=false
+            if((!holder.edtFrom.text.toString().equals("") && !holder.edtTo.text.toString().equals(""))){
+                try {
+                    if (stepList!!.size in 1..5) {
+                        try {
+                            stepList?.add(position + 1, FlightViewModel.MultiCitiesForSearch("", "", ""))
+                            //notifyItemInserted(position + 1)
+                            notifyItemRangeInserted(position + 1, itemCount)
+                        } catch (e: IndexOutOfBoundsException) {
+                            e.printStackTrace()
+                            stepList?.add(FlightViewModel.MultiCitiesForSearch("", "", ""))
+                            notifyItemInserted(position)
+                            //notifyItemRangeInserted(position, itemCount)
+                        }
+                        createView(position, holder.plus, holder.minus)
                     }
-                    createView(position, holder.plus, holder.minus)
+                } catch (e: IndexOutOfBoundsException) {
+                    e.printStackTrace()
                 }
-            } catch (e: ArrayIndexOutOfBoundsException) {
-                e.printStackTrace()
+            } else {
+                Log.e("position&stepsize", position.toString()+" - "+stepList!!.lastIndex);
+                Log.e("ValidationError", "Please enter valid data");
             }
-
         }
-
-        holder.edtFrom.addTextChangedListener(object : TextWatcher {
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                multiCitiesForSearch.fly_from = s.toString().substringAfter("(").substringBefore(")")
-
-            }
-        })
-        holder.edtTo.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                multiCitiesForSearch.fly_to = s.toString().substringAfter("(").substringBefore(")")
-            }
-        })
-
-        multiCitiesForSearch.date_from = holder.tvDeparture.text.toString()
-
-        holder.tvDeparture.setOnClickListener {
-            Utility.dateDialogWithMinMaxDate(Calendar.getInstance(), context.activity, holder.tvDeparture, 0)
-        }
-
-        holder.tvDeparture.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                multiCitiesForSearch.date_from = s.toString()
-
-            }
-        })
-
-        stepList?.set(position, multiCitiesForSearch)
-
     }
 
     fun getSearchParamList(): ArrayList<FlightViewModel.MultiCitiesForSearch> {
-        return stepList!!
+        var stepListFinal: ArrayList<FlightViewModel.MultiCitiesForSearch>?= ArrayList()
+        stepListFinal?.addAll(stepList!!)
+        for (list in stepList!!.indices)
+        {
+            stepListFinal!![list].fly_to=stepListFinal!![list].fly_to.substringAfter("(").substringBefore(")")
+            stepListFinal!![list].fly_from=stepListFinal!![list].fly_from.substringAfter("(").substringBefore(")")
+        }
+        return stepListFinal!!
     }
 }

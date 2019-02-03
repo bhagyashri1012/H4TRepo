@@ -7,6 +7,7 @@ class FilterModel {
     data class Filter(
         var price_from: String,
         var price_to: String,
+        var max_fly_duration: String,
         var dtime_from: String?,
         var dtime_to: String?,
         var atime_from: String,
@@ -28,6 +29,7 @@ class FilterModel {
             source.readString(),
             source.readString(),
             source.readString(),
+            source.readString(),
             ArrayList<Int>().apply { source.readList(this, Int::class.java.classLoader) }
         )
 
@@ -36,6 +38,7 @@ class FilterModel {
         override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
             writeString(price_from)
             writeString(price_to)
+            writeString(max_fly_duration)
             writeString(dtime_from)
             writeString(dtime_to)
             writeString(atime_from)
