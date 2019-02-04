@@ -5,21 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.TextView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.flight.model.FilterModel
 import com.usit.hub4tickets.utils.Constant
 import com.usit.hub4tickets.utils.Pref
 import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.fragment_filter.*
-import android.widget.Toast
 import java.text.DecimalFormat
-import android.databinding.adapters.TextViewBindingAdapter.setText
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.widget.SeekBar
-import android.widget.TextView
-import com.edmodo.rangebar.RangeBar
-import kotlinx.android.synthetic.main.list_item.view.*
 
 
 class FilterActivity : AppCompatActivity() {
@@ -40,18 +33,26 @@ class FilterActivity : AppCompatActivity() {
     private var minValueInTakeOff: String = "00:00"
     private var maxValueInTakeOff: String = "00:00"
     var filterData: FilterModel.Filter? = null
+    private val SMALLEST_HOUR_FRACTION: Float = 60f
+    private val COMMON_FRACTION: Int = 60
+    private val deciFormat = DecimalFormat("00")
 
     private var activityTitle: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_filter)
-    }
-
-    override fun onResume() {
-        super.onResume()
         setToolBar()
         setOtherListeners()
+        initView()
+        if (savedInstanceState != null) {
+            filterData = savedInstanceState.getParcelable(Constant.Path.FILTER_DATA)
+            activityTitle = savedInstanceState.getString(Constant.Path.ACTIVITY_TITLE)
+            if (null != filterData)
+                init()
+            else
+                setDefaultValues()
+        }
         if (intent.extras != null) {
             minValue = intent.getStringExtra(Constant.Path.MIN_PRICE)
             maxValue = intent.getStringExtra(Constant.Path.MAX_PRICE)
@@ -66,12 +67,20 @@ class FilterActivity : AppCompatActivity() {
             ll_inbound.visibility = View.GONE
         }
     }
-    private val SMALLEST_HOUR_FRACTION: Int = 60
-    private val COMMON_FRACTION: Int = 60
-    val deciFormat = DecimalFormat("00")
+
+    private fun initView() {
+        setRangeSeekbarForPrice()
+        setRangeSeekbarForDuration()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState.apply {
+            putString(Constant.Path.ACTIVITY_TITLE, "FragmentReturn")
+            putParcelable(Constant.Path.FILTER_DATA, filterData)
+        })
+    }
 
     private fun setDefaultValues() {
-        setRangeSeekbarForPrice()
         //price
         textMin_price.text = minValue
         textMax_price.text = maxValue
@@ -81,108 +90,104 @@ class FilterActivity : AppCompatActivity() {
             .setMinStartValue(minValue.toFloat())
             .setMaxStartValue(maxValue.toFloat()).apply()
 
-      //duration
-        rb_duration.progressDrawable.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN)
-        rb_duration.thumb.setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN)
-        rb_duration.thumb.setBounds(10,10,10,10)
-        rb_duration.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(thumbRadiusSeek: SeekBar, progress: Int, fromUser: Boolean) {
-                textMax_duration.text=progress.toString()
-                maxValueDuration=progress.toString()
-                if(progress>48)
-                    textMax_duration.text="Any"
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
-        })
-        /*rb_duration.setConnectingLineColor(R.color.colorPrimary)
-        rb_duration.setTickHeight(0f)
-        rb_duration.setThumbIndices(0,48)
-        rb_duration.setThumbColorNormal(R.color.colorPrimary)
-        rb_duration.setThumbColorPressed(R.color.colorPrimaryDark)
-        rb_duration.setOnRangeBarChangeListener { rangeBar, leftThumbIndex, rightThumbIndex ->
-            textMin_duration?.text = "" + leftThumbIndex
-            textMax_duration?.text = "" + rightThumbIndex
-            minValueDuration=textMin_duration.text.toString()
-            maxValueDuration=textMax_duration.text.toString()
-        }*/
-
+        //duration
+        rb_duration.setMinValue(0f).setMaxValue(100f).setMinStartValue(0f).apply()
 
         //outbound take off
         rb_ob_toff.setConnectingLineColor(R.color.colorPrimary)
         rb_ob_toff.setTickCount(COMMON_FRACTION * 24)
         rb_ob_toff.setTickHeight(0f)
-        rb_ob_toff.setThumbRadius(10f)
-        rb_ob_toff.setBarWeight(3f)
-        rb_ob_toff.setConnectingLineWeight(3f)
+        rb_ob_toff.setBarWeight(10f)
         rb_ob_toff.setOnRangeBarChangeListener { rangeBar, leftThumbIndex, rightThumbIndex ->
-            getSelectedValue(textMin_outbound_takeofff,textMax_outbound_takeofff,leftThumbIndex,rightThumbIndex)
-            minValueTakeOff=textMin_outbound_takeofff.text.toString()
-            maxValueTakeOff=textMax_outbound_takeofff.text.toString()
-
+            getSelectedValue(textMin_outbound_takeofff, textMax_outbound_takeofff, leftThumbIndex, rightThumbIndex)
+            minValueTakeOff = textMin_outbound_takeofff.text.toString()
+            maxValueTakeOff = textMax_outbound_takeofff.text.toString()
         }
 
         //outbound landing
         rb_ob_landing.setConnectingLineColor(R.color.colorPrimary)
         rb_ob_landing.setTickCount(COMMON_FRACTION * 24)
         rb_ob_landing.setTickHeight(0f)
-        rb_ob_landing.setThumbRadius(10f)
-        rb_ob_landing.setBarWeight(3f)
-        rb_ob_landing.setConnectingLineWeight(3f)
+        rb_ob_landing.setBarWeight(10f)
         rb_ob_landing.setOnRangeBarChangeListener { rangeBar, leftThumbIndex, rightThumbIndex ->
-            getSelectedValue(textMin_ob_landing,textMax_ob_landing,leftThumbIndex,rightThumbIndex)
-            minValueLanding=textMin_ob_landing.text.toString()
-            maxValueLanding=textMax_ob_landing.text.toString()
-
+            getSelectedValue(textMin_ob_landing, textMax_ob_landing, leftThumbIndex, rightThumbIndex)
+            minValueLanding = textMin_ob_landing.text.toString()
+            maxValueLanding = textMax_ob_landing.text.toString()
         }
 
         //inbound take off
         rb_in_toff.setConnectingLineColor(R.color.colorPrimary)
         rb_in_toff.setTickCount(COMMON_FRACTION * 24)
         rb_in_toff.setTickHeight(0f)
-        rb_in_toff.setThumbRadius(10f)
-        rb_in_toff.setBarWeight(3f)
-        rb_in_toff.setConnectingLineWeight(3f)
+        rb_in_toff.setBarWeight(10f)
         rb_in_toff.setOnRangeBarChangeListener { rangeBar, leftThumbIndex, rightThumbIndex ->
-            getSelectedValue(textMin_inbound_takeofff,textMax_inbound_takeofff,leftThumbIndex,rightThumbIndex)
-            minValueInTakeOff=textMin_inbound_takeofff.text.toString()
-            maxValueInTakeOff=textMax_inbound_takeofff.text.toString()
-
+            getSelectedValue(textMin_inbound_takeofff, textMax_inbound_takeofff, leftThumbIndex, rightThumbIndex)
+            minValueInTakeOff = textMin_inbound_takeofff.text.toString()
+            maxValueInTakeOff = textMax_inbound_takeofff.text.toString()
         }
 
         //inbound landing
         rb_in_landing.setConnectingLineColor(R.color.colorPrimary)
         rb_in_landing.setTickCount(COMMON_FRACTION * 24)
         rb_in_landing.setTickHeight(0f)
-        rb_in_landing.setThumbRadius(10f)
-        rb_in_landing.setBarWeight(3f)
-        rb_in_landing.setConnectingLineWeight(3f)
+        rb_in_landing.setBarWeight(10f)
         rb_in_landing.setOnRangeBarChangeListener { rangeBar, leftThumbIndex, rightThumbIndex ->
-            getSelectedValue(textMin_in_landing,textMax_in_landing,leftThumbIndex,rightThumbIndex)
-            minValueLanding=textMin_in_landing.text.toString()
-            maxValueLanding=textMax_in_landing.text.toString()
-
+            getSelectedValue(textMin_in_landing, textMax_in_landing, leftThumbIndex, rightThumbIndex)
+            minValueInLanding = textMin_in_landing.text.toString()
+            maxValueInLanding = textMax_in_landing.text.toString()
         }
+    }
 
+    private fun getSelectedValue(
+        minTextView: TextView?,
+        maxTextView: TextView?,
+        leftThumbIndex: Int,
+        rightThumbIndex: Int
+    ) {
+        minTextView?.text = "" + leftThumbIndex
+        maxTextView?.text = "" + rightThumbIndex
+        var minHour = Math.round(leftThumbIndex / SMALLEST_HOUR_FRACTION)
+        var minMinute =
+            Math.round((COMMON_FRACTION / SMALLEST_HOUR_FRACTION) * (leftThumbIndex % SMALLEST_HOUR_FRACTION))
+        var maxHour = Math.round(rightThumbIndex / SMALLEST_HOUR_FRACTION)
+        var maxMinute =
+            Math.round((COMMON_FRACTION / SMALLEST_HOUR_FRACTION) * (rightThumbIndex % SMALLEST_HOUR_FRACTION))
+
+        if (minHour <= 0 && minMinute <= 0) {
+            minHour = 0
+            minMinute = 0
+        }
+        if (minHour <= 0 && minMinute <= 30) {
+            minHour = 0
+            minMinute = 0
+        }
+        if (maxHour >= 24)
+            maxHour = 23
+
+        if (maxHour >= 24 && maxMinute >= 0)
+            maxMinute = 59
+
+        if (maxHour >= 23 && maxMinute > 30)
+            maxMinute = 59
+
+        minTextView?.text = deciFormat.format(minHour) + ":" + deciFormat.format(minMinute)
+        maxTextView?.text = deciFormat.format(maxHour) + ":" + deciFormat.format(maxMinute)
 
     }
 
-    private fun getSelectedValue(minTextView: TextView?, maxTextView: TextView?, leftThumbIndex: Int, rightThumbIndex: Int) {
-        minTextView?.text = "" + leftThumbIndex
-        maxTextView?.text = "" + rightThumbIndex
-        val minHour = leftThumbIndex / SMALLEST_HOUR_FRACTION
-        val minMinute = (COMMON_FRACTION/SMALLEST_HOUR_FRACTION.toFloat())* (leftThumbIndex % SMALLEST_HOUR_FRACTION)
-        val maxHour = rightThumbIndex / SMALLEST_HOUR_FRACTION
-        val maxMinute = (COMMON_FRACTION/SMALLEST_HOUR_FRACTION.toFloat()) * (rightThumbIndex % SMALLEST_HOUR_FRACTION)
-        minTextView?.text = deciFormat.format(minHour) + ":" + deciFormat.format(minMinute)
-        maxTextView?.text = deciFormat.format(maxHour) + ":" + deciFormat.format(maxMinute)
+    private fun getLeftAndRightIndex(leftThumbIndex: String): Int {
+        val leftIndexHours = leftThumbIndex.split(":")[0]
+        val leftIndexMin = leftThumbIndex.split(":")[1]
+        val hoursToMinute = Math.round(leftIndexHours.toInt() * SMALLEST_HOUR_FRACTION)
+        return hoursToMinute.plus(leftIndexMin.toInt())
     }
 
     private fun init() {
-        //textMin_price.text = filterData?.price_from
-        //textMax_price.text = filterData?.price_to
+        //duration after apply
+        maxValueDuration = filterData?.max_fly_duration.toString()
+        //price after apply
+        textMin_price.text = filterData?.price_from
+        textMax_price.text = filterData?.price_to
         minValuedef = Pref.getValue(this, Constant.Path.DEF_MIN_PRICE, "0")!!
         maxValuedef = Pref.getValue(this, Constant.Path.DEF_MAX_PRICE, "0")!!
         minValuePrice = filterData?.price_from.toString()
@@ -198,49 +203,94 @@ class FilterActivity : AppCompatActivity() {
             ll_inbound.visibility = View.VISIBLE
 
         }
-
+        //outbound_takeoff after apply
         textMin_outbound_takeofff.text = nullDefaultValues(filterData?.dtime_from, "00:00")
         textMax_outbound_takeofff.text = nullDefaultValues(filterData?.dtime_to, "23:59")
         minValueTakeOff = filterData?.dtime_from.toString()
         maxValueTakeOff = filterData?.dtime_to.toString()
 
-
+        rb_ob_toff.setConnectingLineColor(R.color.colorPrimary)
+        rb_ob_toff.setTickCount(COMMON_FRACTION * 24)
+        rb_ob_toff.setTickHeight(0f)
+        rb_ob_toff.setBarWeight(10f)
+        try {
+            rb_ob_toff.setThumbIndices(getLeftAndRightIndex(minValueTakeOff), getLeftAndRightIndex(maxValueTakeOff))
+        } catch (e: Exception) {
+        }
+        rb_ob_toff.setOnRangeBarChangeListener { rangeBar, leftThumbIndex, rightThumbIndex ->
+            getSelectedValue(textMin_outbound_takeofff, textMax_outbound_takeofff, leftThumbIndex, rightThumbIndex)
+            minValueTakeOff = textMin_outbound_takeofff.text.toString()
+            maxValueTakeOff = textMax_outbound_takeofff.text.toString()
+        }
+        //ob_landing after apply
         textMin_ob_landing.text = nullDefaultValues(filterData?.atime_from, "0:00")
         textMax_ob_landing.text = nullDefaultValues(filterData?.atime_to, "23:59")
         minValueLanding = filterData?.atime_from.toString()
         maxValueLanding = filterData?.atime_to.toString()
 
+        rb_ob_landing.setConnectingLineColor(R.color.colorPrimary)
+        rb_ob_landing.setTickCount(COMMON_FRACTION * 24)
+        rb_ob_landing.setTickHeight(0f)
+        rb_ob_landing.setBarWeight(10f)
+        try {
+            rb_ob_landing.setThumbIndices(getLeftAndRightIndex(minValueLanding), getLeftAndRightIndex(maxValueLanding))
+        } catch (e: Exception) {
+        }
+        rb_ob_landing.setOnRangeBarChangeListener { rangeBar, leftThumbIndex, rightThumbIndex ->
+            getSelectedValue(textMin_ob_landing, textMax_ob_landing, leftThumbIndex, rightThumbIndex)
+            minValueLanding = textMin_ob_landing.text.toString()
+            maxValueLanding = textMax_ob_landing.text.toString()
 
-        textMin_inbound_takeofff.text = nullDefaultValues(filterData?.ret_dtime_from, "0")
+        }
+        //inbound_takeoff after apply
+        textMin_inbound_takeofff.text = nullDefaultValues(filterData?.ret_dtime_from, "0:00")
         textMax_inbound_takeofff.text = nullDefaultValues(filterData?.ret_dtime_to, "23:59")
         minValueInTakeOff = filterData?.ret_dtime_from.toString()
         maxValueInTakeOff = filterData?.ret_dtime_to.toString()
 
+        rb_in_toff.setConnectingLineColor(R.color.colorPrimary)
+        rb_in_toff.setTickCount(COMMON_FRACTION * 24)
+        rb_in_toff.setTickHeight(0f)
+        rb_in_toff.setBarWeight(10f)
+        try {
+            rb_in_toff.setThumbIndices(getLeftAndRightIndex(minValueInTakeOff), getLeftAndRightIndex(maxValueInTakeOff))
+        } catch (e: Exception) {
+        }
+        rb_in_toff.setOnRangeBarChangeListener { rangeBar, leftThumbIndex, rightThumbIndex ->
+            getSelectedValue(textMin_inbound_takeofff, textMax_inbound_takeofff, leftThumbIndex, rightThumbIndex)
+            minValueInTakeOff = textMin_inbound_takeofff.text.toString()
+            maxValueInTakeOff = textMax_inbound_takeofff.text.toString()
 
-        textMin_in_landing.text = nullDefaultValues(filterData?.ret_dtime_from, "0")
-        textMax_in_landing.text = nullDefaultValues(filterData?.ret_dtime_to, "23:59")
+        }
+        //in_landing after apply
+        textMin_in_landing.text = nullDefaultValues(filterData?.ret_atime_from, "0:00")
+        textMax_in_landing.text = nullDefaultValues(filterData?.ret_atime_to, "23:59")
         minValueInLanding = filterData?.ret_atime_from.toString()
         maxValueInLanding = filterData?.ret_atime_to.toString()
 
+        rb_in_landing.setConnectingLineColor(R.color.colorPrimary)
+        rb_in_landing.setTickCount(COMMON_FRACTION * 24)
+        rb_in_landing.setTickHeight(0f)
+        rb_in_landing.setBarWeight(10f)
+        try {
+            rb_in_landing.setThumbIndices(
+                getLeftAndRightIndex(minValueInLanding),
+                getLeftAndRightIndex(maxValueInLanding)
+            )
+        } catch (e: Exception) {
+        }
+        rb_in_landing.setOnRangeBarChangeListener { rangeBar, leftThumbIndex, rightThumbIndex ->
+            getSelectedValue(textMin_in_landing, textMax_in_landing, leftThumbIndex, rightThumbIndex)
+            minValueInLanding = textMin_in_landing.text.toString()
+            maxValueInLanding = textMax_in_landing.text.toString()
 
+        }
 
         switchButton_direct.isChecked = filterData?.max_stopovers?.contains(0)!!
         switchButton_1stop.isChecked = filterData?.max_stopovers?.contains(1)!!
         switchButton_2stops.isChecked = filterData?.max_stopovers?.contains(2)!!
     }
 
-    private fun zeroCheck(maxDuration: String): String {
-        if (maxDuration == "0:00")
-            return "23.59"
-        else if (maxDuration == "0")
-            return "23.59"
-        else if (maxDuration == "00:00")
-            return "23.59"
-        else if (maxDuration == "00")
-            return "23.59"
-        else
-            return maxDuration
-    }
 
     private fun nullDefaultValues(bundleData: String?, defaultValue: String): String {
         if (bundleData.equals("00:00"))
@@ -251,9 +301,9 @@ class FilterActivity : AppCompatActivity() {
 
     private fun setOtherListeners() {
 
-        var maxStopovers: ArrayList<Int> = ArrayList()
         button_dialog_cancel.setOnClickListener { onBackPressed() }
 
+        var maxStopovers: ArrayList<Int> = ArrayList()
         if (switchButton_direct.isChecked)
             maxStopovers.add(0)
         else
@@ -316,8 +366,8 @@ class FilterActivity : AppCompatActivity() {
                     maxValueDuration,
                     minValueTakeOff,
                     maxValueTakeOff,
-                    minValueLanding ,
-                    maxValueLanding ,
+                    minValueLanding,
+                    maxValueLanding,
                     "0:00",
                     "0:00",
                     "0:00",
@@ -335,12 +385,12 @@ class FilterActivity : AppCompatActivity() {
                     maxValueDuration,
                     minValueTakeOff,
                     maxValueTakeOff,
-                    minValueLanding ,
-                    maxValueLanding ,
-                    minValueInTakeOff ,
-                    maxValueInTakeOff ,
-                    minValueInLanding ,
-                    maxValueInLanding ,
+                    minValueLanding,
+                    maxValueLanding,
+                    minValueInTakeOff,
+                    maxValueInTakeOff,
+                    minValueInLanding,
+                    maxValueInLanding,
                     maxStopovers
                 )
                 val intent = Intent()
@@ -372,4 +422,19 @@ class FilterActivity : AppCompatActivity() {
 
     }
 
+    private fun setRangeSeekbarForDuration() {
+        rb_duration.setOnSeekbarChangeListener { maxValue ->
+            textMin_duration.text = maxValue.toString()
+            if (maxValue.toFloat().toInt() > 48)
+                textMax_duration.text = "Any"
+            else
+                textMax_duration.text = "48"
+
+        }
+        rb_duration.setOnSeekbarFinalValueListener { maxValue ->
+            maxValueDuration = maxValue.toString()
+
+        }
+
+    }
 }
