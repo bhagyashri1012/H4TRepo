@@ -9,12 +9,13 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.flight.model.FlightViewModel
-import com.usit.hub4tickets.flight.ui.FragmentMultiCity
+import java.util.*
 
 
 class VerticalRecyclerViewAdapter(
     private val mDataset: ArrayList<FlightViewModel.MultiCitiesForSearch>,
-    private val myClickListener: VerticalRecyclerViewAdapter.MyClickListener) :
+    private val myClickListener: VerticalRecyclerViewAdapter.MyClickListener
+) :
     RecyclerView.Adapter<VerticalRecyclerViewAdapter.DataObjectHolder>() {
 
     class DataObjectHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -24,7 +25,7 @@ class VerticalRecyclerViewAdapter(
         var edtTo: EditText = itemView.findViewById<View>(R.id.edt_to) as EditText
         var edtFrom: EditText = itemView.findViewById<View>(R.id.edt_from) as EditText
     }
-    
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -36,31 +37,74 @@ class VerticalRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: VerticalRecyclerViewAdapter.DataObjectHolder, position: Int) {
+        if (position < 2) {
+            holder.minus.visibility = View.GONE
+            holder.plus.visibility = View.GONE
+        }
+        if (position < 2 && position == 1) {
+            holder.plus.visibility = View.VISIBLE
+        }
+
         holder.edtFrom.setText(mDataset[position].fly_from)
         holder.edtTo.setText(mDataset[position].fly_to)
-        holder.plus.setOnClickListener { myClickListener.onAddClick(position,holder.minus)}
-        holder.minus.setOnClickListener { myClickListener.onMinusClick(position,holder.minus)}
-
+        holder.tvDeparture.text = mDataset[position].date_from
+        holder.plus.setOnClickListener {
+            myClickListener.onAddClick(position, holder)
+        }
+        holder.minus.setOnClickListener {
+            myClickListener.onMinusClick(position, holder)
+        }
+        holder.edtFrom.setOnClickListener {
+            myClickListener.onFromClick(holder.edtFrom, holder.edtTo, holder.tvDeparture, position)
+            //myClickListener.onEditTextChangeClick(position, holder.edtFrom, "fly_from")
+        }
+        holder.edtTo.setOnClickListener {
+            myClickListener.onToClick(holder.edtTo, holder.edtFrom, holder.tvDeparture, position)
+            //myClickListener.onEditTextChangeClick(position, holder.edtTo, "fly_to")
+        }
+        holder.tvDeparture.setOnClickListener {
+            myClickListener.onDepartureDateClick(position, holder.tvDeparture)
+            //Utility.dateDialogWithMinMaxDate(Calendar.getInstance(), context.activity, holder.tvDeparture, 0)
+        }
     }
 
-     fun addItem(dataObj: FlightViewModel.MultiCitiesForSearch, index: Int) {
+    fun addItem(dataObj: FlightViewModel.MultiCitiesForSearch, index: Int) {
         mDataset.add(dataObj)
         notifyItemInserted(index)
     }
 
-     fun deleteItem(index: Int) {
+    fun updateItem(dataObj: FlightViewModel.MultiCitiesForSearch, index: Int) {
+        mDataset[index] = dataObj
+        notifyItemChanged(index)
+    }
+
+    fun deleteItem(index: Int) {
         mDataset.removeAt(index)
         notifyItemRemoved(index)
+    }
+
+    fun getSearchParamList(): ArrayList<FlightViewModel.MultiCitiesForSearch> {
+        var stepListFinal: ArrayList<FlightViewModel.MultiCitiesForSearch>? = ArrayList()
+        stepListFinal?.addAll(mDataset!!)
+        for (list in mDataset!!.indices) {
+            stepListFinal!![list].fly_to = stepListFinal!![list].fly_to.substringAfter("(").substringBefore(")")
+            stepListFinal!![list].fly_from = stepListFinal!![list].fly_from.substringAfter("(").substringBefore(")")
+        }
+        return stepListFinal!!
     }
 
     override fun getItemCount(): Int {
         return mDataset.size
     }
 
+    interface MyClickListener {
+        fun onAddClick(position: Int, v: DataObjectHolder)
+        fun onMinusClick(position: Int, v: DataObjectHolder)
+        //fun onEditTextChangeClick(position: Int, v: EditText, paramName: String)
+        fun onFromClick(edtFrom: EditText, edtTo: EditText, dep: TextView, position: Int)
 
-    public interface MyClickListener {
-        fun onAddClick(position: Int, v: View)
-        fun onMinusClick(position: Int, v: View)
+        fun onToClick(edtTo: EditText, edtFrom: EditText, dep: TextView, position: Int)
+        fun onDepartureDateClick(position: Int, v: TextView)
     }
 
 }
