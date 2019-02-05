@@ -184,7 +184,10 @@ class FilterActivity : AppCompatActivity() {
 
     private fun init() {
         //duration after apply
+        textMin_duration.setText(maxValueDuration)
         maxValueDuration = filterData?.max_fly_duration.toString()
+        rb_duration.setMinStartValue(maxValueDuration.toFloat()).apply()
+                //maxValueDuration.toFloat()
         //price after apply
         textMin_price.text = filterData?.price_from
         textMax_price.text = filterData?.price_to

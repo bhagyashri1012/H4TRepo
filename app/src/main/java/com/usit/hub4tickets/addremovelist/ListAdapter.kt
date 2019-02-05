@@ -166,7 +166,7 @@ class ListAdapter(
                     holder.edtFrom.setText(stepList!![position].fly_from)
                     //holder.tvDeparture.text = stepList!![position].date_from
                     //stepList!![position] = multiCitiesForSearch
-                } catch (e: IndexOutOfBoundsException) {
+                } catch (e:IndexOutOfBoundsException) {
                     e.printStackTrace()
                     stepList?.add(FlightViewModel.MultiCitiesForSearch("", "", ""))
                     notifyItemInserted(position + 1)
