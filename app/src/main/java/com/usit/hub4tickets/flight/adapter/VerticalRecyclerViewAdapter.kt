@@ -10,12 +10,15 @@ import android.widget.TextView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.flight.model.FlightViewModel
 import java.util.*
+import android.util.SparseIntArray
+import com.usit.hub4tickets.flight.ui.FragmentMultiCity
 
 
 class VerticalRecyclerViewAdapter(
     private val mDataset: ArrayList<FlightViewModel.MultiCitiesForSearch>,
+    private val itemStateArray: SparseIntArray,
     private val myClickListener: VerticalRecyclerViewAdapter.MyClickListener
-) :
+    ) :
     RecyclerView.Adapter<VerticalRecyclerViewAdapter.DataObjectHolder>() {
 
     class DataObjectHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -25,6 +28,7 @@ class VerticalRecyclerViewAdapter(
         var edtTo: EditText = itemView.findViewById<View>(R.id.edt_to) as EditText
         var edtFrom: EditText = itemView.findViewById<View>(R.id.edt_from) as EditText
     }
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -37,22 +41,15 @@ class VerticalRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: VerticalRecyclerViewAdapter.DataObjectHolder, position: Int) {
-        if (position < 2) {
-            holder.minus.visibility = View.GONE
-            holder.plus.visibility = View.GONE
-        }
-        if (position < 2 && position == 1) {
-            holder.plus.visibility = View.VISIBLE
-        }
-
         holder.edtFrom.setText(mDataset[position].fly_from)
         holder.edtTo.setText(mDataset[position].fly_to)
+
         holder.tvDeparture.text = mDataset[position].date_from
         holder.plus.setOnClickListener {
-            myClickListener.onAddClick(position, holder)
+            myClickListener.onAddClick(position, holder,itemStateArray)
         }
         holder.minus.setOnClickListener {
-            myClickListener.onMinusClick(position, holder)
+            myClickListener.onMinusClick(position, holder,itemStateArray)
         }
         holder.edtFrom.setOnClickListener {
             myClickListener.onFromClick(holder.edtFrom, holder.edtTo, holder.tvDeparture, position)
@@ -66,6 +63,13 @@ class VerticalRecyclerViewAdapter(
             myClickListener.onDepartureDateClick(position, holder.tvDeparture)
             //Utility.dateDialogWithMinMaxDate(Calendar.getInstance(), context.activity, holder.tvDeparture, 0)
         }
+            if (itemStateArray.get(position, 8) == 0) {
+                holder.plus.visibility = View.VISIBLE
+                holder.minus.visibility = View.GONE
+            } else {
+                holder.plus.visibility = View.GONE
+                holder.minus.visibility = View.VISIBLE
+            }
     }
 
     fun addItem(dataObj: FlightViewModel.MultiCitiesForSearch, index: Int) {
@@ -98,8 +102,16 @@ class VerticalRecyclerViewAdapter(
     }
 
     interface MyClickListener {
-        fun onAddClick(position: Int, v: DataObjectHolder)
-        fun onMinusClick(position: Int, v: DataObjectHolder)
+        fun onAddClick(
+            position: Int,
+            v: DataObjectHolder,
+            itemStateArray: SparseIntArray
+        )
+        fun onMinusClick(
+            position: Int,
+            v: DataObjectHolder,
+            itemStateArray: SparseIntArray
+        )
         //fun onEditTextChangeClick(position: Int, v: EditText, paramName: String)
         fun onFromClick(edtFrom: EditText, edtTo: EditText, dep: TextView, position: Int)
 
