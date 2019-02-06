@@ -1,6 +1,7 @@
 package com.usit.hub4tickets.flight.adapter
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,12 +38,10 @@ class VerticalRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: VerticalRecyclerViewAdapter.DataObjectHolder, position: Int) {
-        holder.edtFrom.setText(mDataset[position].fly_from)
-        holder.edtTo.setText(mDataset[position].fly_to)
-        holder.tvDeparture.text = mDataset[position].date_from
-       /* holder.plus.setOnClickListener {
-            myClickListener.onAddClick(position, holder)
-        }*/
+
+        /* holder.plus.setOnClickListener {
+             myClickListener.onAddClick(position, holder)
+         }*/
         holder.minus.setOnClickListener {
             myClickListener.onMinusClick(position, holder)
         }
@@ -58,30 +57,40 @@ class VerticalRecyclerViewAdapter(
             myClickListener.onDepartureDateClick(position, holder.tvDeparture)
             //Utility.dateDialogWithMinMaxDate(Calendar.getInstance(), context.activity, holder.tvDeparture, 0)
         }
+
+        holder.edtFrom.setText(mDataset[position].fly_from)
+        holder.edtTo.setText(mDataset[position].fly_to)
+        holder.tvDeparture.text = mDataset[position].date_from
+
     }
 
     fun addItem(dataObj: FlightViewModel.MultiCitiesForSearch, index: Int) {
         mDataset.add(dataObj)
+        Log.d(
+            "add  $index",
+            mDataset[index].fly_from + " - " + mDataset[index].fly_to + " - " + mDataset[index].date_from
+        )
         notifyItemInserted(index)
     }
 
     fun updateItem(dataObj: FlightViewModel.MultiCitiesForSearch, index: Int) {
         mDataset[index] = dataObj
+        Log.d(
+            "update  $index",
+            mDataset[index].fly_from + " - " + mDataset[index].fly_to + " - " + mDataset[index].date_from
+        )
         notifyItemChanged(index)
     }
 
     fun deleteItem(index: Int) {
         mDataset.removeAt(index)
         notifyItemRemoved(index)
+        notifyItemRangeChanged(index, mDataset.size)
     }
 
     fun getSearchParamList(): ArrayList<FlightViewModel.MultiCitiesForSearch> {
         var stepListFinal: ArrayList<FlightViewModel.MultiCitiesForSearch>? = ArrayList()
-        stepListFinal?.addAll(mDataset!!)
-        for (list in mDataset!!.indices) {
-            stepListFinal!![list].fly_to = stepListFinal!![list].fly_to.substringAfter("(").substringBefore(")")
-            stepListFinal!![list].fly_from = stepListFinal!![list].fly_from.substringAfter("(").substringBefore(")")
-        }
+        stepListFinal?.addAll(mDataset)
         return stepListFinal!!
     }
 
@@ -94,7 +103,6 @@ class VerticalRecyclerViewAdapter(
         fun onMinusClick(position: Int, v: DataObjectHolder)
         //fun onEditTextChangeClick(position: Int, v: EditText, paramName: String)
         fun onFromClick(edtFrom: EditText, edtTo: EditText, dep: TextView, position: Int)
-
         fun onToClick(edtTo: EditText, edtFrom: EditText, dep: TextView, position: Int)
         fun onDepartureDateClick(position: Int, v: TextView)
     }
