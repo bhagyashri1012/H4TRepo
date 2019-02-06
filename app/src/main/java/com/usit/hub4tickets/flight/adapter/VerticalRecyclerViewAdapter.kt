@@ -58,8 +58,10 @@ class VerticalRecyclerViewAdapter(
             //Utility.dateDialogWithMinMaxDate(Calendar.getInstance(), context.activity, holder.tvDeparture, 0)
         }
 
-        holder.edtFrom.setText(mDataset[position].fly_from)
-        holder.edtTo.setText(mDataset[position].fly_to)
+        if(mDataset[position].fly_from!="")
+        holder.edtFrom.setText(mDataset[position].fly_from.substringBeforeLast("@"))
+        if(mDataset[position].fly_to!="")
+        holder.edtTo.setText(mDataset[position].fly_to.substringBeforeLast("@"))
         holder.tvDeparture.text = mDataset[position].date_from
 
     }

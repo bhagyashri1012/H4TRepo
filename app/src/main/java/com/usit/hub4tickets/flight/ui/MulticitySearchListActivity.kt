@@ -116,7 +116,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
 
         btn_sort.setOnClickListener { sortByDailog() }
         btn_filter.setOnClickListener {
-            openFilter()
+            //openFilter()
         }
 
 
