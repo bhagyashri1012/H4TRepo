@@ -66,6 +66,10 @@ class FilterActivity : AppCompatActivity() {
         if (activityTitle.equals("FragmentOneWay")) {
             ll_inbound.visibility = View.GONE
         }
+        if (activityTitle.equals("FragmentMulticity")) {
+            ll_stops.visibility = View.GONE
+            ll_time.visibility = View.GONE
+        }
     }
 
     private fun initView() {
@@ -187,7 +191,7 @@ class FilterActivity : AppCompatActivity() {
         textMin_duration.setText(maxValueDuration)
         maxValueDuration = filterData?.max_fly_duration.toString()
         rb_duration.setMinStartValue(maxValueDuration.toFloat()).apply()
-                //maxValueDuration.toFloat()
+        //maxValueDuration.toFloat()
         //price after apply
         textMin_price.text = filterData?.price_from
         textMax_price.text = filterData?.price_to
@@ -202,10 +206,12 @@ class FilterActivity : AppCompatActivity() {
         if (activityTitle.equals("FragmentOneWay")) {
             ll_inbound.visibility = View.GONE
 
-        } else {
+        } else if (activityTitle.equals("FragmentMulticity")) {
+            ll_stops.visibility = View.GONE
+            ll_time.visibility = View.GONE
+        } else
             ll_inbound.visibility = View.VISIBLE
 
-        }
         //outbound_takeoff after apply
         textMin_outbound_takeofff.text = nullDefaultValues(filterData?.dtime_from, "00:00")
         textMax_outbound_takeofff.text = nullDefaultValues(filterData?.dtime_to, "23:59")
@@ -394,6 +400,25 @@ class FilterActivity : AppCompatActivity() {
                     maxValueInTakeOff,
                     minValueInLanding,
                     maxValueInLanding,
+                    maxStopovers
+                )
+                val intent = Intent()
+                intent.putExtra(Constant.Path.FILTER_DATA, filterModel)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }else if (activityTitle.equals("FragmentMulticity")) {
+                val filterModel: FilterModel.Filter = FilterModel.Filter(
+                    minValuePrice,
+                    maxValuePrice,
+                    maxValueDuration,
+                    "0:00",
+                    "0:00",
+                    "0:00",
+                    "0:00",
+                    "0:00",
+                    "0:00",
+                    "0:00",
+                    "0:00",
                     maxStopovers
                 )
                 val intent = Intent()

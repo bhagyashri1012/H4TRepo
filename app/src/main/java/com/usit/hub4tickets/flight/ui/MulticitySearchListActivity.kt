@@ -1,5 +1,6 @@
 package com.usit.hub4tickets.flight.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -22,33 +23,6 @@ import kotlinx.android.synthetic.main.sort_by_dialog.view.*
 
 class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     MultiCityInnerAdapter.OnItemClickListener {
-    private lateinit var model: FlightViewModel
-    private lateinit var presenter: FlightPresenter
-    override fun getLayoutResource(): Int {
-        return R.layout.common_toolbar
-    }
-    override fun doRetrieveModel(): FlightViewModel = this.model
-
-    override fun showState(viewState: FlightPresenter.MainView.ViewState) {
-        when (viewState) {
-            FlightPresenter.MainView.ViewState.IDLE -> {
-                Utility.showProgress(false, this)
-            }
-            FlightPresenter.MainView.ViewState.LOADING -> {
-                Utility.showProgress(true, this)
-            }
-            FlightPresenter.MainView.ViewState.MULTICITY_DETAILS_SUCCESS -> {
-                data=model.multiCityListViewModel
-            }
-            FlightPresenter.MainView.ViewState.FLIGHT_NOT_FOUND
-            -> {
-            }
-            FlightPresenter.MainView.ViewState.ERROR
-            -> {
-                Utility.showCustomDialog(this, doRetrieveModel().errorMessage.message, "", null)
-            }
-        }
-    }
     private var dataListAll: ArrayList<ResponseDataMulticity>? = ArrayList()
     private var totalPassengers: String = ""
     private var adults: String? = "1"
@@ -64,17 +38,58 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
         )
     private var travelClass: String? = "Economy"
     private var travelClassCode: String? = "0"
+    var multicityParamList: java.util.ArrayList<FlightViewModel.MultiCitiesForSearch>? = java.util.ArrayList()
+    var data: FlightViewModel.MultiCityResponse? = null
+    var filterData: FilterModel.Filter? = null
+    private var maxPrice: String? = "0"
+    private var minPrice: String? = "0"
+    private val Filter_SELECTION_REQUEST = 503
+    private lateinit var model: FlightViewModel
+    private lateinit var presenter: FlightPresenter
 
-    var data: FlightViewModel.MultiCityResponse?=null
+    override fun getLayoutResource(): Int {
+        return R.layout.common_toolbar
+    }
+
+    override fun doRetrieveModel(): FlightViewModel = this.model
+
+    override fun showState(viewState: FlightPresenter.MainView.ViewState) {
+        when (viewState) {
+            FlightPresenter.MainView.ViewState.IDLE -> {
+                Utility.showProgress(false, this)
+            }
+            FlightPresenter.MainView.ViewState.LOADING -> {
+                Utility.showProgress(true, this)
+            }
+            FlightPresenter.MainView.ViewState.MULTICITY_DETAILS_SUCCESS -> {
+                if (openFilter) {
+                    dataListAll?.clear()
+                    dataListAll?.addAll(model.multiCityListViewModel.responseData!!)
+                    adapter?.notifyDataSetChanged()
+                } else
+                    model.multiCityListViewModel
+            }
+            FlightPresenter.MainView.ViewState.FLIGHT_NOT_FOUND
+            -> {
+            }
+            FlightPresenter.MainView.ViewState.ERROR
+            -> {
+                Utility.showCustomDialog(this, doRetrieveModel().errorMessage.message, "", null)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multicity_search_list)
         init()
         if (null != intent.extras) {
-            data  = intent.getParcelableExtra(Constant.Path.MULTICITY_DETAILS)
-            travelClassCode  = intent.getStringExtra(Constant.Path.CABIN_CLASS_CODE)
-            maxPrice=data?.maxPrice.toString()
-            minPrice=data?.minPrice.toString()
+            data = intent.getParcelableExtra(Constant.Path.MULTICITY_DETAILS)
+            travelClassCode = intent.getStringExtra(Constant.Path.CABIN_CLASS_CODE)
+            multicityParamList =
+                intent.getParcelableArrayListExtra<FlightViewModel.MultiCitiesForSearch>((Constant.Path.MULTICITY_SEARCH_PARAMS))
+            maxPrice = data?.maxPrice.toString()
+            minPrice = data?.minPrice.toString()
             totalPassengers = intent.getStringExtra(Constant.Path.TOTAL_PASSENGERS)
             if (null != data) {
                 dataListAll = data?.responseData as ArrayList<ResponseDataMulticity>
@@ -83,13 +98,11 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                 }
             }
         }
-
     }
 
-    private fun init() {   this.model = FlightViewModel(this)
+    private fun init() {
+        this.model = FlightViewModel(this)
         this.presenter = FlightPresenterImpl(this, this)
-
-
         title = resources.getString(R.string.multicity)
         mainToolbar.setNavigationOnClickListener { onBackPressed() }
         val layoutManager = LinearLayoutManager(this)
@@ -116,17 +129,13 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
 
         btn_sort.setOnClickListener { sortByDailog() }
         btn_filter.setOnClickListener {
-            //openFilter()
+            openFilter()
         }
-
-
     }
-    var filterData: FilterModel.Filter? = null
-    private var maxPrice: String? = "0"
-    private var minPrice: String? = "0"
-    private val Filter_SELECTION_REQUEST = 503
 
+    var openFilter: Boolean = false
     private fun openFilter() {
+        openFilter = true
         val intent = Intent(this, FilterActivity::class.java)
         intent.putExtra(Constant.Path.ACTIVITY_TITLE, "FragmentMulticity")
         intent.putExtra(Constant.Path.FILTER_DATA, filterData)
@@ -135,7 +144,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
         startActivityForResult(intent, Filter_SELECTION_REQUEST)
     }
 
-    private fun callFlightDetailsApi(listM: java.util.ArrayList<FlightViewModel.MultiCitiesForSearch>) {
+    private fun callMulticityDetailsApi(filterData: FilterModel.Filter?) {
         var currency = Pref.getValue(this, PrefConstants.CURRENCY_DEFAULT, "")
         presenter.callMulticityDetails(
             adults!!,
@@ -144,7 +153,10 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             Pref.getValue(this, PrefConstants.USER_ID, "0").toString(),
             infants!!,
             "in-EN",
-            listM,
+            multicityParamList,
+            filterData?.price_from,
+            filterData?.price_to,
+            filterData!!.max_fly_duration,
             travelClassCode.toString(),//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST\
             Pref.getValue(this, PrefConstants.USER_ID, "0").toString()
         )
@@ -153,11 +165,6 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     private fun setDataToRecyclerViewAdapter(
         responseData: ArrayList<ResponseDataMulticity>?
     ) {
-        if (responseData != null) {
-            totalPassengers = Utility.showPassengersAdult(adults).toString() +
-                    Utility.showPassengersChildren(children).toString() +
-                    Utility.showPassengersInfants(infants).toString()
-        }
         adapter = MultiCityRecyclerViewAdapter(responseData, this, totalPassengers, "", "")
         recycler_view!!.adapter = adapter
     }
@@ -241,6 +248,18 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                         Log.d("duration--", sortedList[c].totalDurationFormatted.toString())
                     }
                     setDataToRecyclerViewAdapter(sortedList)
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            Filter_SELECTION_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    filterData = data?.getParcelableExtra(Constant.Path.FILTER_DATA)
+                    callMulticityDetailsApi(filterData)
                 }
             }
         }
