@@ -6,25 +6,49 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.usit.hub4tickets.R
+import com.usit.hub4tickets.domain.presentation.presenters.FlightPresenter
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
+import com.usit.hub4tickets.domain.presentation.screens.main.FlightPresenterImpl
 import com.usit.hub4tickets.flight.adapter.MultiCityInnerAdapter
 import com.usit.hub4tickets.flight.adapter.MultiCityRecyclerViewAdapter
+import com.usit.hub4tickets.flight.model.FilterModel
 import com.usit.hub4tickets.flight.model.FlightViewModel
 import com.usit.hub4tickets.flight.model.FlightViewModel.ResponseDataMulticity
 import com.usit.hub4tickets.search.model.CommonSelectorPojo
-import com.usit.hub4tickets.utils.Constant
-import com.usit.hub4tickets.utils.SignleSelectionAdapter
-import com.usit.hub4tickets.utils.Utility
+import com.usit.hub4tickets.utils.*
 import kotlinx.android.synthetic.main.activity_multicity_search_list.*
 import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.sort_by_dialog.view.*
 
-class MulticitySearchListActivity : BaseActivity(),
+class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     MultiCityInnerAdapter.OnItemClickListener {
+    private lateinit var model: FlightViewModel
+    private lateinit var presenter: FlightPresenter
     override fun getLayoutResource(): Int {
         return R.layout.common_toolbar
     }
+    override fun doRetrieveModel(): FlightViewModel = this.model
 
+    override fun showState(viewState: FlightPresenter.MainView.ViewState) {
+        when (viewState) {
+            FlightPresenter.MainView.ViewState.IDLE -> {
+                Utility.showProgress(false, this)
+            }
+            FlightPresenter.MainView.ViewState.LOADING -> {
+                Utility.showProgress(true, this)
+            }
+            FlightPresenter.MainView.ViewState.MULTICITY_DETAILS_SUCCESS -> {
+                data=model.multiCityListViewModel
+            }
+            FlightPresenter.MainView.ViewState.FLIGHT_NOT_FOUND
+            -> {
+            }
+            FlightPresenter.MainView.ViewState.ERROR
+            -> {
+                Utility.showCustomDialog(this, doRetrieveModel().errorMessage.message, "", null)
+            }
+        }
+    }
     private var dataListAll: ArrayList<ResponseDataMulticity>? = ArrayList()
     private var totalPassengers: String = ""
     private var adults: String? = "1"
@@ -39,17 +63,21 @@ class MulticitySearchListActivity : BaseActivity(),
             currency = ""
         )
     private var travelClass: String? = "Economy"
+    private var travelClassCode: String? = "0"
 
-
+    var data: FlightViewModel.MultiCityResponse?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multicity_search_list)
         init()
         if (null != intent.extras) {
-            var data: FlightViewModel.MultiCityResponse = intent.getParcelableExtra(Constant.Path.MULTICITY_DETAILS)
+            data  = intent.getParcelableExtra(Constant.Path.MULTICITY_DETAILS)
+            travelClassCode  = intent.getStringExtra(Constant.Path.CABIN_CLASS_CODE)
+            maxPrice=data?.maxPrice.toString()
+            minPrice=data?.minPrice.toString()
             totalPassengers = intent.getStringExtra(Constant.Path.TOTAL_PASSENGERS)
             if (null != data) {
-                dataListAll = data.responseData as ArrayList<ResponseDataMulticity>
+                dataListAll = data?.responseData as ArrayList<ResponseDataMulticity>
                 if (null != dataListAll) {
                     setDataToRecyclerViewAdapter(dataListAll)
                 }
@@ -58,7 +86,10 @@ class MulticitySearchListActivity : BaseActivity(),
 
     }
 
-    private fun init() {
+    private fun init() {   this.model = FlightViewModel(this)
+        this.presenter = FlightPresenterImpl(this, this)
+
+
         title = resources.getString(R.string.multicity)
         mainToolbar.setNavigationOnClickListener { onBackPressed() }
         val layoutManager = LinearLayoutManager(this)
@@ -84,6 +115,39 @@ class MulticitySearchListActivity : BaseActivity(),
         )
 
         btn_sort.setOnClickListener { sortByDailog() }
+        btn_filter.setOnClickListener {
+            openFilter()
+        }
+
+
+    }
+    var filterData: FilterModel.Filter? = null
+    private var maxPrice: String? = "0"
+    private var minPrice: String? = "0"
+    private val Filter_SELECTION_REQUEST = 503
+
+    private fun openFilter() {
+        val intent = Intent(this, FilterActivity::class.java)
+        intent.putExtra(Constant.Path.ACTIVITY_TITLE, "FragmentMulticity")
+        intent.putExtra(Constant.Path.FILTER_DATA, filterData)
+        intent.putExtra(Constant.Path.MAX_PRICE, maxPrice)
+        intent.putExtra(Constant.Path.MIN_PRICE, minPrice)
+        startActivityForResult(intent, Filter_SELECTION_REQUEST)
+    }
+
+    private fun callFlightDetailsApi(listM: java.util.ArrayList<FlightViewModel.MultiCitiesForSearch>) {
+        var currency = Pref.getValue(this, PrefConstants.CURRENCY_DEFAULT, "")
+        presenter.callMulticityDetails(
+            adults!!,
+            children!!,
+            currency!!,
+            Pref.getValue(this, PrefConstants.USER_ID, "0").toString(),
+            infants!!,
+            "in-EN",
+            listM,
+            travelClassCode.toString(),//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST\
+            Pref.getValue(this, PrefConstants.USER_ID, "0").toString()
+        )
     }
 
     private fun setDataToRecyclerViewAdapter(

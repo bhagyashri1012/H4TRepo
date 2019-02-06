@@ -19,7 +19,7 @@ class VerticalRecyclerViewAdapter(
     RecyclerView.Adapter<VerticalRecyclerViewAdapter.DataObjectHolder>() {
 
     class DataObjectHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var plus: ImageButton = itemView.findViewById<View>(R.id.plus) as ImageButton
+        //var plus: ImageButton = itemView.findViewById<View>(R.id.plus) as ImageButton
         var minus: ImageButton = itemView.findViewById<View>(R.id.minus) as ImageButton
         var tvDeparture: TextView = itemView.findViewById<View>(R.id.tv_departure) as TextView
         var edtTo: EditText = itemView.findViewById<View>(R.id.edt_to) as EditText
@@ -37,20 +37,12 @@ class VerticalRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: VerticalRecyclerViewAdapter.DataObjectHolder, position: Int) {
-        if (position < 2) {
-            holder.minus.visibility = View.GONE
-            holder.plus.visibility = View.GONE
-        }
-        if (position < 2 && position == 1) {
-            holder.plus.visibility = View.VISIBLE
-        }
-
         holder.edtFrom.setText(mDataset[position].fly_from)
         holder.edtTo.setText(mDataset[position].fly_to)
         holder.tvDeparture.text = mDataset[position].date_from
-        holder.plus.setOnClickListener {
+       /* holder.plus.setOnClickListener {
             myClickListener.onAddClick(position, holder)
-        }
+        }*/
         holder.minus.setOnClickListener {
             myClickListener.onMinusClick(position, holder)
         }
@@ -98,7 +90,7 @@ class VerticalRecyclerViewAdapter(
     }
 
     interface MyClickListener {
-        fun onAddClick(position: Int, v: DataObjectHolder)
+        //fun onAddClick(position: Int, v: DataObjectHolder)
         fun onMinusClick(position: Int, v: DataObjectHolder)
         //fun onEditTextChangeClick(position: Int, v: EditText, paramName: String)
         fun onFromClick(edtFrom: EditText, edtTo: EditText, dep: TextView, position: Int)
