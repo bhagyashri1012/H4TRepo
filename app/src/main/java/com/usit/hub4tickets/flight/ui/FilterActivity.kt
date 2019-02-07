@@ -188,7 +188,7 @@ class FilterActivity : AppCompatActivity() {
 
     private fun init() {
         //duration after apply
-        textMin_duration.setText(maxValueDuration)
+        textMin_duration.text = maxValueDuration
         maxValueDuration = filterData?.max_fly_duration.toString()
         rb_duration.setMinStartValue(maxValueDuration.toFloat()).apply()
         //maxValueDuration.toFloat()
@@ -225,6 +225,7 @@ class FilterActivity : AppCompatActivity() {
         try {
             rb_ob_toff.setThumbIndices(getLeftAndRightIndex(minValueTakeOff), getLeftAndRightIndex(maxValueTakeOff))
         } catch (e: Exception) {
+            e.message
         }
         rb_ob_toff.setOnRangeBarChangeListener { rangeBar, leftThumbIndex, rightThumbIndex ->
             getSelectedValue(textMin_outbound_takeofff, textMax_outbound_takeofff, leftThumbIndex, rightThumbIndex)
@@ -406,7 +407,7 @@ class FilterActivity : AppCompatActivity() {
                 intent.putExtra(Constant.Path.FILTER_DATA, filterModel)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            }else if (activityTitle.equals("FragmentMulticity")) {
+            } else if (activityTitle.equals("FragmentMulticity")) {
                 val filterModel: FilterModel.Filter = FilterModel.Filter(
                     minValuePrice,
                     maxValuePrice,
@@ -453,7 +454,9 @@ class FilterActivity : AppCompatActivity() {
     private fun setRangeSeekbarForDuration() {
         rb_duration.setOnSeekbarChangeListener { maxValue ->
             textMin_duration.text = maxValue.toString()
-            if (maxValue.toFloat().toInt() > 48)
+            if (maxValue.toFloat().toInt() == 0)
+                textMax_duration.text = "Any"
+            else  if (maxValue.toFloat().toInt() > 48)
                 textMax_duration.text = "Any"
             else
                 textMax_duration.text = "48"

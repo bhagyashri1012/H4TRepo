@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.presenters.FlightPresenter
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
@@ -107,7 +106,6 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
         mainToolbar.setNavigationOnClickListener { onBackPressed() }
         val layoutManager = LinearLayoutManager(this)
         recycler_view!!.layoutManager = layoutManager
-
         dataListSortBy = ArrayList()
         //sort by
         dataListSortBy?.add(
@@ -230,7 +228,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                         sortedList!![c]?.totalDurationFormatted =
                             Utility.getDurationFromString(dataListAll!![c].totalDuration).toString()
                     }
-                    //sortedList?.sortBy { it.totalDurationFormatted?.toInt() }
+                    sortedList?.sortBy { it.totalDurationFormatted?.toInt() }
                     sortedList?.sortBy { it.price?.toDouble() }
                     setDataToRecyclerViewAdapter(sortedList)
                 }
@@ -242,11 +240,11 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                         sortedList!![c]?.totalDurationFormatted =
                             Utility.getDurationFromString(dataListAll!![c].totalDuration).toString()
                     }
-                    //sortedList?.sortBy { it.price?.toDouble() }
+                    sortedList?.sortBy { it.price?.toDouble() }
                     sortedList?.sortBy { it.totalDurationFormatted?.toInt() }
-                    for (c in sortedList?.indices!!) {
+                    /*for (c in sortedList?.indices!!) {
                         Log.d("duration--", sortedList[c].totalDurationFormatted.toString())
-                    }
+                    }*/
                     setDataToRecyclerViewAdapter(sortedList)
                 }
             }
