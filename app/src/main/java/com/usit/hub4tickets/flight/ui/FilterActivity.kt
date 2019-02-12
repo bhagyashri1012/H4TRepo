@@ -44,7 +44,7 @@ class FilterActivity : AppCompatActivity() {
         setContentView(R.layout.fragment_filter)
         setToolBar()
         setOtherListeners()
-        initView()
+        setRangeSeekbarForPrice()
         if (savedInstanceState != null) {
             filterData = savedInstanceState.getParcelable(Constant.Path.FILTER_DATA)
             activityTitle = savedInstanceState.getString(Constant.Path.ACTIVITY_TITLE)
@@ -72,11 +72,6 @@ class FilterActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView() {
-        setRangeSeekbarForPrice()
-        setRangeSeekbarForDuration()
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState.apply {
             putString(Constant.Path.ACTIVITY_TITLE, "FragmentReturn")
@@ -96,6 +91,7 @@ class FilterActivity : AppCompatActivity() {
 
         //duration
         rb_duration.setMinValue(0f).setMaxValue(100f).setMinStartValue(0f).apply()
+        setRangeSeekbarForDuration()
 
         //outbound take off
         rb_ob_toff.setConnectingLineColor(R.color.colorPrimary)
@@ -190,7 +186,9 @@ class FilterActivity : AppCompatActivity() {
         //duration after apply
         textMin_duration.text = maxValueDuration
         maxValueDuration = filterData?.max_fly_duration.toString()
-        rb_duration.setMinStartValue(maxValueDuration.toFloat()).apply()
+        rb_duration.setMinStartValue(maxValueDuration.toFloat()).setMaxValue(100f).apply()
+        setRangeSeekbarForDuration()
+
         //maxValueDuration.toFloat()
         //price after apply
         textMin_price.text = filterData?.price_from
@@ -456,7 +454,7 @@ class FilterActivity : AppCompatActivity() {
             textMin_duration.text = maxValue.toString()
             if (maxValue.toFloat().toInt() == 0)
                 textMax_duration.text = "Any"
-            else  if (maxValue.toFloat().toInt() > 48)
+            else if (maxValue.toFloat().toInt() > 48)
                 textMax_duration.text = "Any"
             else
                 textMax_duration.text = "48"
