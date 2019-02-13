@@ -39,7 +39,7 @@ class CalenderActivity : BaseActivity() {
 
     private fun OnDoneClick() {
         get_selected_dates.setOnClickListener {
-            if (activityTitle == "FragmentReturn") {
+            if (activityTitle == "FragmentReturn" && action == "DepartureClick") {
                 if (calendar_view.selectedDates.size <= 1)
                     Toast.makeText(applicationContext, "Select Return Date", Toast.LENGTH_SHORT).show()
                 else {
@@ -60,23 +60,33 @@ class CalenderActivity : BaseActivity() {
                     }
                 }
             } else {
-                departure_date = dateFormat.format(
-                    dateFormatInput.parse(calendar_view.selectedDates[0].toString())
-                )
-                returnDate = dateFormat.format(
-                    dateFormatInput.parse(calendar_view.selectedDates[calendar_view.selectedDates.lastIndex].toString())
-                )
-                //Log.d("departure date", "$departure_date   return date$returnDate")
-                if (returnDate.isNotBlank()) {
-                    val intent = Intent()
-                    intent.putExtra(Constant.Path.RETURN_SELECTED_DEP_DATE, departure_date)
-                    intent.putExtra(Constant.Path.RETURN_SELECTED_RET_DATE, returnDate)
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
+                if (isBefore) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Select Date after : " + dateFormat.parse(defDepartureDate),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    departure_date = dateFormat.format(
+                        dateFormatInput.parse(calendar_view.selectedDates[0].toString())
+                    )
+                    returnDate = dateFormat.format(
+                        dateFormatInput.parse(calendar_view.selectedDates[calendar_view.selectedDates.lastIndex].toString())
+                    )
+                    //Log.d("departure date", "$departure_date   return date$returnDate")
+                    if (returnDate.isNotBlank()) {
+                        val intent = Intent()
+                        intent.putExtra(Constant.Path.RETURN_SELECTED_DEP_DATE, departure_date)
+                        intent.putExtra(Constant.Path.RETURN_SELECTED_RET_DATE, returnDate)
+                        setResult(Activity.RESULT_OK, intent)
+                        finish()
+                    }
                 }
             }
         }
     }
+
+    private var isBefore: Boolean = false
 
     private fun init() {
         if (null != intent.extras) {
@@ -87,10 +97,11 @@ class CalenderActivity : BaseActivity() {
                 defReturnDate = intent.getStringExtra(Constant.Path.SELECTED_TO_DATE)
         }
         val dates = ArrayList<Date>()
-        val nextYear = Calendar.getInstance()
-        nextYear.add(Calendar.YEAR, 1)
 
         if (activityTitle == "FragmentReturn") {
+            val nextYear = Calendar.getInstance()
+            //if (action == "DepartureClick") {
+            nextYear.add(Calendar.YEAR, 1)
             val today = Calendar.getInstance()
             if (!defDepartureDate.isNullOrBlank())
                 today.time = dateFormat.parse(defDepartureDate)
@@ -106,37 +117,73 @@ class CalenderActivity : BaseActivity() {
             calendar_view.init(Date(), nextYear.time)
                 .inMode(CalendarPickerView.SelectionMode.RANGE)
                 .withSelectedDates(dates)
-            /*  if (calendar_view.selectedDates.size > 1) {
-                  //get_selected_dates.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.colorPrimary))
-                  get_selected_dates.isEnabled = true
-              } else {
-                  //get_selected_dates.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.white_grey))
-                  get_selected_dates.isEnabled = false
-              }*/
-
+            /* } else if (action == "ReturnClick") {
+                 nextYear.add(Calendar.YEAR, 1)
+                 val today = Calendar.getInstance()
+                 val today1 = Calendar.getInstance()
+                 if (!defDepartureDate.isNullOrBlank())
+                     today.time = dateFormat.parse(defDepartureDate)
+                 else
+                     today.add(Calendar.DATE, 1)
+                 dates.add(today.time)
+                 if (!defReturnDate.isNullOrBlank())
+                     today1.time = dateFormat.parse(defReturnDate)
+                 else
+                     today1.add(Calendar.DATE, 5)
+                 dates.add(today1.time)
+                 calendar_view.decorators = emptyList<CalendarCellDecorator>()
+                 calendar_view.init(today.time, nextYear.time)
+                     .inMode(CalendarPickerView.SelectionMode.RANGE)
+                     .withSelectedDates(dates)
+             }*/
             calendar_view.setOnDateSelectedListener(object : CalendarPickerView.OnDateSelectedListener {
                 override fun onDateSelected(date: Date) {
 
                     if (action == "ReturnClick") {
-                        val dates = ArrayList<Date>()
-                        val nextYear = Calendar.getInstance()
-                        nextYear.add(Calendar.YEAR, 1)
-                        val today = Calendar.getInstance()
-                        if (!defDepartureDate.isNullOrBlank())
-                            today.time = dateFormat.parse(defDepartureDate)
-                        else
+                        if (!defDepartureDate.isNullOrBlank()) {
+                            if (dateFormat.parse(defDepartureDate).after(date)) {
+                                isBefore = true
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Select Date after : $defDepartureDate",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                isBefore = false
+                                val dates = ArrayList<Date>()
+                                val nextYear = Calendar.getInstance()
+                                nextYear.add(Calendar.YEAR, 1)
+                                val today = Calendar.getInstance()
+                                today.time = dateFormat.parse(defDepartureDate)
+                                dates.add(today.time)
+                                today.time = date
+                                dates.add(today.time)
+                                calendar_view.decorators = emptyList<CalendarCellDecorator>()
+                                calendar_view.init(Date(), nextYear.time)
+                                    .inMode(CalendarPickerView.SelectionMode.RANGE)
+                                    .withSelectedDates(dates)
+                                calendar_view.smoothScrollByOffset(0)
+                                calendar_view.scrollToDate(date)
+                            }
+                        } else {
+                            val dates = ArrayList<Date>()
+                            val nextYear = Calendar.getInstance()
+                            nextYear.add(Calendar.YEAR, 1)
+                            val today = Calendar.getInstance()
                             today.add(Calendar.DATE, 1)
-                        dates.add(today.time)
-                        today.time = date
-                        dates.add(today.time)
-                        calendar_view.decorators = emptyList<CalendarCellDecorator>()
-                        calendar_view.init(Date(), nextYear.time)
-                            .inMode(CalendarPickerView.SelectionMode.RANGE)
-                            .withSelectedDates(dates)
-                        calendar_view.smoothScrollByOffset(0)
-                        calendar_view.scrollToDate(date)
+                            dates.add(today.time)
+                            today.time = date
+                            dates.add(today.time)
+                            calendar_view.decorators = emptyList<CalendarCellDecorator>()
+                            calendar_view.init(Date(), nextYear.time)
+                                .inMode(CalendarPickerView.SelectionMode.RANGE)
+                                .withSelectedDates(dates)
+                            calendar_view.smoothScrollByOffset(0)
+                            calendar_view.scrollToDate(date)
+                        }
+                    } /*else if (action == "ReturnClick") {
 
-                    }
+                    }*/
                 }
 
                 override fun onDateUnselected(date: Date) {
@@ -155,7 +202,8 @@ class CalenderActivity : BaseActivity() {
             })
 
         } else {
-
+            val nextYear = Calendar.getInstance()
+            nextYear.add(Calendar.YEAR, 1)
             val today = Calendar.getInstance()
             if (!defDepartureDate.isNullOrBlank())
                 today.time = dateFormat.parse(defDepartureDate)
