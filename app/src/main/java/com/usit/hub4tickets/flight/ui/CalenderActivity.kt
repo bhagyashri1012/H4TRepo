@@ -24,6 +24,7 @@ class CalenderActivity : BaseActivity() {
     private var departure_date: String = ""
     private var defDepartureDate: String = ""
     private var defDepartureDateAfter: String = ""
+    private var defDepartureDateBfr: String = ""
     private var position: Int = 0
     private var returnDate: String = ""
     private var defReturnDate: String = ""
@@ -125,6 +126,7 @@ class CalenderActivity : BaseActivity() {
                 defReturnDate = intent.getStringExtra(Constant.Path.SELECTED_TO_DATE)
             if (activityTitle == "FragmentMultiCity") {
                 defDepartureDateAfter = intent.getStringExtra(Constant.Path.SELECTED_FROM_DATE_AFTER)
+                defDepartureDateBfr = intent.getStringExtra(Constant.Path.SELECTED_FROM_DATE_BEFORE)
                 position = intent.getIntExtra(Constant.Path.POSITION, 0)
             }
 
@@ -151,7 +153,20 @@ class CalenderActivity : BaseActivity() {
                 .inMode(CalendarPickerView.SelectionMode.RANGE)
                 .withSelectedDates(dates)
 
-        } else {
+        }  else if (activityTitle == "FragmentMultiCity") {
+            val nextYear = Calendar.getInstance()
+            nextYear.add(Calendar.YEAR, 1)
+            val today = Calendar.getInstance()
+            if (!defDepartureDateBfr.isNullOrBlank())
+                today.time = dateFormat.parse(defDepartureDateBfr)
+            else
+                today.add(Calendar.DATE, 1)
+            dates.add(today.time)
+            calendar_view.decorators = emptyList<CalendarCellDecorator>()
+            calendar_view.init(Date(), nextYear.time)
+                .inMode(CalendarPickerView.SelectionMode.SINGLE)
+                .withSelectedDates(dates)
+        }else {
             val nextYear = Calendar.getInstance()
             nextYear.add(Calendar.YEAR, 1)
             val today = Calendar.getInstance()

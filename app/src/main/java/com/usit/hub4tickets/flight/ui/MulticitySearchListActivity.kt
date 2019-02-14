@@ -143,7 +143,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     }
 
     private fun callMulticityDetailsApi(filterData: FilterModel.Filter?) {
-        var currency = Pref.getValue(this, PrefConstants.CURRENCY_DEFAULT, "")
+        /*var currency = Pref.getValue(this, PrefConstants.CURRENCY_DEFAULT, "")
         presenter.callMulticityDetails(
             adults!!,
             children!!,
@@ -157,7 +157,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             filterData!!.max_fly_duration,
             travelClassCode.toString(),//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST\
             Pref.getValue(this, PrefConstants.USER_ID, "0").toString()
-        )
+        )*/
     }
 
     private fun setDataToRecyclerViewAdapter(
