@@ -21,8 +21,8 @@ class VerticalRecyclerViewAdapter(
     class DataObjectHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var minus: ImageButton = itemView.findViewById<View>(R.id.minus) as ImageButton
         var tvDeparture: TextView = itemView.findViewById<View>(R.id.tv_departure) as TextView
-        var edtTo: EditText = itemView.findViewById<View>(R.id.edt_to) as EditText
-        var edtFrom: EditText = itemView.findViewById<View>(R.id.edt_from) as EditText
+        var edtTo: EditText = itemView.findViewById<View>(R.id.edt_to_multicity) as EditText
+        var edtFrom: EditText = itemView.findViewById<View>(R.id.edt_from_multicity) as EditText
     }
 
     override fun onCreateViewHolder(
@@ -48,36 +48,51 @@ class VerticalRecyclerViewAdapter(
         holder.tvDeparture.setOnClickListener {
             myClickListener.onDepartureDateClick(position, holder.tvDeparture)
         }
-
-        if (mDataset[position].fly_from != "")
+        if (mDataset[position].fly_from.isNotBlank())
             holder.edtFrom.setText(mDataset[position].fly_from.substringBeforeLast("@"))
-        if (mDataset[position].fly_to != "")
+        else
+            holder.edtFrom.setText("")
+        if (mDataset[position].fly_to.isNotBlank())
             holder.edtTo.setText(mDataset[position].fly_to.substringBeforeLast("@"))
+        else
+            holder.edtTo.setText("")
         holder.tvDeparture.text = mDataset[position].date_from
     }
 
     fun addItem(dataObj: FlightViewModel.MultiCitiesForSearch, index: Int) {
-        mDataset.add(dataObj)
-        Log.d(
-            "add  $index",
-            mDataset[index].fly_from + " - " + mDataset[index].fly_to + " - " + mDataset[index].date_from
-        )
-        notifyItemInserted(index)
+        try {
+            mDataset.add(dataObj)
+            Log.d(
+                "add  $index",
+                mDataset[index].fly_from + " - " + mDataset[index].fly_to + " - " + mDataset[index].date_from
+            )
+            notifyItemInserted(index)
+        } catch (e: Exception) {
+            e.message
+        }
     }
 
     fun updateItem(dataObj: FlightViewModel.MultiCitiesForSearch, index: Int) {
-        mDataset[index] = dataObj
-        Log.d(
-            "update  $index",
-            mDataset[index].fly_from + " - " + mDataset[index].fly_to + " - " + mDataset[index].date_from
-        )
-        notifyItemChanged(index)
+        try {
+            mDataset[index] = dataObj
+            Log.d(
+                "update  $index",
+                mDataset[index].fly_from + " - " + mDataset[index].fly_to + " - " + mDataset[index].date_from
+            )
+            notifyItemChanged(index)
+        } catch (e: Exception) {
+            e.message
+        }
     }
 
     fun deleteItem(index: Int) {
-        mDataset.removeAt(index)
-        notifyItemRemoved(index)
-        notifyItemRangeChanged(index, mDataset.size)
+        try {
+            mDataset.removeAt(index)
+            notifyItemRemoved(index)
+            notifyItemRangeChanged(index, mDataset.size)
+        } catch (e: Exception) {
+            e.message
+        }
     }
 
     fun getSearchParamList(): ArrayList<FlightViewModel.MultiCitiesForSearch> {

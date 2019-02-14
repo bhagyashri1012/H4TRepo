@@ -41,7 +41,7 @@ class MultiCityRecyclerViewAdapter(
                     listener,
                     totalPassengers,
                     items!![position].price.toString(),
-                    items!![position].currencySymbol.toString()
+                    items!![position].currencySymbol
                 )
             setRecycledViewPool(viewPool)
         }
