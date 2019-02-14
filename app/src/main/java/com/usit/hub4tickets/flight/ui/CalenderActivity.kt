@@ -9,6 +9,7 @@ import com.squareup.timessquare.CalendarPickerView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
 import com.usit.hub4tickets.utils.Constant
+import com.usit.hub4tickets.utils.Utility
 import kotlinx.android.synthetic.main.activity_calender.*
 import kotlinx.android.synthetic.main.common_toolbar.*
 import java.text.SimpleDateFormat
@@ -23,6 +24,7 @@ class CalenderActivity : BaseActivity() {
     private var departure_date: String = ""
     private var defDepartureDate: String = ""
     private var defDepartureDateAfter: String = ""
+    private var position: Int = 0
     private var returnDate: String = ""
     private var defReturnDate: String = ""
     private var action: String = ""
@@ -121,8 +123,10 @@ class CalenderActivity : BaseActivity() {
             activityTitle = intent.getStringExtra(Constant.Path.ACTIVITY_TITLE)
             if (activityTitle == "FragmentReturn")
                 defReturnDate = intent.getStringExtra(Constant.Path.SELECTED_TO_DATE)
-            if (activityTitle == "FragmentMultiCity")
+            if (activityTitle == "FragmentMultiCity") {
                 defDepartureDateAfter = intent.getStringExtra(Constant.Path.SELECTED_FROM_DATE_AFTER)
+                position = intent.getIntExtra(Constant.Path.POSITION, 0)
+            }
 
         }
         val dates = ArrayList<Date>()
@@ -209,6 +213,8 @@ class CalenderActivity : BaseActivity() {
                         }
                     }
                 } else if (activityTitle == "FragmentMultiCity") {
+                    if (position.toInt() == 0)
+                        defDepartureDate = Utility.getCurrentDateNow()
                     if (defDepartureDate.isNotBlank()) {
                         if (dateFormat.parse(defDepartureDate).after(date)) {
                             isBefore = true
