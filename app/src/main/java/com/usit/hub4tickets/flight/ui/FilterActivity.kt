@@ -220,6 +220,7 @@ class FilterActivity : AppCompatActivity() {
         rb_ob_toff.setTickCount(COMMON_FRACTION * 24)
         rb_ob_toff.setTickHeight(0f)
         rb_ob_toff.setBarWeight(10f)
+
         try {
             rb_ob_toff.setThumbIndices(getLeftAndRightIndex(minValueTakeOff), getLeftAndRightIndex(maxValueTakeOff))
         } catch (e: Exception) {
