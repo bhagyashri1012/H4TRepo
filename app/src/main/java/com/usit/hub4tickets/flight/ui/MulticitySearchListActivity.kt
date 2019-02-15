@@ -37,7 +37,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
         )
     private var travelClass: String? = "Economy"
     private var travelClassCode: String? = "0"
-    var multicityParamList: java.util.ArrayList<FlightViewModel.MultiCitiesForSearch>? = java.util.ArrayList()
+    var multicityParamList: java.util.ArrayList<FlightViewModel.MultiCitiesForSearch1>? = java.util.ArrayList()
     var data: FlightViewModel.MultiCityResponse? = null
     var filterData: FilterModel.Filter? = null
     private var maxPrice: String? = "0"
@@ -86,7 +86,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             data = intent.getParcelableExtra(Constant.Path.MULTICITY_DETAILS)
             travelClassCode = intent.getStringExtra(Constant.Path.CABIN_CLASS_CODE)
             multicityParamList =
-                intent.getParcelableArrayListExtra<FlightViewModel.MultiCitiesForSearch>((Constant.Path.MULTICITY_SEARCH_PARAMS))
+                intent.getParcelableArrayListExtra<FlightViewModel.MultiCitiesForSearch1>((Constant.Path.MULTICITY_SEARCH_PARAMS))
             maxPrice = data?.maxPrice.toString()
             minPrice = data?.minPrice.toString()
             totalPassengers = intent.getStringExtra(Constant.Path.TOTAL_PASSENGERS)
@@ -125,7 +125,10 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             )
         )
 
-        btn_sort.setOnClickListener { sortByDailog() }
+        btn_sort.setOnClickListener {
+            if (dataListAll!!.isNotEmpty())
+                sortByDailog()
+        }
         btn_filter.setOnClickListener {
             openFilter()
         }
@@ -143,7 +146,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     }
 
     private fun callMulticityDetailsApi(filterData: FilterModel.Filter?) {
-        /*var currency = Pref.getValue(this, PrefConstants.CURRENCY_DEFAULT, "")
+        var currency = Pref.getValue(this, PrefConstants.CURRENCY_DEFAULT, "")
         presenter.callMulticityDetails(
             adults!!,
             children!!,
@@ -157,7 +160,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             filterData!!.max_fly_duration,
             travelClassCode.toString(),//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST\
             Pref.getValue(this, PrefConstants.USER_ID, "0").toString()
-        )*/
+        )
     }
 
     private fun setDataToRecyclerViewAdapter(
