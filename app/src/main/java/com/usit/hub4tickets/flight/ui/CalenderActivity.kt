@@ -243,19 +243,22 @@ class CalenderActivity : BaseActivity() {
                                 getString(R.string.calender_validations),
                                 Toast.LENGTH_SHORT
                             ).show()
+                            reset = false
                         } else {
                             isBefore = false
                             if (defDepartureDateAfter.isNotBlank()) {
-                                if (dateFormat.parse(defDepartureDateAfter).before(date) && position != 0) {
-                                    isAfter = true
+                                if (dateFormat.parse(defDepartureDateAfter).before(date)) {
+                                    /*isAfter = true
                                     Toast.makeText(
                                         applicationContext,
                                         "Departure date cannot be greater than the next departure date",
                                         Toast.LENGTH_SHORT
-                                    ).show()
-                                } else {
+                                    ).show()*/
                                     isAfter = false
                                     reset = true
+                                } else {
+                                    isAfter = false
+                                    reset = false
                                 }
 
                             }
