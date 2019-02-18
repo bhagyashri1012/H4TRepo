@@ -72,7 +72,11 @@ class VerticalRecyclerViewAdapter(
         }
     }
 
-    fun updateItem(dataObj: FlightViewModel.MultiCitiesForSearch, index: Int) {
+    fun updateItem(
+        dataObj: FlightViewModel.MultiCitiesForSearch,
+        index: Int,
+        reset: Boolean
+    ) {
         try {
             mDataset[index] = dataObj
             Log.d(

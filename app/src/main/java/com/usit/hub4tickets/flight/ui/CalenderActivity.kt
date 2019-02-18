@@ -50,7 +50,7 @@ class CalenderActivity : BaseActivity() {
                         getString(R.string.calender_validations),
                         Toast.LENGTH_SHORT
                     ).show()
-                } else if (isAfter) {
+                } else if (isAfter && position != 0) {
                     Toast.makeText(
                         applicationContext,
                         "Departure date cannot be greater than the next departure date",
@@ -62,29 +62,32 @@ class CalenderActivity : BaseActivity() {
                     )
                     val intent = Intent()
                     intent.putExtra(Constant.Path.RETURN_SELECTED_DEP_DATE, departure_date)
+                    intent.putExtra(Constant.Path.RESET, reset)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 }
             } else {
                 if (activityTitle == "FragmentReturn" && action == "DepartureClick") {
-                    if (calendar_view.selectedDates.size <= 1)
-                        Toast.makeText(applicationContext, "Select Return Date", Toast.LENGTH_SHORT).show()
-                    else {
-                        departure_date = dateFormat.format(
+                    departure_date = dateFormat.format(
+                        dateFormatInput.parse(calendar_view.selectedDates[0].toString())
+                    )
+                    if (calendar_view.selectedDates.size <= 1) {
+                        returnDate = dateFormat.format(
                             dateFormatInput.parse(calendar_view.selectedDates[0].toString())
                         )
+                    } else {
+
                         returnDate = dateFormat.format(
                             dateFormatInput.parse(calendar_view.selectedDates[calendar_view.selectedDates.lastIndex].toString())
                         )
                         //Log.d("departure date", "$departure_date   return date$returnDate")
-
-                        if (returnDate.isNotBlank()) {
-                            val intent = Intent()
-                            intent.putExtra(Constant.Path.RETURN_SELECTED_DEP_DATE, departure_date)
-                            intent.putExtra(Constant.Path.RETURN_SELECTED_RET_DATE, returnDate)
-                            setResult(Activity.RESULT_OK, intent)
-                            finish()
-                        }
+                    }
+                    if (returnDate.isNotBlank()) {
+                        val intent = Intent()
+                        intent.putExtra(Constant.Path.RETURN_SELECTED_DEP_DATE, departure_date)
+                        intent.putExtra(Constant.Path.RETURN_SELECTED_RET_DATE, returnDate)
+                        setResult(Activity.RESULT_OK, intent)
+                        finish()
                     }
                 } else {
                     if (isBefore) {
@@ -116,6 +119,7 @@ class CalenderActivity : BaseActivity() {
 
     private var isBefore: Boolean = false
     private var isAfter: Boolean = false
+    private var reset: Boolean = false
 
     private fun init() {
         if (null != intent.extras) {
@@ -153,7 +157,7 @@ class CalenderActivity : BaseActivity() {
                 .inMode(CalendarPickerView.SelectionMode.RANGE)
                 .withSelectedDates(dates)
 
-        }  else if (activityTitle == "FragmentMultiCity") {
+        } else if (activityTitle == "FragmentMultiCity") {
             val nextYear = Calendar.getInstance()
             nextYear.add(Calendar.YEAR, 1)
             val today = Calendar.getInstance()
@@ -166,7 +170,7 @@ class CalenderActivity : BaseActivity() {
             calendar_view.init(Date(), nextYear.time)
                 .inMode(CalendarPickerView.SelectionMode.SINGLE)
                 .withSelectedDates(dates)
-        }else {
+        } else {
             val nextYear = Calendar.getInstance()
             nextYear.add(Calendar.YEAR, 1)
             val today = Calendar.getInstance()
@@ -230,6 +234,7 @@ class CalenderActivity : BaseActivity() {
                 } else if (activityTitle == "FragmentMultiCity") {
                     if (position.toInt() == 0)
                         defDepartureDate = Utility.getCurrentDateNow()
+
                     if (defDepartureDate.isNotBlank()) {
                         if (dateFormat.parse(defDepartureDate).after(date)) {
                             isBefore = true
@@ -241,15 +246,17 @@ class CalenderActivity : BaseActivity() {
                         } else {
                             isBefore = false
                             if (defDepartureDateAfter.isNotBlank()) {
-                                if (dateFormat.parse(defDepartureDateAfter).before(date)) {
+                                if (dateFormat.parse(defDepartureDateAfter).before(date) && position != 0) {
                                     isAfter = true
                                     Toast.makeText(
                                         applicationContext,
                                         "Departure date cannot be greater than the next departure date",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                } else
+                                } else {
                                     isAfter = false
+                                    reset = true
+                                }
 
                             }
                         }

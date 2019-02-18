@@ -16,12 +16,11 @@
         <Button android:id="@+id/btn_sort"
                 style="@style/CustomSmallTextView"
                 android:minHeight="@dimen/margin_32"
-                android:layout_toRightOf="@id/btn_class"
                 android:layout_marginRight="@dimen/margin_2dp"
                 android:text="@string/sort"
                 android:background="@null"
                 android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorPriTint"
         />
 
         <Button android:id="@+id/btn_filter"
@@ -32,7 +31,7 @@
                 android:textAllCaps="false"
                 android:layout_marginRight="@dimen/margin_2dp"
                 android:background="@null"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorPriTint"
         />
     </LinearLayout>
     <android.support.v7.widget.RecyclerView
