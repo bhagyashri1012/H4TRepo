@@ -98,6 +98,7 @@ class FilterActivity : AppCompatActivity() {
         rb_ob_toff.setTickCount(COMMON_FRACTION * 24)
         rb_ob_toff.setTickHeight(0f)
         rb_ob_toff.setBarWeight(10f)
+        rb_ob_toff.setThumbRadius(-1f)
         rb_ob_toff.setOnRangeBarChangeListener { rangeBar, leftThumbIndex, rightThumbIndex ->
             getSelectedValue(textMin_outbound_takeofff, textMax_outbound_takeofff, leftThumbIndex, rightThumbIndex)
             minValueTakeOff = textMin_outbound_takeofff.text.toString()

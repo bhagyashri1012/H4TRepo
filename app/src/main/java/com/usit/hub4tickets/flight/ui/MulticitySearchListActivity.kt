@@ -201,10 +201,10 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
         dialogView.tv_dialog_header.text = getString(R.string.sort_by)
         val layoutManager = LinearLayoutManager(this)
         dialogView.selection_list?.layoutManager = layoutManager
-        val adapter = SignleSelectionAdapter(
+        val adapter = SignleSelectionSortAdapter(
             this,
             dataListSortBy!!, true,
-            object : SignleSelectionAdapter.OnClickListener {
+            object : SignleSelectionSortAdapter.OnClickListener {
                 override fun onListItemClick(
                     dataList: ArrayList<CommonSelectorPojo>,
                     position: Int
