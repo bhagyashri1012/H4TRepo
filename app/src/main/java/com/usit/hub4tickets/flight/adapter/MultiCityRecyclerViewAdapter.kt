@@ -30,7 +30,7 @@ class MultiCityRecyclerViewAdapter(
     private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onBindViewHolder(holder: TextItemViewHolderMulticity, position: Int) {
-        holder.price.text = items!![position].currencySymbol + " - " + items!![position].price.toString()
+        holder.price.text = items!![position].currencySymbol + " " + items!![position].price.toString()
         val childLayoutManager = LinearLayoutManager(holder.rc.context, LinearLayout.VERTICAL, false)
         //childLayoutManager.initialPrefetchItemCount = 4
         holder.rc.apply {

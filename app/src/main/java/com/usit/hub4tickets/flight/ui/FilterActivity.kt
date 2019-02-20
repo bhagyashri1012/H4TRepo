@@ -13,6 +13,7 @@ import com.usit.hub4tickets.utils.Pref
 import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.fragment_filter.*
 import java.text.DecimalFormat
+import kotlin.math.roundToInt
 
 
 class FilterActivity : AppCompatActivity() {
@@ -23,15 +24,15 @@ class FilterActivity : AppCompatActivity() {
     private var minValuedef: String = "0"
     private var maxValuedef: String = "0"
     private var minValueDuration: String = "0"
-    private var maxValueDuration: String = "0"
+    private var maxValueDuration: String = "100"
     private var minValueLanding: String = "00:00"
-    private var maxValueLanding: String = "00:00"
+    private var maxValueLanding: String = "23:59"
     private var minValueTakeOff: String = "00:00"
-    private var maxValueTakeOff: String = "00:00"
+    private var maxValueTakeOff: String = "23:59"
     private var minValueInLanding: String = "00:00"
-    private var maxValueInLanding: String = "00:00"
+    private var maxValueInLanding: String = "23:59"
     private var minValueInTakeOff: String = "00:00"
-    private var maxValueInTakeOff: String = "00:00"
+    private var maxValueInTakeOff: String = "23:59"
     var filterData: FilterModel.Filter? = null
     private val SMALLEST_HOUR_FRACTION: Float = 60f
     private val COMMON_FRACTION: Int = 60
@@ -88,9 +89,10 @@ class FilterActivity : AppCompatActivity() {
         range_seekbar_price.setMinValue(minValue.toFloat()).setMaxValue(maxValue.toFloat())
             .setMinStartValue(minValue.toFloat())
             .setMaxStartValue(maxValue.toFloat()).apply()
-
+        minValuePrice = minValue.toDouble().roundToInt().toString()
+        maxValuePrice = maxValue.toDouble().roundToInt().toString()
         //duration
-        rb_duration.setMinValue(0f).setMaxValue(100f).setMinStartValue(0f).apply()
+        rb_duration.setMinValue(0f).setMaxValue(100f).setMinStartValue(100f).apply()
         setRangeSeekbarForDuration()
 
         //outbound take off

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.presenters.FlightPresenter
 import com.usit.hub4tickets.domain.presentation.screens.BaseActivity
@@ -16,6 +17,7 @@ import com.usit.hub4tickets.flight.model.FlightViewModel
 import com.usit.hub4tickets.flight.model.FlightViewModel.ResponseDataMulticity
 import com.usit.hub4tickets.search.model.CommonSelectorPojo
 import com.usit.hub4tickets.utils.*
+import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 import kotlinx.android.synthetic.main.activity_multicity_search_list.*
 import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.sort_by_dialog.view.*
@@ -40,8 +42,6 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     var multicityParamList: java.util.ArrayList<FlightViewModel.MultiCitiesForSearch1>? = java.util.ArrayList()
     var data: FlightViewModel.MultiCityResponse? = null
     var filterData: FilterModel.Filter? = null
-    private var maxPrice: String? = "0"
-    private var minPrice: String? = "0"
     private val Filter_SELECTION_REQUEST = 503
     private lateinit var model: FlightViewModel
     private lateinit var presenter: FlightPresenter
@@ -61,19 +61,51 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                 Utility.showProgress(true, this)
             }
             FlightPresenter.MainView.ViewState.MULTICITY_DETAILS_SUCCESS -> {
+                rl_flight_not_found.visibility= View.GONE
+
                 if (openFilter) {
                     dataListAll?.clear()
                     dataListAll?.addAll(model.multiCityListViewModel.responseData!!)
                     adapter?.notifyDataSetChanged()
-                } else
-                    model.multiCityListViewModel
+                } else {
+
+                    dataListAll = model.multiCityListViewModel.responseData as ArrayList<ResponseDataMulticity>
+                    setDataToRecyclerViewAdapter(dataListAll)
+                }
             }
             FlightPresenter.MainView.ViewState.FLIGHT_NOT_FOUND
             -> {
+                rl_flight_not_found.visibility= View.VISIBLE
+                Utility.showCustomDialog(
+                    this,
+                    doRetrieveModel().errorMessage.message,
+                    "",
+                    object : CustomDialogPresenter.CustomDialogView {
+                        override fun onNegativeButtonClicked() {
+                        }
+
+                        override fun onPositiveButtonClicked() {
+                            onBackPressed()
+                        }
+
+                    })
             }
             FlightPresenter.MainView.ViewState.ERROR
             -> {
-                Utility.showCustomDialog(this, doRetrieveModel().errorMessage.message, "", null)
+                Utility.showCustomDialog(
+                    this,
+                    doRetrieveModel().errorMessage.message,
+                    "",
+                    object : CustomDialogPresenter.CustomDialogView {
+                        override fun onNegativeButtonClicked() {
+                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        }
+
+                        override fun onPositiveButtonClicked() {
+                            onBackPressed()
+                        }
+
+                    })
             }
         }
     }
@@ -83,19 +115,19 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
         setContentView(R.layout.activity_multicity_search_list)
         init()
         if (null != intent.extras) {
-            data = intent.getParcelableExtra(Constant.Path.MULTICITY_DETAILS)
+            // data = intent.getParcelableExtra(Constant.Path.MULTICITY_DETAILS)
             travelClassCode = intent.getStringExtra(Constant.Path.CABIN_CLASS_CODE)
             multicityParamList =
                 intent.getParcelableArrayListExtra<FlightViewModel.MultiCitiesForSearch1>((Constant.Path.MULTICITY_SEARCH_PARAMS))
-            maxPrice = data?.maxPrice.toString()
-            minPrice = data?.minPrice.toString()
+            //maxPrice = data?.maxPrice.toString()
+            //minPrice = data?.minPrice.toString()
             totalPassengers = intent.getStringExtra(Constant.Path.TOTAL_PASSENGERS)
-            if (null != data) {
+            /*if (null != data) {
                 dataListAll = data?.responseData as ArrayList<ResponseDataMulticity>
-                if (null != dataListAll) {
-                    setDataToRecyclerViewAdapter(dataListAll)
-                }
-            }
+
+            }*/
+            callMulticityDetailsApi(filterData)
+
         }
     }
 
@@ -140,8 +172,8 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
         val intent = Intent(this, FilterActivity::class.java)
         intent.putExtra(Constant.Path.ACTIVITY_TITLE, "FragmentMulticity")
         intent.putExtra(Constant.Path.FILTER_DATA, filterData)
-        intent.putExtra(Constant.Path.MAX_PRICE, maxPrice)
-        intent.putExtra(Constant.Path.MIN_PRICE, minPrice)
+        intent.putExtra(Constant.Path.MAX_PRICE, model.multiCityListViewModel.maxPrice.toString())
+        intent.putExtra(Constant.Path.MIN_PRICE, model.multiCityListViewModel.minPrice.toString())
         startActivityForResult(intent, Filter_SELECTION_REQUEST)
     }
 
@@ -157,7 +189,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             multicityParamList,
             filterData?.price_from,
             filterData?.price_to,
-            filterData!!.max_fly_duration,
+            filterData?.max_fly_duration,
             travelClassCode.toString(),//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST\
             Pref.getValue(this, PrefConstants.USER_ID, "0").toString()
         )
