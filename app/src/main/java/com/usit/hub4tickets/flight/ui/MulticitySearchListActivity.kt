@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.domain.presentation.presenters.FlightPresenter
@@ -277,9 +278,9 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                     }
                     sortedList?.sortBy { it.price?.toDouble() }
                     sortedList?.sortBy { it.totalDurationFormatted?.toInt() }
-                    /*for (c in sortedList?.indices!!) {
+                    for (c in sortedList?.indices!!) {
                         Log.d("duration--", sortedList[c].totalDurationFormatted.toString())
-                    }*/
+                    }
                     setDataToRecyclerViewAdapter(sortedList)
                 }
             }
