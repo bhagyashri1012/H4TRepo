@@ -104,7 +104,7 @@ class ListAdapter(
             }
 
             override fun afterTextChanged(s: Editable) {
-                Log.d("inTextChange from", s.toString())
+                //Log.d("inTextChange from", s.toString())
                 if(!minusClicked) {
                     multiCitiesForSearch.fly_from = s.toString()
                     try {
@@ -123,7 +123,7 @@ class ListAdapter(
             }
 
             override fun afterTextChanged(s: Editable) {
-                Log.d("inTextChange to", s.toString());
+                //Log.d("inTextChange to", s.toString());
                 if(!minusClicked) {
                     multiCitiesForSearch.fly_to = s.toString()
                     try {
@@ -156,7 +156,7 @@ class ListAdapter(
 
         holder.minus.setOnClickListener {
             minusClicked=true
-            Log.d("steplist - bfr ",stepList.toString())
+          //  Log.d("steplist - bfr ",stepList.toString())
             if (position in 2..5) {
                 try {
                     stepList?.removeAt(position)
@@ -226,7 +226,7 @@ class ListAdapter(
                 }
                 createView(position, holder.plus, holder.minus)
             }
-            Log.d("step list-aft",stepList.toString())
+          //  Log.d("step list-aft",stepList.toString())
         }
         stepList!![position].fly_to = holder.edtTo.text.toString()
         stepList!![position].fly_from = holder.edtFrom.text.toString()

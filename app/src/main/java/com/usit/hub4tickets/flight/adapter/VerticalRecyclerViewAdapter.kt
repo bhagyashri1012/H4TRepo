@@ -62,10 +62,10 @@ class VerticalRecyclerViewAdapter(
     fun addItem(dataObj: FlightViewModel.MultiCitiesForSearch, index: Int) {
         try {
             mDataset.add(dataObj)
-            Log.d(
+           /* Log.d(
                 "add  $index",
                 mDataset[index].fly_from + " - " + mDataset[index].fly_to + " - " + mDataset[index].date_from
-            )
+            )*/
             notifyItemInserted(index)
         } catch (e: Exception) {
             e.message
@@ -79,10 +79,10 @@ class VerticalRecyclerViewAdapter(
     ) {
         try {
             mDataset[index] = dataObj
-            Log.d(
+            /*Log.d(
                 "update  $index",
                 mDataset[index].fly_from + " - " + mDataset[index].fly_to + " - " + mDataset[index].date_from
-            )
+            )*/
             notifyItemChanged(index)
         } catch (e: Exception) {
             e.message
