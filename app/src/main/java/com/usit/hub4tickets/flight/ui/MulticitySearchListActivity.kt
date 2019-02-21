@@ -177,9 +177,14 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
         intent.putExtra(Constant.Path.MIN_PRICE, model.multiCityListViewModel.minPrice.toString())
         startActivityForResult(intent, Filter_SELECTION_REQUEST)
     }
+    private var currency: String? = ""
 
     private fun callMulticityDetailsApi(filterData: FilterModel.Filter?) {
-        var currency = Pref.getValue(this, PrefConstants.CURRENCY_DEFAULT, "")
+        if(Pref.getValue(this, PrefConstants.CURRENCY_ID, "")!!.equals(""))
+            currency = Pref.getValue(this, PrefConstants.CURRENCY_DEFAULT, "")
+        else
+            currency=""
+
         presenter.callMulticityDetails(
             adults!!,
             children!!,

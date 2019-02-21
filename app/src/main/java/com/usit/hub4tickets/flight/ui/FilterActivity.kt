@@ -92,7 +92,7 @@ class FilterActivity : AppCompatActivity() {
         minValuePrice = minValue.toDouble().roundToInt().toString()
         maxValuePrice = maxValue.toDouble().roundToInt().toString()
         //duration
-        rb_duration.setMinValue(0f).setMaxValue(100f).setMinStartValue(100f).apply()
+        rb_duration.setMinStartValue(100f).apply()
         setRangeSeekbarForDuration()
 
         //outbound take off
@@ -187,9 +187,13 @@ class FilterActivity : AppCompatActivity() {
 
     private fun init() {
         //duration after apply
-        textMin_duration.text = maxValueDuration
+        textMax_duration.text = maxValueDuration
         maxValueDuration = filterData?.max_fly_duration.toString()
-        rb_duration.setMinStartValue(maxValueDuration.toFloat()).setMaxValue(100f).apply()
+        if(maxValueDuration=="8") {
+            rb_duration.setMinValue(0f).setMinStartValue(maxValueDuration.toFloat() - 7f).apply()
+        }
+        else
+        rb_duration.setMinValue(8f).setMinStartValue(maxValueDuration.toFloat()).apply()
         setRangeSeekbarForDuration()
 
         //maxValueDuration.toFloat()
@@ -455,16 +459,16 @@ class FilterActivity : AppCompatActivity() {
 
     private fun setRangeSeekbarForDuration() {
         rb_duration.setOnSeekbarChangeListener { maxValue ->
-            textMin_duration.text = maxValue.toString()
-            if (maxValue.toFloat().toInt() == 0)
+            textMax_duration.text = maxValue.toString()
+            if (maxValue.toFloat().toInt() <= 8)
+                textMax_duration.text = "8"
+             if (maxValue.toFloat().toInt() > 99)
                 textMax_duration.text = "Any"
-            else if (maxValue.toFloat().toInt() > 48)
-                textMax_duration.text = "Any"
-            else
-                textMax_duration.text = "48"
-
         }
         rb_duration.setOnSeekbarFinalValueListener { maxValue ->
+            if (maxValue.toFloat().toInt() <= 8)
+                maxValueDuration="8"
+            else
             maxValueDuration = maxValue.toString()
 
         }
