@@ -26,10 +26,6 @@ import kotlinx.android.synthetic.main.sort_by_dialog.view.*
 class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     MultiCityInnerAdapter.OnItemClickListener {
     private var dataListAll: ArrayList<ResponseDataMulticity>? = ArrayList()
-    private var totalPassengers: String = ""
-    private var adults: String? = "1"
-    private var children: String? = "0"
-    private var infants: String? = "0"
     var adapter: MultiCityRecyclerViewAdapter? =
         MultiCityRecyclerViewAdapter(
             items = null,
@@ -62,7 +58,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                 Utility.showProgress(true, this)
             }
             FlightPresenter.MainView.ViewState.MULTICITY_DETAILS_SUCCESS -> {
-                rl_flight_not_found.visibility= View.GONE
+                rl_flight_not_found.visibility = View.GONE
 
                 if (openFilter) {
                     dataListAll?.clear()
@@ -76,20 +72,25 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             }
             FlightPresenter.MainView.ViewState.FLIGHT_NOT_FOUND
             -> {
-                rl_flight_not_found.visibility= View.VISIBLE
-                Utility.showCustomDialog(
-                    this,
-                    doRetrieveModel().errorMessage.message,
-                    "",
-                    object : CustomDialogPresenter.CustomDialogView {
-                        override fun onNegativeButtonClicked() {
-                        }
+                rl_flight_not_found.visibility = View.VISIBLE
+                dataListAll?.clear()
+                adapter?.notifyDataSetChanged()
+                if (!openFilter) {
 
-                        override fun onPositiveButtonClicked() {
-                            onBackPressed()
-                        }
+                    Utility.showCustomDialog(
+                        this,
+                        doRetrieveModel().errorMessage.message,
+                        "",
+                        object : CustomDialogPresenter.CustomDialogView {
+                            override fun onNegativeButtonClicked() {
+                            }
 
-                    })
+                            override fun onPositiveButtonClicked() {
+                                onBackPressed()
+                            }
+
+                        })
+                }
             }
             FlightPresenter.MainView.ViewState.ERROR
             -> {
@@ -111,6 +112,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
         }
     }
 
+    private var totalPassengers: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multicity_search_list)
@@ -127,7 +129,8 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                 dataListAll = data?.responseData as ArrayList<ResponseDataMulticity>
 
             }*/
-            callMulticityDetailsApi(filterData)
+
+            callMulticityDetailsApi()
 
         }
     }
@@ -177,20 +180,18 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
         intent.putExtra(Constant.Path.MIN_PRICE, model.multiCityListViewModel.minPrice.toString())
         startActivityForResult(intent, Filter_SELECTION_REQUEST)
     }
+
     private var currency: String? = ""
 
-    private fun callMulticityDetailsApi(filterData: FilterModel.Filter?) {
-        if(Pref.getValue(this, PrefConstants.CURRENCY_ID, "")!!.equals(""))
+    private fun callMulticityDetailsApi() {
+        if (Pref.getValue(this, PrefConstants.CURRENCY_ID, "")!!.equals(""))
             currency = Pref.getValue(this, PrefConstants.CURRENCY_DEFAULT, "")
         else
-            currency=""
+            currency = ""
 
         presenter.callMulticityDetails(
-            adults!!,
-            children!!,
             currency!!,
             Pref.getValue(this, PrefConstants.USER_ID, "0").toString(),
-            infants!!,
             "in-EN",
             multicityParamList,
             filterData?.price_from,
@@ -211,19 +212,22 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     override fun onMulticityRowClick(
         responseData: List<FlightViewModel.MultiCityResult>,
         totalPassengers: String,
-        price: String
+        price: String,
+        deepLink: String
     ) {
-        enterNextFragment(responseData as ArrayList<FlightViewModel.MultiCityResult>, totalPassengers, price)
+        enterNextFragment(responseData as ArrayList<FlightViewModel.MultiCityResult>, totalPassengers, price, deepLink)
     }
 
     private fun enterNextFragment(
         responseData: ArrayList<FlightViewModel.MultiCityResult>,
         totalPassengers: String,
-        price: String
+        price: String,
+        deepLink: String
     ) {
         val intent = Intent(this, MulticityTripDetailsActivity::class.java)
         intent.putParcelableArrayListExtra(Constant.Path.MULTICITY_LIST_DETAILS, responseData)
         intent.putExtra(Constant.Path.PRICE, price)
+        intent.putExtra(Constant.Path.URL, deepLink)
         intent.putExtra(Constant.Path.TOTAL_PASSENGERS, totalPassengers)
         intent.putExtra(Constant.Path.CABIN_CLASS, travelClass)
         startActivity(intent)
@@ -298,7 +302,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             Filter_SELECTION_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK) {
                     filterData = data?.getParcelableExtra(Constant.Path.FILTER_DATA)
-                    callMulticityDetailsApi(filterData)
+                    callMulticityDetailsApi()
                 }
             }
         }
