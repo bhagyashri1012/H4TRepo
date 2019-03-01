@@ -51,10 +51,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_vertical_margin_half"
-                android:background="@drawable/flight_not_found"
+                android:background="@drawable/flight_not_found9"
         ></ImageView>
         <TextView style="@style/CustomRegularTextView"
-                  android:text="@string/flight_not_found"
+                  android:text="@string/flight_not_found9"
                   android:textColor="@color/colorPrimary"
                   android:layout_below="@+id/imv_flight_not_found"
                   android:layout_centerHorizontal="true"/>
