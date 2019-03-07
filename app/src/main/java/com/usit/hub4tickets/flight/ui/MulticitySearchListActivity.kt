@@ -205,7 +205,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     private fun setDataToRecyclerViewAdapter(
         responseData: ArrayList<ResponseDataMulticity>?
     ) {
-        adapter = MultiCityRecyclerViewAdapter(responseData, this, totalPassengers, "", "")
+        adapter = MultiCityRecyclerViewAdapter(responseData, this, totalPassengers, "", currency!!)
         recycler_view!!.adapter = adapter
     }
 
@@ -213,19 +213,28 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
         responseData: List<FlightViewModel.MultiCityResult>,
         totalPassengers: String,
         price: String,
-        deepLink: String
+        deepLink: String,
+        currency: String
     ) {
-        enterNextFragment(responseData as ArrayList<FlightViewModel.MultiCityResult>, totalPassengers, price, deepLink)
+        enterNextFragment(
+            responseData as ArrayList<FlightViewModel.MultiCityResult>,
+            totalPassengers,
+            price,
+            deepLink,
+            currency
+        )
     }
 
     private fun enterNextFragment(
-        responseData: ArrayList<FlightViewModel.MultiCityResult>,
+        multiCityResult: ArrayList<FlightViewModel.MultiCityResult>,
         totalPassengers: String,
         price: String,
-        deepLink: String
+        deepLink: String,
+        currency: String
     ) {
         val intent = Intent(this, MulticityTripDetailsActivity::class.java)
-        intent.putParcelableArrayListExtra(Constant.Path.MULTICITY_LIST_DETAILS, responseData)
+        intent.putParcelableArrayListExtra(Constant.Path.MULTICITY_LIST_DETAILS, multiCityResult)
+        intent.putExtra(Constant.Path.CURRENCYSYMBOL, dataListAll!![0].currencySymbol)
         intent.putExtra(Constant.Path.PRICE, price)
         intent.putExtra(Constant.Path.URL, deepLink)
         intent.putExtra(Constant.Path.TOTAL_PASSENGERS, totalPassengers)

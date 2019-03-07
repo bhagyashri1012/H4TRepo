@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "266268025613",
+    "firebase_url": "https://hub4tickets-39787.firebaseio.com",
+    "project_id": "hub4tickets-39787",
+    "storage_bucket": "hub4tickets-39787.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266268025613:android:8db3fc936bcae2a2",
+        "android_client_info": {
+          "package_name": "com.usit.hub4tickets"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266268025613-74j9fot4n28r3ucsk46hq2bubmcap6vk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqOHWUJMe6ZuDhoK1w-YIKayd8lpDWOQg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
