@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.usit.hub4tickets.R
@@ -105,6 +106,12 @@ class FilterActivity : AppCompatActivity() {
             getSelectedValue(textMin_outbound_takeofff, textMax_outbound_takeofff, leftThumbIndex, rightThumbIndex)
             minValueTakeOff = textMin_outbound_takeofff.text.toString()
             maxValueTakeOff = textMax_outbound_takeofff.text.toString()
+            if (leftThumbIndex < 0)
+                rangeBar.setThumbIndices(0, getLeftAndRightIndex(maxValueTakeOff))
+            if (rightThumbIndex > getLeftAndRightIndex(maxValueTakeOff))
+                rangeBar.setThumbIndices(getLeftAndRightIndex(minValueTakeOff), getLeftAndRightIndex(maxValueTakeOff))
+            Log.e("getLeftIndex:", leftThumbIndex.toString())
+            Log.e("getRightIndex:", rightThumbIndex.toString())
         }
 
         //outbound landing
@@ -116,6 +123,10 @@ class FilterActivity : AppCompatActivity() {
             getSelectedValue(textMin_ob_landing, textMax_ob_landing, leftThumbIndex, rightThumbIndex)
             minValueLanding = textMin_ob_landing.text.toString()
             maxValueLanding = textMax_ob_landing.text.toString()
+            if (leftThumbIndex < 0)
+                rangeBar.setThumbIndices(0, getLeftAndRightIndex(maxValueLanding))
+            if (rightThumbIndex > getLeftAndRightIndex(maxValueLanding))
+                rangeBar.setThumbIndices(getLeftAndRightIndex(minValueLanding), getLeftAndRightIndex(maxValueLanding))
         }
 
         //inbound take off
@@ -127,6 +138,13 @@ class FilterActivity : AppCompatActivity() {
             getSelectedValue(textMin_inbound_takeofff, textMax_inbound_takeofff, leftThumbIndex, rightThumbIndex)
             minValueInTakeOff = textMin_inbound_takeofff.text.toString()
             maxValueInTakeOff = textMax_inbound_takeofff.text.toString()
+            if (leftThumbIndex < 0)
+                rangeBar.setThumbIndices(0, getLeftAndRightIndex(maxValueInTakeOff))
+            if (rightThumbIndex > getLeftAndRightIndex(maxValueInTakeOff))
+                rangeBar.setThumbIndices(
+                    getLeftAndRightIndex(minValueInTakeOff),
+                    getLeftAndRightIndex(maxValueInTakeOff)
+                )
         }
 
         //inbound landing
@@ -138,6 +156,13 @@ class FilterActivity : AppCompatActivity() {
             getSelectedValue(textMin_in_landing, textMax_in_landing, leftThumbIndex, rightThumbIndex)
             minValueInLanding = textMin_in_landing.text.toString()
             maxValueInLanding = textMax_in_landing.text.toString()
+            if (leftThumbIndex < 0)
+                rangeBar.setThumbIndices(0, getLeftAndRightIndex(maxValueInLanding))
+            if (rightThumbIndex > getLeftAndRightIndex(maxValueInLanding))
+                rangeBar.setThumbIndices(
+                    getLeftAndRightIndex(minValueInLanding),
+                    getLeftAndRightIndex(maxValueInLanding)
+                )
         }
     }
 
@@ -236,6 +261,10 @@ class FilterActivity : AppCompatActivity() {
             getSelectedValue(textMin_outbound_takeofff, textMax_outbound_takeofff, leftThumbIndex, rightThumbIndex)
             minValueTakeOff = textMin_outbound_takeofff.text.toString()
             maxValueTakeOff = textMax_outbound_takeofff.text.toString()
+            if (leftThumbIndex < 0)
+                rangeBar.setThumbIndices(0, getLeftAndRightIndex(maxValueTakeOff))
+            if (rightThumbIndex > getLeftAndRightIndex(maxValueTakeOff))
+                rangeBar.setThumbIndices(getLeftAndRightIndex(minValueTakeOff), getLeftAndRightIndex(maxValueTakeOff))
         }
         //ob_landing after apply
         textMin_ob_landing.text = nullDefaultValues(filterData?.atime_from, "0:00")
@@ -255,6 +284,10 @@ class FilterActivity : AppCompatActivity() {
             getSelectedValue(textMin_ob_landing, textMax_ob_landing, leftThumbIndex, rightThumbIndex)
             minValueLanding = textMin_ob_landing.text.toString()
             maxValueLanding = textMax_ob_landing.text.toString()
+            if (leftThumbIndex < 0)
+                rangeBar.setThumbIndices(0, getLeftAndRightIndex(maxValueLanding))
+            if (rightThumbIndex > getLeftAndRightIndex(maxValueLanding))
+                rangeBar.setThumbIndices(getLeftAndRightIndex(minValueLanding), getLeftAndRightIndex(maxValueLanding))
 
         }
         //inbound_takeoff after apply
@@ -275,7 +308,13 @@ class FilterActivity : AppCompatActivity() {
             getSelectedValue(textMin_inbound_takeofff, textMax_inbound_takeofff, leftThumbIndex, rightThumbIndex)
             minValueInTakeOff = textMin_inbound_takeofff.text.toString()
             maxValueInTakeOff = textMax_inbound_takeofff.text.toString()
-
+            if (leftThumbIndex < 0)
+                rangeBar.setThumbIndices(0, getLeftAndRightIndex(maxValueInTakeOff))
+            if (rightThumbIndex > getLeftAndRightIndex(maxValueInTakeOff))
+                rangeBar.setThumbIndices(
+                    getLeftAndRightIndex(minValueInTakeOff),
+                    getLeftAndRightIndex(maxValueInTakeOff)
+                )
         }
         //in_landing after apply
         textMin_in_landing.text = nullDefaultValues(filterData?.ret_atime_from, "0:00")
@@ -298,7 +337,14 @@ class FilterActivity : AppCompatActivity() {
             getSelectedValue(textMin_in_landing, textMax_in_landing, leftThumbIndex, rightThumbIndex)
             minValueInLanding = textMin_in_landing.text.toString()
             maxValueInLanding = textMax_in_landing.text.toString()
+            if (leftThumbIndex < 0)
+                rangeBar.setThumbIndices(0, getLeftAndRightIndex(maxValueInLanding))
 
+            if (rightThumbIndex > getLeftAndRightIndex(maxValueInLanding))
+                rangeBar.setThumbIndices(
+                    getLeftAndRightIndex(minValueInLanding),
+                    getLeftAndRightIndex(maxValueInLanding)
+                )
         }
 
         switchButton_direct.isChecked = filterData?.max_stopovers?.contains(0)!!
