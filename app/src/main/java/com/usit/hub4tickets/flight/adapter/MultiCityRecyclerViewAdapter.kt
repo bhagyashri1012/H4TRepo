@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.TextView
 import com.usit.hub4tickets.R
 import com.usit.hub4tickets.flight.model.FlightViewModel
 import com.usit.hub4tickets.utils.pagination.PaginationAdapterCallback
+import com.wang.avi.AVLoadingIndicatorView
 
 /**
  * Created by Bhagyashri Burade
@@ -26,12 +26,12 @@ class MultiCityRecyclerViewAdapter(
     var price: String,
     var currency: String,
     var mCallback: PaginationAdapterCallback
-) :  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     // View Types
     private val ITEM = 0
     private val LOADING = 1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):  RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         var viewHolder: RecyclerView.ViewHolder? = null
 
         when (viewType) {
@@ -51,40 +51,43 @@ class MultiCityRecyclerViewAdapter(
     private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val result = items!![position]
+
         when (getItemViewType(position)) {
             ITEM -> {
                 (holder as TextItemViewHolderMulticity)
-                holder.price.text = items!![position].currencySymbol + " " + items!![position].price.toString()
+                holder.price.text = result.currencySymbol + " " + result.price.toString()
                 val childLayoutManager = LinearLayoutManager(holder.rc.context, LinearLayout.VERTICAL, false)
                 //childLayoutManager.initialPrefetchItemCount = 4
                 holder.rc.apply {
                     layoutManager = childLayoutManager
                     adapter =
                         MultiCityInnerAdapter(
-                            items!![position].multiCityResults,
+                            result.multiCityResults,
                             listener,
                             totalPassengers,
-                            items!![position].price.toString(),
-                            items!![position].currencySymbol,
-                            items!![position].deepLink
+                            result.price.toString(),
+                            result.currencySymbol,
+                            result.deepLink
                         )
                     setRecycledViewPool(viewPool)
                 }
             }
-                LOADING ->
-            if (retryPageLoad) {
-                (holder as RecyclerViewAdapter.LoadingVH).mErrorLayout.visibility = View.VISIBLE
-                (holder as RecyclerViewAdapter.LoadingVH).mProgressBar.visibility = View.GONE
+            LOADING ->
+                if (retryPageLoad) {
+                    (holder as MultiCityRecyclerViewAdapter.LoadingVH)
+                    holder.mErrorLayout.visibility = View.VISIBLE
+                    holder.mProgressBar.visibility = View.GONE
 
-                (holder as RecyclerViewAdapter.LoadingVH).mErrorTxt.text = if (errorMsg != null)
-                    errorMsg
-                else
-                    "An unexpected error occurred"
+                    holder.mErrorTxt.text = if (errorMsg != null)
+                        errorMsg
+                    else
+                        "An unexpected error occurred"
 
-            } else {
-                (holder as RecyclerViewAdapter.LoadingVH).mErrorLayout.visibility = View.GONE
-                (holder as RecyclerViewAdapter.LoadingVH).mProgressBar.visibility = View.VISIBLE
-            }
+                } else {
+                    (holder as MultiCityRecyclerViewAdapter.LoadingVH).mErrorLayout.visibility = View.GONE
+                    holder.mProgressBar.visibility = View.VISIBLE
+                }
         }
     }
 
@@ -177,7 +180,7 @@ class MultiCityRecyclerViewAdapter(
     }
 
     inner class LoadingVH(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        val mProgressBar: ProgressBar = itemView.findViewById(R.id.loadmore_progress)
+        val mProgressBar: AVLoadingIndicatorView = itemView.findViewById(R.id.loadmore_progress)
         val mRetryBtn: ImageButton = itemView.findViewById(R.id.loadmore_retry)
         val mErrorTxt: TextView = itemView.findViewById(R.id.loadmore_errortxt)
         val mErrorLayout: LinearLayout = itemView.findViewById(R.id.loadmore_errorlayout)
