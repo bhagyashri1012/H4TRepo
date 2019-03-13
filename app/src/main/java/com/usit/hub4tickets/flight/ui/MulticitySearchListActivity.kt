@@ -18,13 +18,18 @@ import com.usit.hub4tickets.flight.model.FlightViewModel
 import com.usit.hub4tickets.flight.model.FlightViewModel.ResponseDataMulticity
 import com.usit.hub4tickets.search.model.CommonSelectorPojo
 import com.usit.hub4tickets.utils.*
+import com.usit.hub4tickets.utils.pagination.PaginationAdapterCallback
 import com.usit.hub4tickets.utils.view.dialog.CustomDialogPresenter
 import kotlinx.android.synthetic.main.activity_multicity_search_list.*
 import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.sort_by_dialog.view.*
 
 class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
-    MultiCityInnerAdapter.OnItemClickListener {
+    MultiCityInnerAdapter.OnItemClickListener, PaginationAdapterCallback {
+    override fun retryPageLoad() {
+
+    }
+
     private var dataListAll: ArrayList<ResponseDataMulticity>? = ArrayList()
     var adapter: MultiCityRecyclerViewAdapter? =
         MultiCityRecyclerViewAdapter(
@@ -32,7 +37,8 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             listener = null,
             totalPassengers = "",
             price = "",
-            currency = ""
+            currency = "",
+            mCallback = this
         )
     private var travelClass: String? = "Economy"
     private var travelClassCode: String? = "0"
@@ -205,7 +211,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     private fun setDataToRecyclerViewAdapter(
         responseData: ArrayList<ResponseDataMulticity>?
     ) {
-        adapter = MultiCityRecyclerViewAdapter(responseData, this, totalPassengers, "", currency!!)
+        adapter = MultiCityRecyclerViewAdapter(responseData, this, totalPassengers, "", currency!!,this)
         recycler_view!!.adapter = adapter
     }
 
