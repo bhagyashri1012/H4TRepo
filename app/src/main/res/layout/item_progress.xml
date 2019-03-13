@@ -16,7 +16,7 @@
     <LinearLayout
         android:id="@+id/loadmore_errorlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:orientation="horizontal"
@@ -41,7 +41,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
@@ -54,7 +54,7 @@
                 style="@style/CustomSmallTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="What went wrong"/>
+                tools:text="What went wrongWhat went wrongWhat went wrongWhat went wrongWhat went wrongWhat went wrong"/>
 
             <TextView
                 style="@style/CustomSmallTextView"
