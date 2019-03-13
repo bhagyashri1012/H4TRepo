@@ -51,6 +51,8 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     var TOTAL_PAGES = 20
     var currentPage = PAGE_START
 
+    private var isFilterEnable: Boolean = false
+
     override fun retryPageLoad() {
         loadNextPage()
     }
@@ -60,7 +62,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     private fun loadNextPage() {
         //load netx page here
         Log.d(TAG, "loadNextPage: $currentPage")
-        callMulticityDetailsApi()
+        callMulticityDetailsApi(isFilterEnable)
 
     }
 
@@ -96,7 +98,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                     dataListAll?.clear()
                     isLastPg = model.multiCityListViewModel.last
                     dataListAll?.addAll(model.multiCityListViewModel.responseData!!)
-                    adapter?.notifyDataSetChanged()
+                    adapter?.clear()
                 } else {
                     setDataToRecyclerViewAdapter(model.multiCityListViewModel.responseData as ArrayList<ResponseDataMulticity>)
                 }
@@ -112,7 +114,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             -> {
                 rl_flight_not_found.visibility = View.VISIBLE
                 dataListAll?.clear()
-                adapter?.notifyDataSetChanged()
+                adapter?.clear()
                 if (!openFilter) {
 
                     Utility.showCustomDialog(
@@ -196,7 +198,8 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             multicityParamList =
                 intent.getParcelableArrayListExtra<FlightViewModel.MultiCitiesForSearch1>((Constant.Path.MULTICITY_SEARCH_PARAMS))
             totalPassengers = intent.getStringExtra(Constant.Path.TOTAL_PASSENGERS)
-            callMulticityDetailsApi()
+            isFilterEnable=false
+            callMulticityDetailsApi(isFilterEnable)
         }
     }
 
@@ -245,7 +248,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     }
 
 
-    private fun callMulticityDetailsApi() {
+    private fun callMulticityDetailsApi(isFiltering: Boolean) {
         if (Pref.getValue(this, PrefConstants.CURRENCY, "")!!.equals(""))
             currency = Pref.getValue(this, PrefConstants.CURRENCY_DEFAULT, "GB")
         else
@@ -262,7 +265,8 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             travelClassCode.toString(),//ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST\
             Pref.getValue(this, PrefConstants.USER_ID, "0").toString(),
             currentPage,
-            TOTAL_PAGES
+            TOTAL_PAGES,
+            isFiltering
         )
     }
 
@@ -418,8 +422,9 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                     filterData = data?.getParcelableExtra(Constant.Path.FILTER_DATA)
                     currentPage = 0
                     dataListAll!!.clear()
-                    adapter!!.notifyDataSetChanged()
-                    callMulticityDetailsApi()
+                    adapter!!.clear()
+                    isFilterEnable=true
+                    callMulticityDetailsApi(isFilterEnable)
                 }
             }
         }
