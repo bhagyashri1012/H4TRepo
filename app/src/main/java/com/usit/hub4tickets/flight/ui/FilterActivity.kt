@@ -110,8 +110,8 @@ class FilterActivity : AppCompatActivity() {
                 rangeBar.setThumbIndices(0, getLeftAndRightIndex(maxValueTakeOff))
             if (rightThumbIndex > getLeftAndRightIndex(maxValueTakeOff))
                 rangeBar.setThumbIndices(getLeftAndRightIndex(minValueTakeOff), getLeftAndRightIndex(maxValueTakeOff))
-            Log.e("getLeftIndex:", leftThumbIndex.toString())
-            Log.e("getRightIndex:", rightThumbIndex.toString())
+            //Log.e("getLeftIndex:", leftThumbIndex.toString())
+            //Log.e("getRightIndex:", rightThumbIndex.toString())
         }
 
         //outbound landing
@@ -216,8 +216,12 @@ class FilterActivity : AppCompatActivity() {
         maxValueDuration = filterData?.max_fly_duration.toString()
         if (maxValueDuration == "8") {
             rb_duration.setMinValue(0f).setMinStartValue(maxValueDuration.toFloat() - 7f).apply()
-        } else
+        } else if (maxValueDuration == "100") {
+            rb_duration.setMinValue(0f).setMinStartValue(maxValueDuration.toFloat()).setMaxValue(maxValueDuration.toFloat()).apply()
+        } else {
             rb_duration.setMinValue(8f).setMinStartValue(maxValueDuration.toFloat()).apply()
+        }
+
         setRangeSeekbarForDuration()
 
         //maxValueDuration.toFloat()
