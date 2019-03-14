@@ -94,17 +94,12 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             }
             FlightPresenter.MainView.ViewState.MULTICITY_DETAILS_SUCCESS -> {
                 rl_flight_not_found.visibility = View.GONE
+                isLastPg = model.multiCityListViewModel.last
                 if (openFilter) {
                     dataListAll?.clear()
-                    isLastPg = model.multiCityListViewModel.last
+                    adapter?.clear()
+                    setDataToRecyclerViewAdapter(model.multiCityListViewModel.responseData as ArrayList<ResponseDataMulticity>)
 
-                    if (!isLastPg) {
-                        dataListAll?.addAll(model.multiCityListViewModel.responseData!!)
-                        adapter?.clear()
-                        adapter!!.addLoadingFooter()
-                    }
-                    else
-                        adapter!!.removeLoadingFooter()
                 } else {
                     setDataToRecyclerViewAdapter(model.multiCityListViewModel.responseData as ArrayList<ResponseDataMulticity>)
                 }
@@ -324,8 +319,6 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
 
         if (!isLastPg)
             adapter!!.addLoadingFooter()
-        else
-            adapter!!.removeLoadingFooter()
 
     }
 
