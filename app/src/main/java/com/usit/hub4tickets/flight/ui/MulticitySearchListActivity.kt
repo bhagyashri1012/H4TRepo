@@ -97,8 +97,14 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                 if (openFilter) {
                     dataListAll?.clear()
                     isLastPg = model.multiCityListViewModel.last
-                    dataListAll?.addAll(model.multiCityListViewModel.responseData!!)
-                    adapter?.clear()
+
+                    if (!isLastPg) {
+                        dataListAll?.addAll(model.multiCityListViewModel.responseData!!)
+                        adapter?.clear()
+                        adapter!!.addLoadingFooter()
+                    }
+                    else
+                        adapter!!.removeLoadingFooter()
                 } else {
                     setDataToRecyclerViewAdapter(model.multiCityListViewModel.responseData as ArrayList<ResponseDataMulticity>)
                 }
@@ -318,6 +324,8 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
 
         if (!isLastPg)
             adapter!!.addLoadingFooter()
+        else
+            adapter!!.removeLoadingFooter()
 
     }
 
