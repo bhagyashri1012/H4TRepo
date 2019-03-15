@@ -298,9 +298,6 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
 
         if (!isLastPg)
             adapter!!.addLoadingFooter()
-        else
-            adapter!!.removeLoadingFooter()
-
     }
 
     /**
