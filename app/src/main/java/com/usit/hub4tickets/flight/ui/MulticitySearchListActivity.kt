@@ -50,7 +50,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     // limiting to 5 for this tutorial, since total pages in actual API is very large. Feel free to modify.
     var TOTAL_PAGES = 20
     var currentPage = PAGE_START
-
+    private var sortBy: String? = "PRICE"
     private var isFilterEnable: Boolean = false
 
     override fun retryPageLoad() {
@@ -62,7 +62,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     private fun loadNextPage() {
         //load netx page here
         Log.d(TAG, "loadNextPage: $currentPage")
-        callMulticityDetailsApi(isFilterEnable)
+        callMulticityDetailsApi(isFilterEnable, sortBy!!)
 
     }
 
@@ -200,7 +200,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                 intent.getParcelableArrayListExtra<FlightViewModel.MultiCitiesForSearch1>((Constant.Path.MULTICITY_SEARCH_PARAMS))
             totalPassengers = intent.getStringExtra(Constant.Path.TOTAL_PASSENGERS)
             isFilterEnable=false
-            callMulticityDetailsApi(isFilterEnable)
+            callMulticityDetailsApi(isFilterEnable, sortBy!!)
         }
     }
 
@@ -249,7 +249,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     }
 
 
-    private fun callMulticityDetailsApi(isFiltering: Boolean) {
+    private fun callMulticityDetailsApi(isFiltering: Boolean, sortBy: String) {
         if (Pref.getValue(this, PrefConstants.CURRENCY, "")!!.equals(""))
             currency = Pref.getValue(this, PrefConstants.CURRENCY_DEFAULT, "GB")
         else
@@ -267,7 +267,8 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             Pref.getValue(this, PrefConstants.USER_ID, "0").toString(),
             currentPage,
             TOTAL_PAGES,
-            isFiltering
+            isFiltering,
+            sortBy
         )
     }
 
@@ -385,7 +386,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
         if (null != sortByCode) {
             when (sortByCode) {
                 resources.getString(R.string.price_code) -> {
-                    val sortedList: ArrayList<ResponseDataMulticity>? =
+                    /*val sortedList: ArrayList<ResponseDataMulticity>? =
                         ArrayList()
                     sortedList?.addAll(dataListAll!!)
                     for (c in dataListAll?.indices!!) {
@@ -394,10 +395,13 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                     }
                     sortedList?.sortBy { it.totalDurationFormatted?.toInt() }
                     sortedList?.sortBy { it.price.toDouble() }
-                    setDataToRecyclerViewAdapter(sortedList)
+                    setDataToRecyclerViewAdapter(sortedList)*/
+                    sortBy = Constant.Path.PRICE
+                    currentPage = 0
+                    callMulticityDetailsApi(isFilterEnable, sortBy!!)
                 }
                 resources.getString(R.string.duration_code) -> {
-                    val sortedList: ArrayList<ResponseDataMulticity>? =
+                    /*val sortedList: ArrayList<ResponseDataMulticity>? =
                         ArrayList()
                     sortedList?.addAll(dataListAll!!)
                     for (c in dataListAll?.indices!!) {
@@ -409,7 +413,10 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                     for (c in sortedList?.indices!!) {
                         Log.d("duration--", sortedList[c].totalDurationFormatted.toString())
                     }
-                    setDataToRecyclerViewAdapter(sortedList)
+                    setDataToRecyclerViewAdapter(sortedList)*/
+                    sortBy = Constant.Path.DURATION
+                    currentPage = 0
+                    callMulticityDetailsApi(isFilterEnable, sortBy!!)
                 }
             }
         }
@@ -425,7 +432,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
                     dataListAll!!.clear()
                     adapter!!.clear()
                     isFilterEnable=true
-                    callMulticityDetailsApi(isFilterEnable)
+                    callMulticityDetailsApi(isFilterEnable, sortBy!!)
                 }
             }
         }

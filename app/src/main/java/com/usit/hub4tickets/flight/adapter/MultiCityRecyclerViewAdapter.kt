@@ -147,7 +147,7 @@ class MultiCityRecyclerViewAdapter(
 
     fun addLoadingFooter() {
         isLoadingAdded = true
-        //add(FlightViewModel.FlightListResponse.ResponseData())
+        add(FlightViewModel.ResponseDataMulticity("", "", ArrayList(), 00.0, "", ""))
     }
 
     fun removeLoadingFooter() {
