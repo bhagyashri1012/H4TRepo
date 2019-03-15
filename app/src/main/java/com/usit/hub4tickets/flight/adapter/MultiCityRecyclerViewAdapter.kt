@@ -60,7 +60,7 @@ class MultiCityRecyclerViewAdapter(
                 val childLayoutManager = LinearLayoutManager(holder.rc.context, LinearLayout.VERTICAL, false)
                 //childLayoutManager.initialPrefetchItemCount = 4
                 holder.rc.apply {
-                    layoutManager = childLayoutManager
+                    layoutManager = childLayoutManager as RecyclerView.LayoutManager?
                     adapter =
                         MultiCityInnerAdapter(
                             result.multiCityResults,

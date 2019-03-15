@@ -174,10 +174,10 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
             override fun loadMoreItems() {
                 isLoadingOn = true
                 currentPage += 1
-                if (!isLastPg)
+              //  if (!isLastPg)
                     loadNextPage()
-                else
-                    isLoadingOn = false
+              //  else
+              //      isLoadingOn = false
             }
 
             override fun isLastPage(): Boolean {
