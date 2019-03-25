@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/margin_4dp"
+        app:cardElevation="3dp"
+        app:cardUseCompatPadding="true"
+>
+    <LinearLayout android:layout_width="match_parent"
+                  android:orientation="vertical"
+                  android:layout_height="wrap_content"
+    >
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="2"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    tools:text="The Hollywood Rosevelt"
+                    android:layout_width="0dp"
+                    style="@style/CustomMediumTextView"
+                    android:layout_gravity="right|center_vertical"
+                    android:id="@+id/textViewTitle"
+                    android:maxLines="3"
+                    android:layout_weight="1"/>
+            <RatingBar
+                    android:layout_width="wrap_content"
+                    style="@android:style/Widget.DeviceDefault.RatingBar.Small"
+                    android:theme="@style/RatingBar"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ratingBar2"
+                    android:rating="3.5"
+                    android:stepSize="0.5"
+                    android:numStars="5"
+                    android:gravity="right|center_vertical"
+                    android:layout_marginRight="@dimen/margin_4dp"
+            />
+        </LinearLayout>
+        <ImageView android:layout_width="match_parent"
+                   android:layout_height="180dp"
+                   android:src="@drawable/image1"
+                   android:scaleType="fitXY"
+
+        />
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="3"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:text="8.9"
+                    android:layout_width="0dp"
+                    style="@style/CustomRegularTextView"
+                    android:drawableLeft="@drawable/ic_place"
+                    android:paddingRight="@dimen/margin_4dp"
+                    android:drawablePadding="@dimen/margin_4dp"
+                    android:layout_gravity="right"
+                    android:id="@+id/textViewRating"
+                    android:layout_weight=".8"/>
+            <TextView
+                    android:layout_width="0dp"
+                    style="@style/CustomRegularTextView"
+                    android:id="@+id/textViewDist"
+                    tools:text="15km to city center"
+                    android:layout_gravity="right|center_horizontal"
+                    android:layout_weight="1.2"/>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content">
+                <TextView
+                        style="@style/CustomRegularBoldTextView"
+                        android:id="@+id/textViewPrice"
+                        android:layout_width="wrap_content"
+                        android:maxLines="2"
+                        android:text="$24,1000"
+                        android:layout_gravity="right|center_vertical"
+                />
+                <TextView
+                        style="@style/CustomSmallTextView"
+                        android:id="@+id/textViewVia"
+                        android:layout_width="wrap_content"
+                        android:text="via Hotels.com"
+                        android:maxLines="2"
+                        android:layout_gravity="right|center_vertical"
+                />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

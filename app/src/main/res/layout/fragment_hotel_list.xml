@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:background="@color/pale_grey"
+        android:orientation="vertical"
+>
+    <include layout="@layout/common_toolbar"/>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@color/white_two"
+                  android:orientation="horizontal"
+    >
+        <TextView style="@style/CustomRegularTextView"
+                  android:width="@dimen/height_0dp"
+                  android:layout_weight="1"
+                  android:text="281 results"
+                  android:padding="@dimen/activity_horizontal_margin"
+                  android:layout_centerHorizontal="true"/>
+        <TextView style="@style/CustomRegularTextView"
+                  android:text="SORT &amp; FILTER"
+                  android:width="@dimen/height_0dp"
+                  android:layout_weight="1"
+                  android:gravity="right"
+                  android:padding="@dimen/activity_horizontal_margin"
+                  android:layout_centerHorizontal="true"/>
+
+    </LinearLayout>
+
+    <TextView style="@style/CustomRegularTextView"
+              android:text="Results sorted by Best showing total price
+All taxes and fees included, except local tax if applicable"
+              android:textAlignment="center"
+              android:layout_gravity="center"
+              android:padding="@dimen/activity_horizontal_margin"
+              android:layout_centerHorizontal="true"/>
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_hotels_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/height_48"    />
+</LinearLayout>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            xmlns:tools="http://schemas.android.com/tools"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                                            tools:context=".hotel.HotelDetailsActivity"
+                                            tools:showIn="@layout/activity_hotel_details">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="@dimen/activity_horizontal_margin"
+                  android:orientation="vertical"
+    >
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                        android:orientation="horizontal">
+
+
+            <LinearLayout android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+            >
+                <TextView
+                        style="@style/CustomLargeTextView"
+                        android:layout_width="wrap_content"
+                        android:text="OYO Hotel"/>
+                <TextView
+                        style="@style/CustomSmallTextView"
+                        android:layout_width="wrap_content"
+                        android:text="05-08 March 2019 , 2 Adults"/>
+            </LinearLayout>
+            <RatingBar
+                    android:layout_width="wrap_content"
+                    style="@android:style/Widget.DeviceDefault.RatingBar.Small"
+                    android:theme="@style/RatingBar"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ratingBarHotelDetails"
+                    android:rating="3.5"
+                    android:stepSize="0.5"
+                    android:numStars="5"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:gravity="right|center_vertical"
+                    android:layout_marginRight="@dimen/margin_4dp"
+            />
+
+
+        </RelativeLayout>
+        <View style="@style/Divider"
+        />
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginBottom="@dimen/activity_vertical_margin"
+                      android:layout_marginTop="@dimen/activity_vertical_margin"
+                      android:orientation="vertical"
+        >
+            <TextView
+                    android:text="8.9"
+                    android:layout_width="wrap_content"
+                    style="@style/CustomRegularTextView"
+                    android:drawableLeft="@drawable/ic_place"
+                    android:paddingRight="@dimen/margin_4dp"
+                    android:drawablePadding="@dimen/margin_4dp"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                    android:id="@+id/textViewRating"
+                    android:layout_weight=".8"/>
+            <TextView
+                    style="@style/CustomRegularBoldTextView"
+                    android:layout_width="wrap_content"
+                    android:text="Location"/>
+            <TextView
+                    style="@style/CustomSmallTextView"
+                    android:layout_width="wrap_content"
+                    android:text="05-08 March 2019 , 2 Adults"/>
+        </LinearLayout>
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+
+        >
+            <com.google.android.gms.maps.MapView
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

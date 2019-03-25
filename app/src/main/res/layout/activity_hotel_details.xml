@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:fitsSystemWindows="true"
+>
+    <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/app_bar_height"
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:contentScrim="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+
+            <ImageView
+                    android:id="@+id/expandedImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/image1"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.7"/>
+
+            <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_scrolling"/>
+
+    <!--<android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            app:layout_anchor="@id/app_bar"
+            app:layout_anchorGravity="bottom|end"
+            app:srcCompat="@android:drawable/ic_dialog_info" />-->
+    <LinearLayout
+            android:id="@+id/ll_footer"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:gravity="center_vertical"
+            android:paddingRight="@dimen/activity_vertical_margin_half"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:weightSum="2.5"
+            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="true"
+    >
+        <TextView android:id="@+id/tv_total_deals"
+                  style="@style/WhiteRegularTextView"
+                  tools:text="2 Deals from"
+                  android:layout_weight="1"
+                  android:layout_marginRight="@dimen/padding_8dp"
+                  android:maxLines="2"
+        />
+        <TextView android:id="@+id/tv_price"
+                  style="@style/WhiteRegularTextView"
+                  tools:text="$25000"
+                  android:layout_weight="1"
+                  android:maxLines="2"
+        />
+        <Button android:id="@+id/btn_continue_booking"
+                style="@style/CustomButtonGreen"
+                android:text="Continue Booking"
+                android:layout_weight=".5"
+                android:layout_gravity="right|center_vertical"
+        />
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

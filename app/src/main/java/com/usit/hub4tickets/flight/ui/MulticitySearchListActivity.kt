@@ -301,7 +301,7 @@ class MulticitySearchListActivity : BaseActivity(), FlightPresenter.MainView,
     }
 
     /**
-     * This method is to set data to RecyclerViewAdapter on scroll
+     * This method is to set data to FlightsRecyclerViewAdapter on scroll
      * pagination implementation : -
      * remove loading footer -> set loading flag =0 -> add response data to arraylist
      * add loading footer if isLastPag=false
